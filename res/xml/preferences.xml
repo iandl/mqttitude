@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <st.alr.homA.PreferencesServer
+        android:key="serverPreference"
+        android:negativeButtonText="Cancel"
+        android:positiveButtonText="Connect"
+        android:title="Server" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="runInBackgroundPreference"
+        android:summary="foo"
+        android:title="Run in background" />
+
+    
+</PreferenceScreen>
