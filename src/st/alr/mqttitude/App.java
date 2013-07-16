@@ -63,9 +63,12 @@ public class App extends Application {
             @Override
             public void onLocationRespone(Location location) {
                 EventBus.getDefault().postSticky(new Events.LocationUpdated(location));
-                if(publish)
-                    Log.v(this.toString(), "TODO: publish");
-
+                if(publish) {
+                    Intent service = new Intent(App.getInstance(), MqttService.class);
+                    startService(service);                    
+                    MqttService.getInstance().publishWithTimeout(PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("location_topic", null), location.getLatitude()+":"+location.getLatitude(), true, 20);
+                }
+                    
             }
         });
     }
@@ -75,7 +78,7 @@ public class App extends Application {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(st.alr.mqttitude.support.Defaults.UPDATE_INTEND_ID), PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar wakeUpTime = Calendar.getInstance();
-        wakeUpTime.add(Calendar.MINUTE, PreferenceManager.getDefaultSharedPreferences(this).getInt("updateIntervall", st.alr.mqttitude.support.Defaults.VALUE_UPDATE_INTERVAL));
+        wakeUpTime.add(Calendar.MINUTE, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("updateIntervall", st.alr.mqttitude.support.Defaults.VALUE_UPDATE_INTERVAL)));
 
         AlarmManager aMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
         aMgr.set(AlarmManager.RTC_WAKEUP, wakeUpTime.getTimeInMillis(), pendingIntent);
