@@ -97,16 +97,15 @@ public class MainActivity extends FragmentActivity {
     }
     
     public void onEvent(Events.LocationUpdated e) {
-        Log.v(this.toString(), "LocationUpdated: " + e.getLocation().getLatitude() + ":" + e.getLocation().getLongitude());
         longitude.setText(e.getLocation().getLongitude()+"");
         latitude.setText(e.getLocation().getLatitude()+"");
     }
 
     
     public void update(View view) {
-        App.getInstance().updateLocation();        
+        App.getInstance().updateLocation(false);        
     }
     public void publish(View view) {
-        App.getInstance().publishLocation();
+        App.getInstance().updateLocation(true);
     }
 }
