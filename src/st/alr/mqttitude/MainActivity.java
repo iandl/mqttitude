@@ -1,22 +1,30 @@
 
-package st.alr.mqttpositionlogger;
+package st.alr.mqttitude;
 
-import st.alr.mqttpositionlogger.MqttService.MQTT_CONNECTIVITY;
-import st.alr.mqttpositionlogger.support.Events.MqttConnectivityChanged;
+import st.alr.mqttitude.MqttService.MQTT_CONNECTIVITY;
+import st.alr.mqttitude.support.Locator;
+import st.alr.mqttitude.support.LocatorCallback;
+import st.alr.mqttitude.support.Events.MqttConnectivityChanged;
+import st.alr.mqttpositionlogger.R;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import de.greenrobot.event.EventBus;
 
 public class MainActivity extends FragmentActivity {
-    RelativeLayout disconnectedLayout;
-    LinearLayout connectedLayout;
-
+    Button publish;
+    TextView latitude;
+    TextView longitude;
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -43,11 +51,9 @@ public class MainActivity extends FragmentActivity {
 
     private void updateViewVisibility() {
         if (MqttService.getConnectivity() == MQTT_CONNECTIVITY.CONNECTED) {
-            connectedLayout.setVisibility(View.VISIBLE);
-            disconnectedLayout.setVisibility(View.INVISIBLE);
+            publish.setVisibility(View.VISIBLE);
         } else {
-            connectedLayout.setVisibility(View.INVISIBLE);
-            disconnectedLayout.setVisibility(View.VISIBLE);
+            publish.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -65,6 +71,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
+
         return true;
     }
 
@@ -79,11 +86,32 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-        disconnectedLayout = (RelativeLayout) findViewById(R.id.disconnectedLayout);
-        connectedLayout = (LinearLayout) findViewById(R.id.connectedLayout);
+        publish = (Button) findViewById(R.id.publish);
+        longitude = (TextView) findViewById(R.id.longitude);
+        latitude = (TextView) findViewById(R.id.latitude);
 
         updateViewVisibility();
 
         EventBus.getDefault().register(this);
+    }
+    
+    public void update(View view) {
+        Log.v(this.toString(), "requesting position");
+        App.getInstance().getLocator().get(new LocatorCallback() {
+            
+            @Override
+            public void onLocationRespone(Location location) {
+                
+                Log.v(this.toString(), "onLocationRespone: " + location.getLatitude() + ":" + location.getLongitude());
+                latitude.setText(""+location.getLatitude());
+                longitude.setText(""+location.getLongitude());
+
+            }
+        });
+
+    }
+    public void publish(View view) {
+        Log.v(this.toString(), "requesting position");
+        App.getInstance().publishLocation();
     }
 }

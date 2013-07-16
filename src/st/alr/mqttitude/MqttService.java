@@ -1,6 +1,7 @@
-package st.alr.mqttpositionlogger;
+package st.alr.mqttitude;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -12,7 +13,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-import st.alr.mqttpositionlogger.support.Events;
+import st.alr.mqttitude.support.Defaults;
+import st.alr.mqttitude.support.Events;
+import st.alr.mqttpositionlogger.R;
+//import st.alr.mqttitude.support.OnNewLocationListener;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -24,16 +28,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 import de.greenrobot.event.EventBus;
 
 
@@ -59,6 +70,19 @@ public class MqttService extends Service implements MqttCallback
     private LocalBinder<MqttService> mBinder;
     private Thread workerThread;
     
+    private static Location currentLocation;
+    private static Location prevLocation;
+    private static LocationManager locationManager;
+
+    private String provider = LocationManager.GPS_PROVIDER;
+
+    // An alarm for rising in special times to fire the
+    // pendingIntentPositioning
+    private AlarmManager alarmManagerPositioning;
+    // A PendingIntent for calling a receiver in special times
+    public PendingIntent pendingIntentPositioning;
+
+    
     /**
      * @category SERVICE HANDLING
      */
@@ -83,6 +107,13 @@ public class MqttService extends Service implements MqttCallback
         };
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesChangedListener);
 
+        
+//        alarmManagerPositioning = (AlarmManager)  getSystemService(Context.ALARM_SERVICE);
+//        Intent intentToFire = new Intent(ReceiverPositioningAlarm.ACTION_REFRESH_SCHEDULE_ALARM);
+//        intentToFire.putExtra(ReceiverPositioningAlarm.COMMAND,  ReceiverPositioningAlarm.SENDER_SRV_POSITIONING);
+//        pendingIntentPositioning = PendingIntent.getBroadcast(this, 0,   intentToFire, 0);
+
+        
         EventBus.getDefault().register(this);
         handleNotification();
     }
@@ -177,11 +208,13 @@ public class MqttService extends Service implements MqttCallback
         if (mqttClient != null) {
             return;
         }
+        
+
 
         try
         {
-            String brokerAddress = sharedPreferences.getString("serverAddress", App.defaultsServerAddress);
-            String brokerPort = sharedPreferences.getString("serverPort", App.defaultsServerPort);
+            String brokerAddress = sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_HOST, Defaults.VALUE_BROKER_HOST);
+            String brokerPort = sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_PORT, Defaults.VALUE_BROKER_PORT);
 
             mqttClient = new MqttClient("tcp://" + brokerAddress + ":" + brokerPort, getClientId(),
                     null);
@@ -193,6 +226,8 @@ public class MqttService extends Service implements MqttCallback
             changeMqttConnectivity(MQTT_CONNECTIVITY.DISCONNECTED);
         }
 
+
+        
 
     }
 
@@ -228,7 +263,6 @@ public class MqttService extends Service implements MqttCallback
     private void onConnect() {
    
         
-        // Subscribe to topics
         if (!isConnected()) {
             Log.e(this.toString(), "onConnect: !isConnected");
         }  
@@ -480,6 +514,10 @@ public class MqttService extends Service implements MqttCallback
         }
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferencesChangedListener);
 
+        if(this.alarmManagerPositioning != null)
+            this.alarmManagerPositioning.cancel(pendingIntentPositioning);
+        
+        
         super.onDestroy();
     }
 
@@ -499,6 +537,7 @@ public class MqttService extends Service implements MqttCallback
                 return App.getInstance().getString(R.string.connectivityDisconnected);
         }
     }
+
 }
 
 

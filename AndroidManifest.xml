@@ -5,47 +5,43 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="17" />
 
-                <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.NFC" />
-    
-    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
+        android:name="st.alr.mqttitude.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" 
-        android:name="st.alr.mqttpositionlogger.App"
-        
-        
-        >
-        
-
-        
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="st.alr.mqttpositionlogger.MainActivity"
+            android:name="st.alr.mqttitude.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
-            android:name="st.alr.mqttpositionlogger.PreferencesActivity"
+            android:name="st.alr.mqttitude.PreferencesActivity"
             android:configChanges="orientation"
             android:label="Preferences" >
         </activity>
 
         <service
-            android:name="st.alr.mqttpositionlogger.MqttService"
+            android:name="st.alr.mqttitude.MqttService"
             android:exported="false" >
         </service>
-        
+
+        <receiver
+            android:name="st.alr.mqttpositionlogger.support.rest.alr.mqttitude.support.receiverPositioningAlarme" >
+        </receiver>
     </application>
 
 </manifest>
