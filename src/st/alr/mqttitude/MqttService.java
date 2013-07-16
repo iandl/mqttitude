@@ -36,6 +36,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -69,7 +70,8 @@ public class MqttService extends Service implements MqttCallback
     private boolean notificationEnabled;
     private LocalBinder<MqttService> mBinder;
     private Thread workerThread;
-    
+    private Runnable deferredPublish;
+
     private static Location currentLocation;
     private static Location prevLocation;
     private static LocationManager locationManager;
@@ -357,6 +359,9 @@ public class MqttService extends Service implements MqttCallback
         mqttConnectivity = event.getConnectivity();
         if(notificationEnabled)
             updateNotification();
+        if (deferredPublish != null && event.getConnectivity() == MQTT_CONNECTIVITY.CONNECTED)
+            deferredPublish.run();
+
     }
     
     
@@ -535,6 +540,32 @@ public class MqttService extends Service implements MqttCallback
             // More verbose disconnect states could be added here. For now any flavor of disconnected is treated the same
             default:
                 return App.getInstance().getString(R.string.connectivityDisconnected);
+        }
+    }
+    
+    public void publishWithTimeout(final String topic, final String payload, final boolean retained, int timeout) {
+        Log.v(this.toString(), topic + ":" + payload);
+        if (getConnectivity() == MQTT_CONNECTIVITY.CONNECTED) {
+            publish(topic, payload, retained);
+        } else {
+            Log.d(this.toString(), "No broker connection established yet, deferring publish");
+            deferredPublish = new Runnable() {
+                @Override
+                public void run() {
+                    deferredPublish = null;
+                    Log.d(this.toString(), "Broker connection established, publishing deferred message");
+                    publish(topic, payload, retained);
+                }
+                
+            };
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(this.toString(),  "Publish timed out");
+                    deferredPublish = null;
+                }
+            }, timeout * 1000);        
         }
     }
 
