@@ -2,7 +2,7 @@
 package st.alr.mqttitude;
 
 import st.alr.mqttitude.support.Events;
-import st.alr.mqttpositionlogger.R;
+import st.alr.mqttitude.R;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;

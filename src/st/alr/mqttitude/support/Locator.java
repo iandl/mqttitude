@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import st.alr.mqttitude.App;
 import st.alr.mqttitude.MqttService;
-import st.alr.mqttpositionlogger.R;
+import st.alr.mqttitude.R;
 import android.content.Context;
 import android.location.GpsStatus;
 import android.location.Location;
