@@ -15,7 +15,7 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 import st.alr.mqttitude.support.Defaults;
 import st.alr.mqttitude.support.Events;
-import st.alr.mqttpositionlogger.R;
+import st.alr.mqttitude.R;
 //import st.alr.mqttitude.support.OnNewLocationListener;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;

@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import st.alr.mqttitude.MqttService.MQTT_CONNECTIVITY;
 import st.alr.mqttitude.support.Defaults;
-import st.alr.mqttpositionlogger.R;
+import st.alr.mqttitude.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

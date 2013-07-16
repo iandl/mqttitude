@@ -2,10 +2,11 @@
 package st.alr.mqttitude;
 
 import st.alr.mqttitude.MqttService.MQTT_CONNECTIVITY;
+import st.alr.mqttitude.support.Events;
 import st.alr.mqttitude.support.Locator;
 import st.alr.mqttitude.support.LocatorCallback;
 import st.alr.mqttitude.support.Events.MqttConnectivityChanged;
-import st.alr.mqttpositionlogger.R;
+import st.alr.mqttitude.R;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -95,23 +96,17 @@ public class MainActivity extends FragmentActivity {
         EventBus.getDefault().register(this);
     }
     
+    public void onEvent(Events.LocationUpdated e) {
+        Log.v(this.toString(), "LocationUpdated: " + e.getLocation().getLatitude() + ":" + e.getLocation().getLongitude());
+        longitude.setText(e.getLocation().getLongitude()+"");
+        latitude.setText(e.getLocation().getLongitude()+"");
+    }
+
+    
     public void update(View view) {
-        Log.v(this.toString(), "requesting position");
-        App.getInstance().getLocator().get(new LocatorCallback() {
-            
-            @Override
-            public void onLocationRespone(Location location) {
-                
-                Log.v(this.toString(), "onLocationRespone: " + location.getLatitude() + ":" + location.getLongitude());
-                latitude.setText(""+location.getLatitude());
-                longitude.setText(""+location.getLongitude());
-
-            }
-        });
-
+        App.getInstance().updateLocation();        
     }
     public void publish(View view) {
-        Log.v(this.toString(), "requesting position");
         App.getInstance().publishLocation();
     }
 }
