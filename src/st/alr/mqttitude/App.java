@@ -56,22 +56,16 @@ public class App extends Application {
         Log.v(this.toString(), "LocationUpdated: " + e.getLocation().getLatitude() + ":" + e.getLocation().getLongitude());
     }
 
-    public void publishLocation() {
+    public void updateLocation(final boolean publish) {
+        
         locator.get(new LocatorCallback() {
             
             @Override
             public void onLocationRespone(Location location) {
                 EventBus.getDefault().postSticky(new Events.LocationUpdated(location));
-                Log.v(this.toString(), "TODO: publish");
-            }
-        });
-    }
-    public void updateLocation() {
-        locator.get(new LocatorCallback() {
-            
-            @Override
-            public void onLocationRespone(Location location) {
-                EventBus.getDefault().postSticky(new Events.LocationUpdated(location));
+                if(publish)
+                    Log.v(this.toString(), "TODO: publish");
+
             }
         });
     }
@@ -90,10 +84,13 @@ public class App extends Application {
     private class UpdateReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context arg0, Intent arg1) {
+        public void onReceive(Context arg0, Intent intent) {
+            if(intent.getAction() != null && intent.getAction().equals(Defaults.UPDATE_INTEND_ID)){
+
             Log.v(this.toString(), "Updating");
-            publishLocation();
+            updateLocation(true);
             scheduleNextUpdate();
+            }
         }
         
     }

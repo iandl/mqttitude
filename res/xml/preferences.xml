@@ -37,6 +37,7 @@
         android:title="@string/preferencesLicensesTitle" />
 
     <Preference
+        android:key="versionReadOnly"
         android:title="@string/preferencesVersionTitle" />
 
 </PreferenceScreen>
