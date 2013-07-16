@@ -99,7 +99,7 @@ public class MainActivity extends FragmentActivity {
     public void onEvent(Events.LocationUpdated e) {
         Log.v(this.toString(), "LocationUpdated: " + e.getLocation().getLatitude() + ":" + e.getLocation().getLongitude());
         longitude.setText(e.getLocation().getLongitude()+"");
-        latitude.setText(e.getLocation().getLongitude()+"");
+        latitude.setText(e.getLocation().getLatitude()+"");
     }
 
     
