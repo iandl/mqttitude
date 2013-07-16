@@ -1,6 +1,6 @@
-package st.alr.mqttpositionlogger.support;
+package st.alr.mqttitude.support;
 
-import st.alr.mqttpositionlogger.MqttService;
+import st.alr.mqttitude.MqttService;
 
 public class Events {
     public static class MqttConnectivityChanged {
