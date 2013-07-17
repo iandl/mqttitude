@@ -1,7 +1,9 @@
 
 package st.alr.mqttitude;
 
-import st.alr.mqttitude.MqttService.MQTT_CONNECTIVITY;
+import st.alr.mqttitude.preferences.ActivityPreferences;
+import st.alr.mqttitude.services.ServiceMqtt;
+import st.alr.mqttitude.services.ServiceMqtt.MQTT_CONNECTIVITY;
 import st.alr.mqttitude.support.Events;
 import st.alr.mqttitude.support.Locator;
 import st.alr.mqttitude.support.LocatorCallback;
@@ -21,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.greenrobot.event.EventBus;
 
-public class MainActivity extends FragmentActivity {
+public class ActivityMain extends FragmentActivity {
     Button publish;
     TextView latitude;
     TextView longitude;
@@ -30,7 +32,7 @@ public class MainActivity extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                Intent intent1 = new Intent(this, PreferencesActivity.class);
+                Intent intent1 = new Intent(this, ActivityPreferences.class);
                 startActivity(intent1);
                 return true;
             default:
@@ -46,12 +48,12 @@ public class MainActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
 
-        Intent service = new Intent(this, MqttService.class);
+        Intent service = new Intent(this, ServiceMqtt.class);
         startService(service);
     }
 
     private void updateViewVisibility() {
-        if (MqttService.getConnectivity() == MQTT_CONNECTIVITY.CONNECTED) {
+        if (ServiceMqtt.getConnectivity() == MQTT_CONNECTIVITY.CONNECTED) {
             publish.setVisibility(View.VISIBLE);
         } else {
             publish.setVisibility(View.INVISIBLE);

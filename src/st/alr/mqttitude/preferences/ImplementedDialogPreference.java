@@ -1,4 +1,4 @@
-package st.alr.mqttitude.support;
+package st.alr.mqttitude.preferences;
 
 import android.content.Context;
 import android.preference.DialogPreference;

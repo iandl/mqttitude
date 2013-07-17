@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <st.alr.mqttitude.PreferencesServer
-        android:key="serverPreference"
+    <st.alr.mqttitude.preferences.PreferencesBroker
+        android:key="brokerPreference"
         android:negativeButtonText="@string/preferencesServerCancel"
         android:positiveButtonText="@string/preferencesServerConnect"
         android:title="@string/preferencesServerTitle" />
@@ -29,7 +29,7 @@
         android:summary="@string/preferencesNotificationSummary"
         android:title="@string/preferencesNotificationTitle" />
 
-    <st.alr.mqttitude.support.ImplementedDialogPreference
+    <st.alr.mqttitude.preferences.ImplementedDialogPreference
         android:dialogLayout="@layout/preferences_licenses"
         android:negativeButtonText=""
         android:positiveButtonText="@string/preferencesLicensesDismiss"

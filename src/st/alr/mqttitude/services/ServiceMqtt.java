@@ -1,9 +1,25 @@
-package st.alr.mqttitude;
+package st.alr.mqttitude.services;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -13,8 +29,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
+import st.alr.mqttitude.R.drawable;
+import st.alr.mqttitude.R.string;
 import st.alr.mqttitude.support.Defaults;
 import st.alr.mqttitude.support.Events;
+import st.alr.mqttitude.ActivityMain;
+import st.alr.mqttitude.App;
 import st.alr.mqttitude.R;
 //import st.alr.mqttitude.support.OnNewLocationListener;
 import android.annotation.SuppressLint;
@@ -49,7 +69,7 @@ import android.widget.Toast;
 import de.greenrobot.event.EventBus;
 
 
-public class MqttService extends Service implements MqttCallback
+public class ServiceMqtt extends Service implements MqttCallback
 {
 
     public static enum MQTT_CONNECTIVITY {
@@ -64,11 +84,11 @@ public class MqttService extends Service implements MqttCallback
     private MqttClient mqttClient;
     private static SharedPreferences sharedPreferences;
     private static NotificationCompat.Builder notificationBuilder;
-    private static MqttService instance;
+    private static ServiceMqtt instance;
     private SharedPreferences.OnSharedPreferenceChangeListener preferencesChangedListener;
     private NotificationManager notificationManager;
     private boolean notificationEnabled;
-    private LocalBinder<MqttService> mBinder;
+    private LocalBinder<ServiceMqtt> mBinder;
     private Thread workerThread;
     private Runnable deferredPublish;
 
@@ -95,7 +115,7 @@ public class MqttService extends Service implements MqttCallback
         instance = this;
         workerThread = null;
         changeMqttConnectivity(MQTT_CONNECTIVITY.INITIAL);
-        mBinder = new LocalBinder<MqttService>(this);
+        mBinder = new LocalBinder<ServiceMqtt>(this);
         notificationManager = (NotificationManager) App.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new NotificationCompat.Builder(App.getInstance());
         keepAliveSeconds = 15 * 60;
@@ -218,9 +238,14 @@ public class MqttService extends Service implements MqttCallback
             String brokerAddress = sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_HOST, Defaults.VALUE_BROKER_HOST);
             String brokerPort = sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_PORT, Defaults.VALUE_BROKER_PORT);
 
-            mqttClient = new MqttClient("tcp://" + brokerAddress + ":" + brokerPort, getClientId(),
-                    null);
+            String handle = "ssl";
+            
+            if(sharedPreferences.getInt(Defaults.SETTINGS_KEY_BROKER_SECURITY, Defaults.VALUE_BROKER_SECURITY_NONE) == Defaults.VALUE_BROKER_SECURITY_NONE)
+                handle = "tcp";
+            
+            mqttClient = new MqttClient(handle+"://" + brokerAddress + ":" + brokerPort, getClientId(), null);
             mqttClient.setCallback(this);
+        
         } catch (MqttException e)
         {
             // something went wrong!
@@ -233,6 +258,35 @@ public class MqttService extends Service implements MqttCallback
 
     }
 
+    private javax.net.ssl.SSLSocketFactory getSSLSocketFactory() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, KeyManagementException {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        // From https://www.washington.edu/itconnect/security/ca/load-der.crt
+        InputStream caInput = new BufferedInputStream(new FileInputStream(sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_SECURITY_SSL_CA_PATH, "")));
+        java.security.cert.Certificate ca;
+        try {
+            ca = cf.generateCertificate(caInput);
+        } finally {
+            caInput.close();
+        }
+
+        // Create a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        // Create a TrustManager that trusts the CAs in our KeyStore
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        // Create an SSLContext that uses our TrustManager
+        SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, tmf.getTrustManagers(), null);
+
+        return context.getSocketFactory();
+    }
+    
     private boolean connect()
     {
         workerThread = Thread.currentThread(); // We connect, so we're the worker thread
@@ -242,6 +296,21 @@ public class MqttService extends Service implements MqttCallback
         {
             changeMqttConnectivity(MQTT_CONNECTIVITY.CONNECTING);
             MqttConnectOptions options = new MqttConnectOptions();
+
+            
+
+         // TODO: Make this nicer
+         if(sharedPreferences.getInt(Defaults.SETTINGS_KEY_BROKER_SECURITY, Defaults.VALUE_BROKER_SECURITY_NONE) == Defaults.VALUE_BROKER_SECURITY_SSL)
+            options.setSocketFactory(getSSLSocketFactory());
+                        
+         if(!sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_PASSWORD, "").equals(""))
+             options.setPassword(sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_PASSWORD, "").toCharArray());
+        
+         if(!sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_USERNAME, "").equals(""))
+             options.setUserName(sharedPreferences.getString(Defaults.SETTINGS_KEY_BROKER_USERNAME, ""));
+         
+
+
             
             options.setKeepAliveInterval(keepAliveSeconds); 
             options.setConnectionTimeout(10);
@@ -251,9 +320,11 @@ public class MqttService extends Service implements MqttCallback
             changeMqttConnectivity(MQTT_CONNECTIVITY.CONNECTED);
 
             return true;
-        } catch (Exception e) // Paho tends to throw NPEs in some cases. 
+        } 
+         catch (Exception e) // Catch paho and socket factory exceptions 
         {
             Log.e(this.toString(), e.toString());
+            //TODO: send reason to user
             changeMqttConnectivity(MQTT_CONNECTIVITY.DISCONNECTED);
             return false;
         }
@@ -416,10 +487,10 @@ public class MqttService extends Service implements MqttCallback
     }
     
     private void createNotification() {
-        Intent resultIntent = new Intent(App.getInstance(), MainActivity.class);
+        Intent resultIntent = new Intent(App.getInstance(), ActivityMain.class);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(App
                 .getInstance());
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(ActivityMain.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -463,7 +534,7 @@ public class MqttService extends Service implements MqttCallback
     /**
      * @category MISC
      */
-    public static MqttService getInstance() {
+    public static ServiceMqtt getInstance() {
         return instance;
     }
     
@@ -489,12 +560,12 @@ public class MqttService extends Service implements MqttCallback
 
     public class LocalBinder<T> extends Binder
     {
-        private WeakReference<MqttService> mService;
-        public LocalBinder(MqttService service) {
-            mService = new WeakReference<MqttService>(service);
+        private WeakReference<ServiceMqtt> mService;
+        public LocalBinder(ServiceMqtt service) {
+            mService = new WeakReference<ServiceMqtt>(service);
         }
 
-        public MqttService getService() {
+        public ServiceMqtt getService() {
             return mService.get();
         }
 
@@ -530,7 +601,7 @@ public class MqttService extends Service implements MqttCallback
     public void deliveryComplete(MqttDeliveryToken arg0) { }
     
     public static String getConnectivityText() {
-        switch (MqttService.getConnectivity()) {
+        switch (ServiceMqtt.getConnectivity()) {
             case CONNECTED:
                 return App.getInstance().getString(R.string.connectivityConnected);
             case CONNECTING:

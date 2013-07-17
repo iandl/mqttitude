@@ -4,8 +4,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
 
+import st.alr.mqttitude.services.ServiceMqtt;
+import st.alr.mqttitude.services.ServiceMqtt.MQTT_CONNECTIVITY;
 import st.alr.mqttitude.support.Defaults;
-import st.alr.mqttitude.MqttService.MQTT_CONNECTIVITY;
 import st.alr.mqttitude.support.Events;
 import st.alr.mqttitude.support.Locator;
 import st.alr.mqttitude.support.LocatorCallback;
@@ -64,9 +65,9 @@ public class App extends Application {
             public void onLocationRespone(Location location) {
                 EventBus.getDefault().postSticky(new Events.LocationUpdated(location));
                 if(publish) {
-                    Intent service = new Intent(App.getInstance(), MqttService.class);
+                    Intent service = new Intent(App.getInstance(), ServiceMqtt.class);
                     startService(service);                    
-                    MqttService.getInstance().publishWithTimeout(PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("location_topic", null), location.getLatitude()+":"+location.getLatitude(), true, 20);
+                    ServiceMqtt.getInstance().publishWithTimeout(PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("location_topic", null), location.getLatitude()+":"+location.getLongitude(), true, 20);
                 }
                     
             }
