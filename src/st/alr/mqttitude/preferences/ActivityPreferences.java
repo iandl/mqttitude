@@ -1,6 +1,8 @@
 
-package st.alr.mqttitude;
+package st.alr.mqttitude.preferences;
 
+import st.alr.mqttitude.R.xml;
+import st.alr.mqttitude.services.ServiceMqtt;
 import st.alr.mqttitude.support.Events;
 import st.alr.mqttitude.R;
 import android.content.Intent;
@@ -13,7 +15,7 @@ import android.preference.PreferenceFragment;
 import android.view.Menu;
 import de.greenrobot.event.EventBus;
 
-public class PreferencesActivity extends PreferenceActivity {
+public class ActivityPreferences extends PreferenceActivity {
     private static Preference serverPreference;
 
     @Override
@@ -21,7 +23,7 @@ public class PreferencesActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         // Start service if it is not already started
-        Intent service = new Intent(this, MqttService.class);
+        Intent service = new Intent(this, ServiceMqtt.class);
         startService(service);
 
         // Register for connection changed events
@@ -49,7 +51,7 @@ public class PreferencesActivity extends PreferenceActivity {
                 e.printStackTrace();
             }
 
-            serverPreference = findPreference("serverPreference");
+            serverPreference = findPreference("brokerPreference");
             setServerPreferenceSummary();
 
         }
@@ -65,7 +67,7 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private static void setServerPreferenceSummary() {
-        serverPreference.setSummary(MqttService.getConnectivityText());
+        serverPreference.setSummary(ServiceMqtt.getConnectivityText());
     }
 
 

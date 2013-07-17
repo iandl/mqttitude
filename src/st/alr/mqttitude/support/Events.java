@@ -1,7 +1,7 @@
 package st.alr.mqttitude.support;
 
 import android.location.Location;
-import st.alr.mqttitude.MqttService;
+import st.alr.mqttitude.services.ServiceMqtt;
 
 public class Events {
     public static class LocationUpdated {
@@ -18,14 +18,14 @@ public class Events {
         
     }
     public static class MqttConnectivityChanged {
-		private MqttService.MQTT_CONNECTIVITY connectivity;
+		private ServiceMqtt.MQTT_CONNECTIVITY connectivity;
 
 		public MqttConnectivityChanged(
-				MqttService.MQTT_CONNECTIVITY connectivity) {
+				ServiceMqtt.MQTT_CONNECTIVITY connectivity) {
 			this.connectivity = connectivity;
 		}
 
-		public MqttService.MQTT_CONNECTIVITY getConnectivity() {
+		public ServiceMqtt.MQTT_CONNECTIVITY getConnectivity() {
 			return connectivity;
 		}
 	}
