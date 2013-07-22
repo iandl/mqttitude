@@ -1,0 +1,13 @@
+%div#left
+  %div.header
+  %ul#positions  
+    - for position in @user.positions
+      %li{:data => {:lat => position.lat, :long => position.long, :timestamp => position.timestamp}}
+        %span.time="#{Time.at(position.timestamp.to_i).strftime("%Y-%m-%d %H:%M:%S")}" 
+        %span.loc="#{position.lat}:#{position.long}"
+      //%form{:action => "/user/#{@user.name}/positions/#{position.id}", :method=>"post"}
+      //  %input{:type => "hidden", :name => "_method", :value => "delete"}
+      //  %input{:type => "submit", :value => "Delete"}
+%div#right
+  %div.header
+  %div#map

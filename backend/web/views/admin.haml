@@ -1,0 +1,9 @@
+%h1 Admin
+%h2 Users
+%ul  
+  - for user in @users
+    = "#{user.id} #{user.name}"
+    %form{:action => "/user/#{user.name}", :method=>"post"}
+      %input{:type => "hidden", :name => "_method", :value => "delete"}
+      %input{:type => "submit", :value => "Delete"}
+
