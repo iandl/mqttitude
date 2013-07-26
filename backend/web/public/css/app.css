@@ -22,38 +22,95 @@ html, body {
 	position: relative
 }
 
-.header {
-	height: 50px;
-	background: #343a3a;
-	width: 100%;
-}
 
 
 #left {
   height: 100%;
-  width: 20%;
-  min-width: 150px;
+  width: 600px;
   position: fixed;
-  left:0;
+  left:-200px;
   z-index: 99;
-  background: #fffefa;
-}
-#left .header {
-	background: #404548;
-	border-right: 1px solid #25292A;
+  background: transparent;
 
 }
-#positions {
+
+ul#years {
 	position: absolute;
-	top: 50px;
+	top: 0px;
 	bottom: 0px;
-	width: 100%;
-	border-right: 1px solid #dcdcd9;
-  box-shadow: 1px 0 1px rgba(225, 225, 225, 0.50);
+	width: 200px;
+
+  overflow-y: scroll;
+  background: #404548;
+	border-right: 1px solid #25292A;
+	z-index: 10;
+}
+
+
+ul#year-months {
+position: absolute;
+left: 200px;
+width: 150px;
+top: 0px;
+bottom: 0px;
+z-index: 8;
+		background: #474745;
 
 }
 
-#positions li {
+ul#year-month-days {
+	position: absolute;
+	left: 350px;
+	width: 75px;
+	top: 0px;
+	bottom: 0px;
+		z-index: 8;
+		background: 		#373737;
+		color: #AEAEAE;
+
+
+}
+ul#year-month-days li {
+line-height: 30px;
+text-indent: 33px;
+color: #AEAEAE;
+font-size: 12px;
+}
+
+ul#years > li, ul#year-months > li, ul#year-month-days > li {
+
+		cursor: pointer;
+}
+
+
+li.day {
+	height: 50px;
+	cursor: pointer;
+}
+
+li.year-month:hover li.day {
+	display: block;
+}
+li.day ul {
+	display: none;
+}
+
+li.day:hover ul {
+	display: block;
+}
+
+
+ul.times {
+	position: absolute;
+	left: 140px;
+	width: 40px;
+	top: 0;
+}
+
+li.time {
+	height: 20px;
+}
+/*#positions li {
 	border-bottom: 1px solid #f1f1ef;
 	height: 50px;
 	position: relative;
@@ -64,30 +121,42 @@ html, body {
 	left: 20px;	
 }
 
-#positions li span.time {
-	top: 10px;
+
+
+#positions li span.title {
+	top: 5px;
 	font-weight: bold;
-	font-size: 18px;
+	font-size: 14px;
 	color: #3b3b3c;
 }
 
-#positions li span.loc {
-	bottom: 10px;
-	font-size: 16px;
+#positions li span.subtitle {
+	bottom: 5px;
+	font-size: 12px;
+	color: #b3b3b2;
 }
-	
+
+#positions > li ul {
+	display: none;
+}
+
+#positions li:hover {
+	background: #f2f2f2;
+	text-shadow: 0 0 1px #fff;
+}
+	*/
 
 
 #right {
 	position: absolute;
-	right: 0;
+	left:225px;
 	width: 100%;
   height: 100%;
 }
 
 #map {
 	position: absolute;
-	top: 50px;
+	top: 0px;
 	bottom: 0px;
 	width: 100%;
 	#color: #b6b6b4;

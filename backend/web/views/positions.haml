@@ -1,13 +1,30 @@
 %div#left
-  %div.header
-  %ul#positions  
-    - for position in @user.positions
-      %li{:data => {:lat => position.lat, :long => position.long, :timestamp => position.timestamp}}
-        %span.time="#{Time.at(position.timestamp.to_i).strftime("%Y-%m-%d %H:%M:%S")}" 
-        %span.loc="#{position.lat}:#{position.long}"
-      //%form{:action => "/user/#{@user.name}/positions/#{position.id}", :method=>"post"}
-      //  %input{:type => "hidden", :name => "_method", :value => "delete"}
-      //  %input{:type => "submit", :value => "Delete"}
+  %ul#years
+    -@years.each do |y|
+      %li="#{y.y}"
+  %ul#year-months
+    -@months.each do |m|
+      %li="#{m.m}"
+  %ul#year-month-days
+    -@days.each do |d|
+      %li="#{d.d}"
+
+
+
+
+
+/ %ul#positions  
+/   -@user.positions.group_by{|p| Time.at(p.timestamp.to_i).strftime("%B %Y")}.each do |year_month, p_year_months|
+/     %li.year-month
+/       %span= year_month
+/       %ul.days  
+/         -p_year_months.group_by{|p| Time.at(p.timestamp.to_i).strftime("%d")}.each do |day, p_days|
+/           %li.day
+/             %span= day
+/             %ul.times
+/               -p_days.each do |p|
+/                 %li.times{:data => {:lat => p.lat, :long => p.long, :timestamp => p.timestamp}}
+/                 %span="#{Time.at(p.timestamp.to_i).strftime("%H:%M:%S")}" 
+
 %div#right
-  %div.header
   %div#map
