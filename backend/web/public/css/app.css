@@ -22,129 +22,49 @@ html, body {
 	position: relative
 }
 
-
-
 #left {
   height: 100%;
-  width: 600px;
+  width: 400px;
   position: fixed;
-  left:-200px;
+  left:0;
   z-index: 99;
   background: transparent;
 
 }
 
-ul#years {
+#md1, #md2, #md3, #md4 {
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
-	width: 200px;
-
+	width: 100px;
   overflow-y: scroll;
+  border-right: 1px solid #25292A;
+}
+
+#md1 {
+	left: 0;
   background: #404548;
-	border-right: 1px solid #25292A;
 	z-index: 10;
 }
-
-
-ul#year-months {
-position: absolute;
-left: 200px;
-width: 150px;
-top: 0px;
-bottom: 0px;
-z-index: 8;
-		background: #474745;
-
+#md2 {
+	left: 100px;
+  background: #404548;
+	z-index: 9;
 }
-
-ul#year-month-days {
-	position: absolute;
-	left: 350px;
-	width: 75px;
-	top: 0px;
-	bottom: 0px;
-		z-index: 8;
-		background: 		#373737;
-		color: #AEAEAE;
-
-
+#md3 {
+	left: 200px;
+  background: #404548;
+	z-index: 8;
 }
-ul#year-month-days li {
-line-height: 30px;
-text-indent: 33px;
-color: #AEAEAE;
-font-size: 12px;
+#md4 {
+	left: 300px;
+  background: #404548;
+	z-index: 7;
 }
-
-ul#years > li, ul#year-months > li, ul#year-month-days > li {
-
-		cursor: pointer;
-}
-
-
-li.day {
-	height: 50px;
-	cursor: pointer;
-}
-
-li.year-month:hover li.day {
-	display: block;
-}
-li.day ul {
+.hidden{
 	display: none;
 }
 
-li.day:hover ul {
-	display: block;
-}
-
-
-ul.times {
-	position: absolute;
-	left: 140px;
-	width: 40px;
-	top: 0;
-}
-
-li.time {
-	height: 20px;
-}
-/*#positions li {
-	border-bottom: 1px solid #f1f1ef;
-	height: 50px;
-	position: relative;
-}
-
-#positions li > span {
-	position: absolute;
-	left: 20px;	
-}
-
-
-
-#positions li span.title {
-	top: 5px;
-	font-weight: bold;
-	font-size: 14px;
-	color: #3b3b3c;
-}
-
-#positions li span.subtitle {
-	bottom: 5px;
-	font-size: 12px;
-	color: #b3b3b2;
-}
-
-#positions > li ul {
-	display: none;
-}
-
-#positions li:hover {
-	background: #f2f2f2;
-	text-shadow: 0 0 1px #fff;
-}
-	*/
 
 
 #right {

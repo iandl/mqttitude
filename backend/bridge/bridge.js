@@ -40,7 +40,7 @@ var date = new Date();
 
 
 		request({
-		  uri: "http://192.168.8.2:9393/user/bucks/positions",
+		  uri: "http://192.168.8.2:9393/users/bucks/positions",
 		  method: "POST",
 		  form: {
 		  	lat: message.split(":")[0],

@@ -37,7 +37,7 @@ class Year < Ohm::Model
   list :positions, :Position
 
   def to_json(a)
-    {:y => y}.to_json
+    y.to_json
   end
 end
 
@@ -52,7 +52,7 @@ class Month < Ohm::Model
   list :positions, :Position
 
   def to_json(a)
-    {:y => y, :m => m}.to_json
+    m.to_json
   end
 
 end
@@ -70,7 +70,7 @@ class Day < Ohm::Model
   list :positions, :Position
 
    def to_json(a)
-    {:y => y, :m => m, :d => d}.to_json
+    d.to_json
   end
 end
 
@@ -128,37 +128,49 @@ get '/test' do
  User.create :name=>'bucks', :password => 'test'
 end
 
-get '/user/:name' do
+get '/users/:name' do
 	@user = userFromParams()
-
-  @years = Year.find(:user_id => @user.id);  
-  @months = Month.find(:user_id => @user.id, :y => @years.first().y); 
-  @days = Day.find(:user_id => @user.id, :y => @years.first().y, :m => @months.first().m); 
-
-	haml :positions
+	haml :user
 end
 
-get '/user/:name/edit' do 
-
+get '/users/:name/edit' do 
+  #TODO
 end
 
-put '/user/:name' do 
-
+put '/users/:name' do 
+  #TODO
 end
 
-delete '/user/:name' do 
+delete '/users/:name' do 
+  #TODO
 end
 
 
-get '/user/:name/dates' do 
+get '/users/:name/dates' do 
+  content_type :json
   @user = userFromParams()
-  @years = Year.find(:user_id => @user.id);  
-  @months = Month.find(:user_id => @user.id); 
-  @days = Day.find(:user_id => @user.id); 
-  {:ys => @years, :ms => @months, :ds => @days}.to_json
+  Day.find(:user_id => @user.id).to_json
+end
+get '/users/:name/dates/years' do 
+  content_type :json
+
+  @user = userFromParams()
+  @years = Year.find(:user_id => @user.id).sort_by(:y, :order => "DESC").to_json 
 end
 
-get '/user/:name/positions' do 
+get '/users/:name/dates/years/:year/months' do 
+  content_type :json
+  @user = userFromParams
+  Month.find(:y => params[:year], :user_id => @user.id).sort_by(:m, :order => "DESC").to_json
+end
+
+get '/users/:name/dates/years/:year/months/:month/days' do 
+  content_type :json
+  @user = userFromParams()
+  Day.find(:y => params[:year], :m => params[:month], :user_id => @user.id).sort_by(:d, :order => "DESC").to_json
+end
+
+get '/users/:name/positions' do 
   content_type :json
 	@user = userFromParams()
   if @user.positions
@@ -167,26 +179,26 @@ get '/user/:name/positions' do
     halt 404
   end
 end
-get '/user/:name/positions/:year' do 
+get '/users/:name/positions/:year' do 
   content_type :json
   @user = userFromParams()
   year = Year.find(:y => params[:year], :user_id => @user.id).first();  
   if year and year.positions 
-    year.positions.to_json()
+    year.positions.sort_by(:timestamp, :order => "DESC ALPHA").to_json()
   else
     halt 404
   end
 end
-get '/user/:name/positions/:year/:month' do 
+get '/users/:name/positions/:year/:month' do 
   @user = userFromParams()
   month = Month.find(:y => params[:year], :m => params[:month], :user_id => @user.id).first()  
   if month and month.positions 
-    month.positions.to_json()
+    month.positions.sort_by(:timestamp, :order => "DESC ALPHA").to_json()
   else
     halt 404
   end
 end
-get '/user/:name/positions/:year/:month/:day' do 
+get '/users/:name/positions/:year/:month/:day' do 
   @user = userFromParams()
   day = Day.find(:y => params[:year], :m => params[:month], :d => params[:day], :user_id => @user.id).first()
   if day and day.positions 
@@ -200,7 +212,7 @@ end
 
 
 
-post '/user/:name/positions' do 
+post '/users/:name/positions' do 
   user = userFromParams()
 
   lat = params[:lat]
@@ -249,24 +261,24 @@ post '/user/:name/positions' do
 end
 
 
-delete '/user/:name/positions' do 
+delete '/users/:name/positions' do 
 	@user = userFromParams()
 	@user.positions.each do |p|
 		@user.positions.delete(p)
 		p.delete();
 	end
 	#status 200
-	redirect '/user/:name/positions'
+	redirect '/users/:name/positions'
 end
 
-delete '/user/:name/positions/:id' do
+delete '/users/:name/positions/:id' do
 	print "deleting #{params[:id]}"
 	p = Position.all[params[:id]]
 	unless p.nil? then 
 		userFromParams().positions.delete(p)
 		p.delete()
 	end
-	redirect "/user/#{params[:name]}/positions"
+	redirect "/users/#{params[:name]}/positions"
 end
 
   get '/admin' do
@@ -286,7 +298,7 @@ end
     warden_handler.authenticate!
     if warden_handler.authenticated?
       print "Authenticated";
-      redirect "/user/#{warden_handler.user.name}" 
+      redirect "/users/#{warden_handler.user.name}" 
     else
       print "Not authenticated";
       redirect "/"

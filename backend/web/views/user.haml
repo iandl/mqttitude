@@ -3,5 +3,11 @@
   %head  
     %title Mqttitude  
   %body  
-    %h1= "User #{@user.id}" 
-    %a{:href => "/user/#{@user.name}/positions"}Positions
+    %div#left
+      %div#md1
+      %div#md2.hidden
+      %div#md3.hidden
+      %div#md4.hidden
+
+    %div#right
+      %div#map
