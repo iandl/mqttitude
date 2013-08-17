@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSString *host;
 @property (nonatomic) UInt32 port;
 @property (strong, nonatomic) NSMutableArray *logArray;
+@property (strong, nonatomic) NSMutableArray *annotationArray;
 
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak, nonatomic) IBOutlet UITextField *status;
@@ -88,6 +89,7 @@
     [super viewDidLoad];
     
     self.logArray = [[NSMutableArray alloc] init];
+    self.annotationArray = [[NSMutableArray alloc] init];
     
     if ([CLLocationManager locationServicesEnabled]) {
         self.manager = [[CLLocationManager alloc] init];
@@ -122,7 +124,7 @@
             [self log:[NSDate date] message:self.status.text];
             
             // Forcing reconnection
-            [self.session connectToHost:self.host port:self.port];
+            [self.session connectToHost:self.host port:self.port usingSSL:self.tls];
             break;
         case MQTTSessionEventProtocolError:
             self.status.text = @"protocol error";
@@ -143,7 +145,8 @@
         self.session = [[MQTTSession alloc] initWithClientId:self.clientId];
         [self.session setDelegate:self];
         [self.session connectToHost:self.host
-                               port:self.port];
+                               port:self.port
+                           usingSSL:self.tls];
     }
     if (self.manager) {
         [self.manager startMonitoringSignificantLocationChanges];
@@ -167,6 +170,8 @@
     [self publishLocation:self.manager.location];
 }
 
+#define MAX_ANNOTATIONS 20
+
 - (void)publishLocation:(CLLocation *)location
 {
     if (location) {
@@ -177,19 +182,37 @@
         locationAnnotation.coordinate = location.coordinate;
         locationAnnotation.timeStamp = location.timestamp;
         [self.map addAnnotation:locationAnnotation];
+        [self.annotationArray addObject:locationAnnotation];
+        if ([self.annotationArray count] > MAX_ANNOTATIONS) {
+            [self.map removeAnnotation:self.annotationArray[0]];
+            [self.annotationArray removeObjectAtIndex:0];
+        }
         
-        NSString *json = [NSString stringWithFormat:
-                          @"{\"lat\": \"%f\", \"lon\": \"%f\", \"tst\": \"%.0f\", \"acc\": \"%.0fm\",}",
-                          location.coordinate.latitude,
-                          location.coordinate.longitude,
-                          [location.timestamp timeIntervalSince1970],
-                          location.horizontalAccuracy
-                          ];
+        NSDictionary *jsonObject = @{
+                                     @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
+                                     @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
+                                     @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
+                                     @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
+                                     @"alt": [NSString stringWithFormat:@"%f", location.altitude],
+                                     @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
+                                     @"vel": [NSString stringWithFormat:@"%f", location.speed],
+                                     @"dir": [NSString stringWithFormat:@"%f", location.course],
+                                     @"mo": [NSString stringWithFormat:@"%@", @"unkown"]
+                                     };
+        NSData *data;
+        
+        if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
+            NSError *error;
+            data = [NSJSONSerialization dataWithJSONObject:jsonObject options:!NSJSONWritingPrettyPrinted error:&error];
+            if (!data) {
+                [self log:[NSDate date] message:[error description]];
+            }
+        } else {
+            [self log:[NSDate date] message:[NSString stringWithFormat:@"No valid JSON Object: %@", [jsonObject description]]];
+        }
         
         if (self.session) {
-            NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
-            
-            [self log:location.timestamp message:json];
+            [self log:location.timestamp message:[NSString stringWithUTF8String:data.bytes]];
             
             switch (self.qos) {
                 case 0:
@@ -248,6 +271,7 @@
         [self disconnect];
         self.host = settings.host;
         self.port = settings.port;
+        self.tls = settings.tls;
         self.topic = settings.topic;
         self.retainFlag = settings.retainFlag;
         self.qos = settings.qos;

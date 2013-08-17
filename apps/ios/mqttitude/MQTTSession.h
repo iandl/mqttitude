@@ -106,6 +106,7 @@ typedef enum {
 - (void)close;
 - (void)setDelegate:aDelegate;
 - (void)connectToHost:(NSString*)ip port:(UInt32)port;
+- (void)connectToHost:(NSString*)ip port:(UInt32)port usingSSL:(BOOL)usingSSL;
 - (void)subscribeTopic:(NSString*)theTopic;
 - (void)subscribeToTopic:(NSString*)topic atLevel:(UInt8)qosLevel;
 - (void)unsubscribeTopic:(NSString*)theTopic;

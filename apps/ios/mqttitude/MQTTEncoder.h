@@ -16,16 +16,6 @@
 #import <Foundation/Foundation.h>
 #import "MQTTMessage.h"
 
-@interface MQTTEncoder : NSObject <NSStreamDelegate> {
-    NSInteger       status;
-    NSOutputStream* stream;
-    NSRunLoop*      runLoop;
-    NSString*       runLoopMode;
-    NSMutableData*  buffer;
-    NSInteger       byteIndex;
-    id              delegate;
-}
-
 typedef enum {
     MQTTEncoderEventReady,
     MQTTEncoderEventErrorOccurred
@@ -38,6 +28,17 @@ typedef enum {
     MQTTEncoderStatusEndEncountered,
     MQTTEncoderStatusError
 } MQTTEncoderStatus;
+
+
+@interface MQTTEncoder : NSObject <NSStreamDelegate> {    
+    MQTTEncoderStatus status;
+    NSOutputStream* stream;
+    NSRunLoop*      runLoop;
+    NSString*       runLoopMode;
+    NSMutableData*  buffer;
+    NSInteger       byteIndex;
+    id              delegate;
+}
 
 - (id)initWithStream:(NSOutputStream*)aStream
              runLoop:(NSRunLoop*)aRunLoop
