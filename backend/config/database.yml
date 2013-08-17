@@ -1,0 +1,7 @@
+adapter: 'mysql2'
+database: mqttitude
+password: mqttitude
+username: mqttitude
+host: localhost
+port: 3306
+encoding: 'utf8'

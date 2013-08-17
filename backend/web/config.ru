@@ -1,3 +1,0 @@
-require './mqttitude'
-run Mqttitude
-

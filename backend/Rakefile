@@ -1,0 +1,2 @@
+require './mqttitude'
+require 'sinatra/activerecord/rake'

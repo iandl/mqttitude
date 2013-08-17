@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+gem 'sinatra'
+gem 'mysql2'
+gem 'activerecord'
+gem 'sinatra-activerecord'
+gem 'haml'
+gem 'json'
+gem 'mqtt'
+gem 'thin'
