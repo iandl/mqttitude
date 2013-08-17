@@ -7,7 +7,8 @@
     "tst": "1376715317",
     "acc": "75m",
     "mo" : "<type>",
-    "alt" : "mmmmm"
+    "alt" : "mmmmm",
+    "vac" : "xxxx"
 }
 ```
 
@@ -17,3 +18,4 @@
 * `acc` is accuracy if available
 * `mo` is motion (e.g. `vehicle`, `on foot`, etc.) if available
 * `alt` altitude, measured in meters (i.e. units of 100cm)
+* "vac" : "xxxx" for vertical accuracy in meters - negative value indicates no valid altitude information
