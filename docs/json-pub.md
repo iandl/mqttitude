@@ -6,7 +6,8 @@
     "lon": "y.yyyyyy", 
     "tst": "1376715317",
     "acc": "75m",
-    "mo" : "<type>"
+    "mo" : "<type>",
+    "alt" : "mmmmm"
 }
 ```
 
@@ -15,3 +16,4 @@
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
 * `acc` is accuracy if available
 * `mo` is motion (e.g. `vehicle`, `on foot`, etc.) if available
+* `alt` altitude, measured in meters (i.e. units of 100cm)
