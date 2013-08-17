@@ -193,9 +193,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		84CF9A0417BEED5B00E1333C /* mqttitude */ = {
+		84CF9A0417BEED5B00E1333C /* MQTTitude */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84CF9A2B17BEED5B00E1333C /* Build configuration list for PBXNativeTarget "mqttitude" */;
+			buildConfigurationList = 84CF9A2B17BEED5B00E1333C /* Build configuration list for PBXNativeTarget "MQTTitude" */;
 			buildPhases = (
 				84CF9A0117BEED5B00E1333C /* Sources */,
 				84CF9A0217BEED5B00E1333C /* Frameworks */,
@@ -205,7 +205,7 @@
 			);
 			dependencies = (
 			);
-			name = mqttitude;
+			name = MQTTitude;
 			productName = mqttitude;
 			productReference = 84CF9A0517BEED5B00E1333C /* mqttitude.app */;
 			productType = "com.apple.product-type.application";
@@ -232,7 +232,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84CF9A0417BEED5B00E1333C /* mqttitude */,
+				84CF9A0417BEED5B00E1333C /* MQTTitude */,
 			);
 		};
 /* End PBXProject section */
@@ -396,13 +396,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84CF9A2B17BEED5B00E1333C /* Build configuration list for PBXNativeTarget "mqttitude" */ = {
+		84CF9A2B17BEED5B00E1333C /* Build configuration list for PBXNativeTarget "MQTTitude" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84CF9A2C17BEED5B00E1333C /* Debug */,
 				84CF9A2D17BEED5B00E1333C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

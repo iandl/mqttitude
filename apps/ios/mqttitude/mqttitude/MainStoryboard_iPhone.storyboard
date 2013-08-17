@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--Mqttitude View Controller - mqttitude-->
+        <!--Mqttitude View Controller - MQTTitude-->
         <scene sceneID="5">
             <objects>
                 <viewController id="2" customClass="mqttitudeViewController" sceneMemberID="viewController">
@@ -50,7 +50,7 @@
                             <constraint firstItem="DCB-8M-xaX" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="k0t-O5-6Gw"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="mqttitude" id="x0N-7e-ll2">
+                    <navigationItem key="navigationItem" title="MQTTitude" id="x0N-7e-ll2">
                         <barButtonItem key="rightBarButtonItem" title="Settings" id="hPX-4p-OdQ">
                             <connections>
                                 <segue destination="7Lm-46-Dd7" kind="push" identifier="push" id="qdF-k1-mZs"/>
@@ -366,37 +366,6 @@
             <point key="canvasLocation" x="75" y="175"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
-        </class>
-        <class className="mqttitudeLogTVCViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeLogTVCViewController.h"/>
-        </class>
-        <class className="mqttitudeSettingsTVCViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeSettingsTVCViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="UIhost" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIport" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIqos" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="UIretainFlag" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItls" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItopic" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="publishNow:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="outlet" name="map" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="status" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
