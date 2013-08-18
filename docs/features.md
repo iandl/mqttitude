@@ -57,3 +57,5 @@ ones, or user provided ones that require a lock screen password to be set)
 * QoS and Retain are UI-configurable
 
 * Scrollable log of last 50 status changes/published locations
+
+* TLS. Use of self-signed server certificate on broker requires installing DER certificate on device's certificate store, which is a simple procedure.
