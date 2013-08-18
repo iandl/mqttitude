@@ -1,4 +1,3 @@
-
 ## Location object
 
 This location object is published by the mobile apps and delivered by the backend JSON API.
@@ -49,12 +48,18 @@ GET /users/1
 ```
 
 ```none
-GET /users/locations?year=2013
+GET /users/1/locations
 ```
 ```none
-GET /users/locations?year=2013&month=1
+GET /users/1/locations/current
 ```
 ```none
-GET /users/locations?year=2013&month=1&day=13
+GET /users/1/locations?year=2013
+```
+```none
+GET /users/1/locations?year=2013&month=1
+```
+```none
+GET /users/1/locations?year=2013&month=1&day=13
 ```
 
