@@ -24,7 +24,7 @@ the elements.
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
 * `acc` is accuracy if available
 * `mo` is motion (e.g. `vehicle`, `on foot`, etc.) if available
-* `alt` altitude, measured in meters (i.e. units of 100cm). Android provides the info, but it doesn't seem to contain anything useful.
+* `alt` altitude, measured in meters (i.e. units of 100cm). Android provides the info, but it doesn't always contain anything useful.
 * `vac`,  "xxxx" for vertical accuracy in meters - negative value indicates no valid altitude information
 * `dir` is direction
 * `vel` is velocity
