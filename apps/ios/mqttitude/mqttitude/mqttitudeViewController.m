@@ -11,41 +11,58 @@
 #import "mqttitudeLogTVCViewController.h"
 #import "Location.h"
 #import "LogEntry.h"
-
+#import <AddressBookUI/AddressBookUI.h>
 
 @interface mqttitudeViewController ()
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) CLLocationManager *manager;
 @property (strong, nonatomic) NSString *clientId;
+@property (strong, nonatomic) CLGeocoder *geocoder;
 
 @property (strong, nonatomic) NSString *topic;
-@property (nonatomic) BOOL tls;
 @property (nonatomic) BOOL retainFlag;
 @property (nonatomic) NSInteger qos;
+
 @property (strong, nonatomic) NSString *host;
 @property (nonatomic) UInt32 port;
+@property (nonatomic) BOOL tls;
+@property (nonatomic) BOOL auth;
+@property (strong, nonatomic) NSString *user;
+@property (strong, nonatomic) NSString *pass;
+
 @property (strong, nonatomic) NSMutableArray *logArray;
 @property (strong, nonatomic) NSMutableArray *annotationArray;
 
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak, nonatomic) IBOutlet UITextField *status;
+@property (weak, nonatomic) IBOutlet UITextView *placeMark;
+
 
 @end
 
 @implementation mqttitudeViewController
 
 #define SETTINGS_KEY @"SETTINGS"
+
 #define HOST_KEY @"HOST"
 #define PORT_KEY @"PORT"
-#define TOPIC_KEY @"TOPIC"
 #define TLS_KEY @"TLS"
+#define AUTH_KEY @"AUTH"
+#define USER_KEY @"USER"
+#define PASS_KEY @"PASS"
+
+#define TOPIC_KEY @"TOPIC"
 #define RETAIN_KEY @"RETAIN"
 #define QOS_KEY @"QOS"
 
-#define HOST_DEFAULT @"test.mosquitto.org"
+#define HOST_DEFAULT @"roo.jpmens.net"
 #define PORT_DEFAULT 1883
-#define TOPIC_DEFAULT @"mqttitude"
 #define TLS_DEFAULT FALSE
+#define AUTH_DEFAULT FALSE
+#define USER_DEFAULT @""
+#define PASS_DEFAULT @""
+
+#define TOPIC_DEFAULT @"mqttitude"
 #define RETAIN_DEFAULT TRUE
 #define QOS_DEFAULT 2
 
@@ -54,8 +71,11 @@
     [[NSUserDefaults standardUserDefaults] setObject:@{
                                             HOST_KEY:self.host,
                                             PORT_KEY:@(self.port),
-                                           TOPIC_KEY:self.topic,
                                              TLS_KEY:@(self.tls),
+                                             AUTH_KEY:@(self.auth),
+                                             USER_KEY:self.user,
+                                             PASS_KEY:self.pass,
+                                           TOPIC_KEY:self.topic,
                                           RETAIN_KEY:@(self.retainFlag),
                                              QOS_KEY:@(self.qos)}
                                               forKey:SETTINGS_KEY];
@@ -68,16 +88,24 @@
     
     if (settings) {
         self.host = settings[HOST_KEY];
-        self.topic = settings[TOPIC_KEY];
         self.port = [settings[PORT_KEY] intValue];
         self.tls = [settings[TLS_KEY] boolValue];
+        self.auth = [settings[AUTH_KEY] boolValue];
+        self.user = settings[USER_KEY];
+        self.pass = settings[PASS_KEY];
+
+        self.topic = settings[TOPIC_KEY];
         self.retainFlag = [settings[RETAIN_KEY] boolValue];
         self.qos = [settings[QOS_KEY] intValue];
     } else {
         self.host = HOST_DEFAULT;
         self.port = PORT_DEFAULT;
-        self.topic = TOPIC_DEFAULT;
         self.tls = TLS_DEFAULT;
+        self.auth = AUTH_DEFAULT;
+        self.user = USER_DEFAULT;
+        self.pass = PASS_DEFAULT;
+        
+        self.topic = TOPIC_DEFAULT;
         self.retainFlag = RETAIN_DEFAULT;
         self.qos = QOS_DEFAULT;
         [self synchronizeSettings];
@@ -94,10 +122,9 @@
     if ([CLLocationManager locationServicesEnabled]) {
         self.manager = [[CLLocationManager alloc] init];
         self.manager.delegate = self;
-        
     } else {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        [self log:[NSDate date] message:[NSString stringWithFormat:@"Not authorized for CoreLocation %d", status]];
+        [self log:[NSDate date] message:[NSString stringWithFormat:@"MQTTitude not authorized for CoreLocation %d", status]];
         
     }
     
@@ -110,27 +137,31 @@
 - (void)session:(MQTTSession*)sender handleEvent:(MQTTSessionEvent)eventCode {
     switch (eventCode) {
         case MQTTSessionEventConnected:
-            self.status.text = @"connected";
+            self.status.text = NSLocalizedString(@"connected",
+                                                 @"Status messsage to the user MQTT is connected to host");
             break;
         case MQTTSessionEventConnectionRefused:
-            self.status.text = @"connection refused";            
+            self.status.text = NSLocalizedString(@"connection refused",
+                                                 @"Status messsage to the user MQTT connect to host was refused");
             break;
         case MQTTSessionEventConnectionClosed:
-            self.status.text = @"connection closed";
-            
+            self.status.text = NSLocalizedString(@"connection closed",
+                                                 @"Status messsage to the user MQTT connection to host was closed");
             break;
         case MQTTSessionEventConnectionError:
-            self.status.text = @"connection error, reconnecting...";
+            self.status.text = NSLocalizedString(@"connection error, reconnecting...",
+                                                 @"Status messsage to the user MQTT connection problem, retrying");
             [self log:[NSDate date] message:self.status.text];
             
             // Forcing reconnection
             [self.session connectToHost:self.host port:self.port usingSSL:self.tls];
             break;
         case MQTTSessionEventProtocolError:
-            self.status.text = @"protocol error";
+            self.status.text = NSLocalizedString(@"protocol error",
+                                                 @"Status messsage to the user MQTT detected a protocol error");
             break;
         default:
-            self.status.text = [NSString stringWithFormat:@"unknown eventCode: %d", eventCode];
+            self.status.text = [NSString stringWithFormat:@"MQTTitude unknown eventCode: %d", eventCode];
             break;
     }
     [self log:[NSDate date] message:self.status.text];
@@ -142,7 +173,11 @@
     if (!self.session) {
         self.clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         
-        self.session = [[MQTTSession alloc] initWithClientId:self.clientId];
+        if (self.auth) {
+            self.session = [[MQTTSession alloc] initWithClientId:self.clientId userName:self.user password:self.pass];
+        } else {
+            self.session = [[MQTTSession alloc] initWithClientId:self.clientId];
+        }
         [self.session setDelegate:self];
         [self.session connectToHost:self.host
                                port:self.port
@@ -181,6 +216,8 @@
         Location *locationAnnotation = [[Location alloc] init];
         locationAnnotation.coordinate = location.coordinate;
         locationAnnotation.timeStamp = location.timestamp;
+        [self geocodeLocation:location annotation:locationAnnotation];
+
         [self.map addAnnotation:locationAnnotation];
         [self.annotationArray addObject:locationAnnotation];
         if ([self.annotationArray count] > MAX_ANNOTATIONS) {
@@ -212,7 +249,15 @@
         }
         
         if (self.session) {
-            [self log:location.timestamp message:[NSString stringWithUTF8String:data.bytes]];
+            /* the following lines are necessary to convert data which is possibly not null-terminated into a string */
+            NSString *message = [[NSString alloc] init];
+            for (int i = 0; i < data.length; i++) {
+                char c;
+                [data getBytes:&c range:NSMakeRange(i, 1)];
+                message = [message stringByAppendingFormat:@"%c", c];
+            }
+            
+            [self log:location.timestamp message:message];
             
             switch (self.qos) {
                 case 0:
@@ -225,7 +270,7 @@
                     [self.session publishDataExactlyOnce:data onTopic:[NSString stringWithFormat:@"%@", self.topic] retain:self.retainFlag];
                     break;
                 default:
-                    NSLog(@"Unknown qos: %d", self.qos);
+                    NSLog(@"MQTTitude unknown qos: %d", self.qos);
                     break;                    
             }
         }
@@ -255,6 +300,10 @@
         settings.host = self.host;
         settings.port = self.port;
         settings.tls = self.tls;
+        settings.auth = self.auth;
+        settings.user = self.user;
+        settings.pass = self.pass;
+        
         settings.topic = self.topic;
         settings.retainFlag = self.retainFlag;
         settings.qos = self.qos;
@@ -272,6 +321,9 @@
         self.host = settings.host;
         self.port = settings.port;
         self.tls = settings.tls;
+        self.auth = settings.auth;
+        self.user = settings.user;
+        self.pass = settings.pass;
         self.topic = settings.topic;
         self.retainFlag = settings.retainFlag;
         self.qos = settings.qos;
@@ -294,6 +346,25 @@
     if ([self.logArray count] > MAX_LOGS) {
         [self.logArray removeLastObject];
     }
+}
+
+- (void)geocodeLocation:(CLLocation*)location annotation:(Location *)locationAnnotation
+{
+    if (!self.geocoder)
+        self.geocoder = [[CLGeocoder alloc] init];
+    
+    [self.geocoder reverseGeocodeLocation:location completionHandler:
+     ^(NSArray* placemarks, NSError* error){
+         if ([placemarks count] > 0)
+         {
+             CLPlacemark *placemark = placemarks[0];
+             self.placeMark.text = ABCreateStringWithAddressDictionary (placemark.addressDictionary, TRUE);
+         } else {
+             self.placeMark.text = [NSString stringWithFormat:@"%f %f",
+                                    location.coordinate.latitude,
+                                    location.coordinate.longitude];
+         }
+     }];
 }
 
 @end

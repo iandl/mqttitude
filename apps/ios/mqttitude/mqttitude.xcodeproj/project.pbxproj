@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8453FFD817BFAB1D00851A4C /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453FFD217BFAB1D00851A4C /* MQTTMessage.m */; };
-		8453FFD917BFAB1D00851A4C /* MQTTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453FFD417BFAB1D00851A4C /* MQTTEncoder.m */; };
-		8453FFDA17BFAB1D00851A4C /* MQTTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453FFD617BFAB1D00851A4C /* MQTTDecoder.m */; };
-		8453FFE017BFAB6C00851A4C /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453FFDC17BFAB6B00851A4C /* MQttTxFlow.m */; };
-		8453FFE117BFAB6C00851A4C /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453FFDE17BFAB6C00851A4C /* MQTTSession.m */; };
+		8485A89A17C10CE300D3348A /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89017C10CE300D3348A /* MQttTxFlow.m */; };
+		8485A89B17C10CE300D3348A /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89217C10CE300D3348A /* MQTTSession.m */; };
+		8485A89C17C10CE300D3348A /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89417C10CE300D3348A /* MQTTMessage.m */; };
+		8485A89D17C10CE300D3348A /* MQTTEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89617C10CE300D3348A /* MQTTEncoder.m */; };
+		8485A89E17C10CE300D3348A /* MQTTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89817C10CE300D3348A /* MQTTDecoder.m */; };
+		8485A8A117C11D1F00D3348A /* fells_loop.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 8485A8A017C11D1E00D3348A /* fells_loop.gpx */; };
+		8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8485A8A617C178AF00D3348A /* AddressBookUI.framework */; };
 		84CF9A0917BEED5B00E1333C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0817BEED5B00E1333C /* UIKit.framework */; };
 		84CF9A0B17BEED5B00E1333C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0A17BEED5B00E1333C /* Foundation.framework */; };
 		84CF9A0D17BEED5B00E1333C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0C17BEED5B00E1333C /* CoreGraphics.framework */; };
@@ -32,22 +34,27 @@
 		84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */; };
 		84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5117BEF44F00E1333C /* MapKit.framework */; };
 		84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5317BEF45700E1333C /* CoreLocation.framework */; };
-		84CF9A5617BEF4A200E1333C /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A5517BEF4A200E1333C /* MainStoryboard_iPhone.storyboard */; };
 		84CF9A5F17BF051200E1333C /* LogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A5E17BF051200E1333C /* LogEntry.m */; };
 		84CF9A6217BF1A9400E1333C /* mqttitudeLogTVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A6117BF1A9400E1333C /* mqttitudeLogTVCViewController.m */; };
+		84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */; };
+		84F93C0717C029580060E809 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84F93C0517C029580060E809 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8453FFD217BFAB1D00851A4C /* MQTTMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTMessage.m; sourceTree = "<group>"; };
-		8453FFD317BFAB1D00851A4C /* MQTTMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTMessage.h; sourceTree = "<group>"; };
-		8453FFD417BFAB1D00851A4C /* MQTTEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTEncoder.m; sourceTree = "<group>"; };
-		8453FFD517BFAB1D00851A4C /* MQTTEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTEncoder.h; sourceTree = "<group>"; };
-		8453FFD617BFAB1D00851A4C /* MQTTDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTDecoder.m; sourceTree = "<group>"; };
-		8453FFD717BFAB1D00851A4C /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
-		8453FFDC17BFAB6B00851A4C /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
-		8453FFDD17BFAB6C00851A4C /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
-		8453FFDE17BFAB6C00851A4C /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
-		8453FFDF17BFAB6C00851A4C /* MQTTSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTSession.h; sourceTree = "<group>"; };
+		8485A89017C10CE300D3348A /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
+		8485A89117C10CE300D3348A /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
+		8485A89217C10CE300D3348A /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
+		8485A89317C10CE300D3348A /* MQTTSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTSession.h; sourceTree = "<group>"; };
+		8485A89417C10CE300D3348A /* MQTTMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTMessage.m; sourceTree = "<group>"; };
+		8485A89517C10CE300D3348A /* MQTTMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTMessage.h; sourceTree = "<group>"; };
+		8485A89617C10CE300D3348A /* MQTTEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTEncoder.m; sourceTree = "<group>"; };
+		8485A89717C10CE300D3348A /* MQTTEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTEncoder.h; sourceTree = "<group>"; };
+		8485A89817C10CE300D3348A /* MQTTDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTDecoder.m; sourceTree = "<group>"; };
+		8485A89917C10CE300D3348A /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
+		8485A8A017C11D1E00D3348A /* fells_loop.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = fells_loop.gpx; path = ../fells_loop.gpx; sourceTree = "<group>"; };
+		8485A8A617C178AF00D3348A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		8485A8A917C17A4300D3348A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
+		8485A8AB17C17A4E00D3348A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CF9A0817BEED5B00E1333C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		84CF9A0A17BEED5B00E1333C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -75,11 +82,13 @@
 		84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		84CF9A5117BEF44F00E1333C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84CF9A5317BEF45700E1333C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		84CF9A5517BEF4A200E1333C /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		84CF9A5D17BF051100E1333C /* LogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogEntry.h; sourceTree = "<group>"; };
 		84CF9A5E17BF051200E1333C /* LogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogEntry.m; sourceTree = "<group>"; };
 		84CF9A6017BF1A9400E1333C /* mqttitudeLogTVCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeLogTVCViewController.h; sourceTree = "<group>"; };
 		84CF9A6117BF1A9400E1333C /* mqttitudeLogTVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeLogTVCViewController.m; sourceTree = "<group>"; };
+		84F93C0417C028690060E809 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		84F93C0617C029580060E809 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		84F93C0917C02A030060E809 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */,
 				84CF9A5417BEF45800E1333C /* CoreLocation.framework in Frameworks */,
 				84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */,
 				84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */,
@@ -99,27 +109,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8453FFDB17BFAB3200851A4C /* MQTT */ = {
+		8485A89F17C10CEB00D3348A /* mqttIO-objC */ = {
 			isa = PBXGroup;
 			children = (
-				8453FFDC17BFAB6B00851A4C /* MQttTxFlow.m */,
-				8453FFDD17BFAB6C00851A4C /* MQttTxFlow.h */,
-				8453FFDE17BFAB6C00851A4C /* MQTTSession.m */,
-				8453FFDF17BFAB6C00851A4C /* MQTTSession.h */,
-				8453FFD217BFAB1D00851A4C /* MQTTMessage.m */,
-				8453FFD317BFAB1D00851A4C /* MQTTMessage.h */,
-				8453FFD417BFAB1D00851A4C /* MQTTEncoder.m */,
-				8453FFD517BFAB1D00851A4C /* MQTTEncoder.h */,
-				8453FFD617BFAB1D00851A4C /* MQTTDecoder.m */,
-				8453FFD717BFAB1D00851A4C /* MQTTDecoder.h */,
+				8485A89017C10CE300D3348A /* MQttTxFlow.m */,
+				8485A89117C10CE300D3348A /* MQttTxFlow.h */,
+				8485A89217C10CE300D3348A /* MQTTSession.m */,
+				8485A89317C10CE300D3348A /* MQTTSession.h */,
+				8485A89417C10CE300D3348A /* MQTTMessage.m */,
+				8485A89517C10CE300D3348A /* MQTTMessage.h */,
+				8485A89617C10CE300D3348A /* MQTTEncoder.m */,
+				8485A89717C10CE300D3348A /* MQTTEncoder.h */,
+				8485A89817C10CE300D3348A /* MQTTDecoder.m */,
+				8485A89917C10CE300D3348A /* MQTTDecoder.h */,
 			);
-			name = MQTT;
+			name = "mqttIO-objC";
 			sourceTree = "<group>";
 		};
 		84CF99FC17BEED5B00E1333C = {
 			isa = PBXGroup;
 			children = (
-				8453FFDB17BFAB3200851A4C /* MQTT */,
+				8485A89F17C10CEB00D3348A /* mqttIO-objC */,
 				84CF9A0E17BEED5B00E1333C /* mqttitude */,
 				84CF9A0717BEED5B00E1333C /* Frameworks */,
 				84CF9A0617BEED5B00E1333C /* Products */,
@@ -137,6 +147,7 @@
 		84CF9A0717BEED5B00E1333C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8485A8A617C178AF00D3348A /* AddressBookUI.framework */,
 				84CF9A5317BEF45700E1333C /* CoreLocation.framework */,
 				84CF9A5117BEF44F00E1333C /* MapKit.framework */,
 				84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */,
@@ -150,7 +161,8 @@
 		84CF9A0E17BEED5B00E1333C /* mqttitude */ = {
 			isa = PBXGroup;
 			children = (
-				84CF9A5517BEF4A200E1333C /* MainStoryboard_iPhone.storyboard */,
+				84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */,
+				84F93C0517C029580060E809 /* Localizable.strings */,
 				84CF9A6017BF1A9400E1333C /* mqttitudeLogTVCViewController.h */,
 				84CF9A6117BF1A9400E1333C /* mqttitudeLogTVCViewController.m */,
 				84CF9A1717BEED5B00E1333C /* mqttitudeAppDelegate.h */,
@@ -171,6 +183,7 @@
 		84CF9A0F17BEED5B00E1333C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8485A8A017C11D1E00D3348A /* fells_loop.gpx */,
 				84CF9A2E17BEF09500E1333C /* iTunesArtwork@2x */,
 				84CF9A2F17BEF09500E1333C /* iTunesArtwork */,
 				84CF9A3E17BEF1C200E1333C /* icon_144x144.png */,
@@ -223,6 +236,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
+				de,
 			);
 			mainGroup = 84CF99FC17BEED5B00E1333C;
 			productRefGroup = 84CF9A0617BEED5B00E1333C /* Products */;
@@ -248,7 +263,9 @@
 				84CF9A3B17BEF11200E1333C /* icon_114x114.png in Resources */,
 				84CF9A3D17BEF13200E1333C /* icon_72x72.png in Resources */,
 				84CF9A3F17BEF1C200E1333C /* icon_144x144.png in Resources */,
-				84CF9A5617BEF4A200E1333C /* MainStoryboard_iPhone.storyboard in Resources */,
+				84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */,
+				84F93C0717C029580060E809 /* Localizable.strings in Resources */,
+				8485A8A117C11D1F00D3348A /* fells_loop.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,15 +283,37 @@
 				84CF9A4517BEF35700E1333C /* mqttitudeSettingsTVCViewController.m in Sources */,
 				84CF9A5F17BF051200E1333C /* LogEntry.m in Sources */,
 				84CF9A6217BF1A9400E1333C /* mqttitudeLogTVCViewController.m in Sources */,
-				8453FFD817BFAB1D00851A4C /* MQTTMessage.m in Sources */,
-				8453FFD917BFAB1D00851A4C /* MQTTEncoder.m in Sources */,
-				8453FFDA17BFAB1D00851A4C /* MQTTDecoder.m in Sources */,
-				8453FFE017BFAB6C00851A4C /* MQttTxFlow.m in Sources */,
-				8453FFE117BFAB6C00851A4C /* MQTTSession.m in Sources */,
+				8485A89A17C10CE300D3348A /* MQttTxFlow.m in Sources */,
+				8485A89B17C10CE300D3348A /* MQTTSession.m in Sources */,
+				8485A89C17C10CE300D3348A /* MQTTMessage.m in Sources */,
+				8485A89D17C10CE300D3348A /* MQTTEncoder.m in Sources */,
+				8485A89E17C10CE300D3348A /* MQTTDecoder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84F93C0417C028690060E809 /* Base */,
+				8485A8A917C17A4300D3348A /* en */,
+				8485A8AB17C17A4E00D3348A /* de */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		84F93C0517C029580060E809 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84F93C0617C029580060E809 /* en */,
+				84F93C0917C02A030060E809 /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		84CF9A2917BEED5B00E1333C /* Debug */ = {
@@ -303,6 +342,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				"LIBRARY_SEARCH_PATHS[arch=armv7s]" = "";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -341,7 +381,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -354,7 +393,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mqttitude/mqttitude-Prefix.pch";
 				INFOPLIST_FILE = "mqttitude/mqttitude-Info.plist";
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

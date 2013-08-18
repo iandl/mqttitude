@@ -1,0 +1,108 @@
+
+/* Class = "IBUILabel"; text = "TLS"; ObjectID = "2f0-X4-Xzv"; */
+"2f0-X4-Xzv.text" = "TLS";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "4BU-gN-ed5"; */
+"4BU-gN-ed5.text" = "Title";
+
+/* Class = "IBUITableViewSection"; headerTitle = "Server Connection"; ObjectID = "4JK-fA-yFU"; */
+"4JK-fA-yFU.headerTitle" = "Server Connection";
+
+/* Class = "IBUIButton"; normalTitle = "Info"; ObjectID = "5Vo-1v-YWU"; */
+"5Vo-1v-YWU.normalTitle" = "Info";
+
+/* Class = "IBUITableViewSection"; headerTitle = "MQTT Parameters"; ObjectID = "6nX-V8-09P"; */
+"6nX-V8-09P.headerTitle" = "MQTT Parameters";
+
+/* Class = "IBUILabel"; text = "Authenticate"; ObjectID = "90q-yO-ge9"; */
+"90q-yO-ge9.text" = "Authenticate";
+
+/* Class = "IBUILabel"; text = "UserID"; ObjectID = "9QR-ZZ-2PU"; */
+"9QR-ZZ-2PU.text" = "UserID";
+
+/* Class = "IBUILabel"; text = "Password"; ObjectID = "9kJ-qG-UQa"; */
+"9kJ-qG-UQa.text" = "Password";
+
+/* Class = "IBUISegmentedControl"; BhH-Bt-E8i.segmentTitles[0] = "0"; ObjectID = "BhH-Bt-E8i"; */
+"BhH-Bt-E8i.segmentTitles[0]" = "0";
+
+/* Class = "IBUISegmentedControl"; BhH-Bt-E8i.segmentTitles[1] = "1"; ObjectID = "BhH-Bt-E8i"; */
+"BhH-Bt-E8i.segmentTitles[1]" = "1";
+
+/* Class = "IBUISegmentedControl"; BhH-Bt-E8i.segmentTitles[2] = "2"; ObjectID = "BhH-Bt-E8i"; */
+"BhH-Bt-E8i.segmentTitles[2]" = "2";
+
+/* Class = "IBUINavigationItem"; title = "Settings"; ObjectID = "BlZ-XY-L9g"; */
+"BlZ-XY-L9g.title" = "Settings";
+
+/* Class = "IBUIBarButtonItem"; title = "Share"; ObjectID = "Byb-vF-1jL"; */
+"Byb-vF-1jL.title" = "Share";
+
+/* Class = "IBUIBarButtonItem"; title = "Show Log"; ObjectID = "DIF-vb-obJ"; */
+"DIF-vb-obJ.title" = "Show Log";
+
+/* Class = "IBUITextField"; text = "Status"; ObjectID = "FCI-QI-8au"; */
+"FCI-QI-8au.text" = "Status";
+
+/* Class = "IBUITextField"; text = "Host"; ObjectID = "FRL-Td-pft"; */
+"FRL-Td-pft.text" = "Host";
+
+/* Class = "IBUITextField"; text = "password"; ObjectID = "Gkl-PD-Bsg"; */
+"Gkl-PD-Bsg.text" = "password";
+
+/* Class = "IBUILabel"; text = "Version"; ObjectID = "HI4-Zj-rQA"; */
+"HI4-Zj-rQA.text" = "Version";
+
+/* Class = "IBUITextField"; text = "UserID"; ObjectID = "KEA-tN-tGr"; */
+"KEA-tN-tGr.text" = "UserID";
+
+/* Class = "IBUIButton"; normalTitle = "Credits"; ObjectID = "Mda-lh-1Eo"; */
+"Mda-lh-1Eo.normalTitle" = "Credits";
+
+/* Class = "IBUITableViewSection"; headerTitle = "MQTTitude App"; ObjectID = "OBE-cO-5wF"; */
+"OBE-cO-5wF.headerTitle" = "MQTTitude App";
+
+/* Class = "IBUITextView"; text = "A Google Latitude replacement that allows to upload the current location data to an own server\n"; ObjectID = "QFO-iQ-pI3"; */
+"QFO-iQ-pI3.text" = "A Google Latitude replacement that allows to upload the current location data to an own server\n";
+
+/* Class = "IBUILabel"; text = "Host"; ObjectID = "Wmq-nz-Nhm"; */
+"Wmq-nz-Nhm.text" = "Host";
+
+/* Class = "IBUILabel"; text = "QoS"; ObjectID = "Zap-E9-Kcv"; */
+"Zap-E9-Kcv.text" = "QoS";
+
+/* Class = "IBUILabel"; text = "Subtitle"; ObjectID = "cEh-Fy-HAT"; */
+"cEh-Fy-HAT.text" = "Subtitle";
+
+/* Class = "IBUITextField"; text = "Topic"; ObjectID = "dYE-Dl-58G"; */
+"dYE-Dl-58G.text" = "Topic";
+
+/* Class = "IBUINavigationItem"; title = "Log"; ObjectID = "dd4-rC-iK0"; */
+"dd4-rC-iK0.title" = "Log";
+
+/* Class = "IBUIBarButtonItem"; title = "Settings"; ObjectID = "hPX-4p-OdQ"; */
+"hPX-4p-OdQ.title" = "Settings";
+
+/* Class = "IBUITextView"; text = "© by Christoph Krey, mqttitude.net\n\nusing\n\nmqttIO-objC\nhttp://github.com/m2mIO/mqttIO-objC"; ObjectID = "hof-rs-weX"; */
+"hof-rs-weX.text" = "© by Christoph Krey, mqttitude.net\n\nusing\n\nmqttIO-objC\nhttp://github.com/m2mIO/mqttIO-objC";
+
+/* Class = "IBUILabel"; text = "Port"; ObjectID = "l6z-Hm-XcE"; */
+"l6z-Hm-XcE.text" = "Port";
+
+/* Class = "IBUILabel"; text = "Topic"; ObjectID = "oRS-ES-Aun"; */
+"oRS-ES-Aun.text" = "Topic";
+
+/* Class = "IBUITextView"; text = "Placemark"; ObjectID = "pEd-Mm-Cm6"; */
+"pEd-Mm-Cm6.text" = "Placemark";
+
+/* Class = "IBUINavigationItem"; title = "MQTTitude"; ObjectID = "x0N-7e-ll2"; */
+"x0N-7e-ll2.title" = "MQTTitude";
+
+/* Class = "IBUIBarButtonItem"; title = "Publish Now"; ObjectID = "xmE-pL-qYg"; */
+"xmE-pL-qYg.title" = "Publish Now";
+
+/* Class = "IBUITextField"; text = "Port"; ObjectID = "yw5-Nq-yNB"; */
+"yw5-Nq-yNB.text" = "Port";
+
+/* Class = "IBUILabel"; text = "Retain"; ObjectID = "yyy-1a-h4s"; */
+"yyy-1a-h4s.text" = "Retain";

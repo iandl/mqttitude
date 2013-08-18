@@ -18,7 +18,9 @@
 }
 
 - (NSString *)title {
-    return [self.timeStamp description];
+    return [NSDateFormatter localizedStringFromDate:self.timeStamp
+                                          dateStyle:NSDateFormatterShortStyle
+                                          timeStyle:NSDateFormatterMediumStyle];
 }
 
 - (NSString *)subtitle {
