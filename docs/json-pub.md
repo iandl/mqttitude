@@ -1,5 +1,4 @@
 
-
 ## Location object
 This location object is published by the mobile apps and delivered by the backend JSON API
 ```json
@@ -27,19 +26,27 @@ This location object is published by the mobile apps and delivered by the backen
 {
     "name": "testuser"
 }
+```
 
 ## Backend API
 
+```none
 GET /users
 > {"items":[{"name" : foo}, {"name" : "bar"}]}
+```
 
+```none
 GET /users/1
 > {"name" : foo}
+```
 
+```none
 GET /users/locations?year=2013
-
+```
+```none
 GET /users/locations?year=2013&month=1
-
+```
+```none
 GET /users/locations?year=2013&month=1&day=13
-
+```
 
