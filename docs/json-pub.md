@@ -1,15 +1,21 @@
 
 ## Location object
-This location object is published by the mobile apps and delivered by the backend JSON API
+
+This location object is published by the mobile apps and delivered by the backend JSON API.
+The commments behind the elements document which of the apps (Android (a), iOS (i)) provide
+the elements.
+
 ```json
 {
-    "lat": "xx.xxxxxx", 
-    "lon": "y.yyyyyy", 
-    "tst": "1376715317",
-    "acc": "75m",
-    "mo" : "<type>",
-    "alt" : "mmmmm",
-    "vac" : "xxxx"
+    "lat": "xx.xxxxxx", 	// (a) (i)
+    "lon": "y.yyyyyy", 		// (a) (i)
+    "tst": "1376715317",	// (a) (i)
+    "acc": "75m",		// (a) (i)
+    "mo" : "<type>", 		// (i)
+    "alt" : "mmmmm",		// (a) (i)
+    "vac" : "xxxx",		// (i)
+    "dir" : "xxx",		// (i)
+    "vel" : "xxx",		// (i)
 }
 ```
 
@@ -18,8 +24,10 @@ This location object is published by the mobile apps and delivered by the backen
 * `tst` is a UNIX [epoch timestamp](http://en.wikipedia.org/wiki/Unix_time)
 * `acc` is accuracy if available
 * `mo` is motion (e.g. `vehicle`, `on foot`, etc.) if available
-* `alt` altitude, measured in meters (i.e. units of 100cm)
-* "vac" : "xxxx" for vertical accuracy in meters - negative value indicates no valid altitude information
+* `alt` altitude, measured in meters (i.e. units of 100cm). Android provides the info, but it doesn't seem to contain anything useful.
+* `vac`,  "xxxx" for vertical accuracy in meters - negative value indicates no valid altitude information
+* `dir` is direction
+* `vel` is velocity
 
 ## User object
 ```json
