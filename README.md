@@ -61,9 +61,9 @@ myphone/jane/loca
 * _QoS_ or Quality of Service, specifies how the app should attempt to publish
   to an MQTT broker, and knows three values:
 
-  0. The message is delivered at most once, or it is not delivered at all. Its delivery across the network is not acknowledged.
-  1. The message is always delivered at least once. If the sender does not receive an acknowledgment, the message is sent again with the DUP flag set until an acknowledgment is received. As a result receiver can be sent the same message multiple times, and might process it multiple times.
-  2. The message is always delivered exactly once. This is the safest but slowest method of transfer.
+    * QoS=0. The message is delivered at most once, or it is not delivered at all. Its delivery across the network is not acknowledged.
+    * QoS=1. The message is always delivered at least once. If the sender does not receive an acknowledgment, the message is sent again with the DUP flag set until an acknowledgment is received. As a result receiver can be sent the same message multiple times, and might process it multiple times.
+    * QoS=2. The message is always delivered exactly once. This is the safest but slowest method of transfer.
 
 * Retain means that the MQTT broker will attempt to store a published message
   on a particular topic. Some brokers do not support retained messages.
