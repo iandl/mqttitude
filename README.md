@@ -34,7 +34,7 @@ Both the App and the back-end talk to the broker (as shown in the diagram below)
 You can also have other programs obtain the data from the broker (MQTTitude
 uses [JSON] for which there is support in almost any language you can imagine.)
 
- ![Architecture](mqttitude.png)
+ ![Architecture](docs/assets/mqttitude.png)
 
 ## Getting started
 
