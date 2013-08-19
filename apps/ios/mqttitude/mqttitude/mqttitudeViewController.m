@@ -11,13 +11,13 @@
 #import "mqttitudeLogTVCViewController.h"
 #import "Location.h"
 #import "LogEntry.h"
-#import <AddressBookUI/AddressBookUI.h>
 
 @interface mqttitudeViewController ()
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) CLLocationManager *manager;
 @property (strong, nonatomic) NSString *clientId;
-@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSTimer *keepalive;
 
 @property (strong, nonatomic) NSString *topic;
 @property (nonatomic) BOOL retainFlag;
@@ -35,7 +35,6 @@
 
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak, nonatomic) IBOutlet UITextField *status;
-@property (weak, nonatomic) IBOutlet UITextView *placeMark;
 
 
 @end
@@ -112,6 +111,8 @@
     }
 }
 
+#define KEEP_ALIVE 30
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -129,47 +130,100 @@
     }
     
     [self settingsFromPropertyList];
+    
+    self.keepalive = [NSTimer timerWithTimeInterval:KEEP_ALIVE target:self selector:@selector(stillhere ) userInfo:Nil repeats:TRUE];
+    NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
+    [runLoop addTimer:self.keepalive forMode:NSDefaultRunLoopMode];
+
     [self connect];
+
+    if (self.manager) {
+        [self.manager startMonitoringSignificantLocationChanges];
+    }
+}
+
+- (void)stillhere
+{
+    UIApplicationState state =  [[UIApplication sharedApplication] applicationState];
+    NSLog(@"ApplicationState: %d, time remaining %10.3f",
+          state,
+          (state == UIApplicationStateBackground) ?
+          [UIApplication sharedApplication].backgroundTimeRemaining :
+            0.0);
 }
 
 #pragma mark - MQtt Callback methods
+#define RECONNECT_SLEEP 10.0
 
 - (void)session:(MQTTSession*)sender handleEvent:(MQTTSessionEvent)eventCode {
     switch (eventCode) {
         case MQTTSessionEventConnected:
-            self.status.text = NSLocalizedString(@"connected",
-                                                 @"Status messsage to the user MQTT is connected to host");
+            [self sessionMessage: NSLocalizedString(@"connected",
+                                                 @"Status messsage to the user MQTT is connected to host")];
             break;
         case MQTTSessionEventConnectionRefused:
-            self.status.text = NSLocalizedString(@"connection refused",
-                                                 @"Status messsage to the user MQTT connect to host was refused");
+            [self sessionMessage: NSLocalizedString(@"refused",
+                                                    @"Status messsage to the user MQTT connect to host was refused")];
+            [self disconnect];
             break;
         case MQTTSessionEventConnectionClosed:
-            self.status.text = NSLocalizedString(@"connection closed",
-                                                 @"Status messsage to the user MQTT connection to host was closed");
+            [self sessionMessage: NSLocalizedString(@"closed",
+                                                 @"Status messsage to the user MQTT connection to host was closed")];
             break;
         case MQTTSessionEventConnectionError:
-            self.status.text = NSLocalizedString(@"connection error, reconnecting...",
-                                                 @"Status messsage to the user MQTT connection problem, retrying");
-            [self log:[NSDate date] message:self.status.text];
-            
-            // Forcing reconnection
-            [self.session connectToHost:self.host port:self.port usingSSL:self.tls];
+        {
+            [self sessionMessage:NSLocalizedString(@"connection error",
+                                                 @"Status messsage to the user MQTT connection problem")];
+            //Forcing reconnection
+            [self.timer invalidate];
+            self.session = nil;
+            self.timer = [NSTimer timerWithTimeInterval:RECONNECT_SLEEP target:self selector:@selector(reconnect) userInfo:Nil repeats:FALSE];
+            NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
+            [runLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
             break;
+        }
         case MQTTSessionEventProtocolError:
-            self.status.text = NSLocalizedString(@"protocol error",
-                                                 @"Status messsage to the user MQTT detected a protocol error");
-            break;
+            [self sessionMessage:NSLocalizedString(@"protocol error",
+                                                 @"Status messsage to the user MQTT detected a protocol error")];
+            break;      
         default:
-            self.status.text = [NSString stringWithFormat:@"MQTTitude unknown eventCode: %d", eventCode];
+            [self sessionMessage:[NSString stringWithFormat:@"MQTTitude unknown eventCode: %d", eventCode]];
             break;
     }
-    [self log:[NSDate date] message:self.status.text];
-
 }
+
+- (void)sessionMessage:(NSString *)message
+{
+    NSString *sessionMessage = [NSString stringWithFormat:@"%@ (%@%@:%d TLS=%@)",
+                         message,
+                         (self.auth) ? [NSString stringWithFormat:@"%@@", self.user] : @"",
+                         self.host,
+                         (unsigned int)self.port,
+                         (self.tls) ? @"ON" : @"OFF"
+                         ];
+    self.status.text = sessionMessage;
+    [self log:[NSDate date] message:sessionMessage];
+}
+
+- (void)reconnect
+{
+    self.timer = nil;
+    [self sessionMessage:NSLocalizedString(@"reconnect",
+                                           @"Status messsage to the user MQTT reconnect")];
+    [self connect];
+}
+
+- (void)session:(MQTTSession *)session newMessage:(NSData *)data onTopic:(NSString *)topic
+{
+    NSLog(@"%@: %@", topic, [self dataToString:data]);
+    [self publishLocation:self.manager.location];
+}
+
+#define LISTENTO @"LISTENTO"
 
 - (void)connect
 {
+    [self.timer invalidate];
     if (!self.session) {
         self.clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         
@@ -182,23 +236,18 @@
         [self.session connectToHost:self.host
                                port:self.port
                            usingSSL:self.tls];
-    }
-    if (self.manager) {
-        [self.manager startMonitoringSignificantLocationChanges];
+        [self.session subscribeTopic:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO]];
     }
 }
 
 - (void)disconnect
 {
+    [self.timer invalidate];
     if (self.session) {
+        [self.session unsubscribeTopic:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO]];
         [self.session close];
         self.session = nil;
     }
-    if (self.manager) {
-        [self.manager stopMonitoringSignificantLocationChanges];
-    }
-    
-    [self.map removeAnnotations:self.map.annotations];
 }
 
 - (IBAction)publishNow:(UIBarButtonItem *)sender {
@@ -216,7 +265,6 @@
         Location *locationAnnotation = [[Location alloc] init];
         locationAnnotation.coordinate = location.coordinate;
         locationAnnotation.timeStamp = location.timestamp;
-        [self geocodeLocation:location annotation:locationAnnotation];
 
         [self.map addAnnotation:locationAnnotation];
         [self.annotationArray addObject:locationAnnotation];
@@ -234,7 +282,7 @@
                                      @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
                                      @"vel": [NSString stringWithFormat:@"%f", location.speed],
                                      @"dir": [NSString stringWithFormat:@"%f", location.course],
-                                     @"mo": [NSString stringWithFormat:@"%@", @"unkown"]
+                                     @"_type": [NSString stringWithFormat:@"%@", @"location"]
                                      };
         NSData *data;
         
@@ -250,13 +298,7 @@
         
         if (self.session) {
             /* the following lines are necessary to convert data which is possibly not null-terminated into a string */
-            NSString *message = [[NSString alloc] init];
-            for (int i = 0; i < data.length; i++) {
-                char c;
-                [data getBytes:&c range:NSMakeRange(i, 1)];
-                message = [message stringByAppendingFormat:@"%c", c];
-            }
-            
+            NSString *message = [self dataToString:data];
             [self log:location.timestamp message:message];
             
             switch (self.qos) {
@@ -303,7 +345,6 @@
         settings.auth = self.auth;
         settings.user = self.user;
         settings.pass = self.pass;
-        
         settings.topic = self.topic;
         settings.retainFlag = self.retainFlag;
         settings.qos = self.qos;
@@ -348,23 +389,18 @@
     }
 }
 
-- (void)geocodeLocation:(CLLocation*)location annotation:(Location *)locationAnnotation
+- (NSString *)dataToString:(NSData *)data
 {
-    if (!self.geocoder)
-        self.geocoder = [[CLGeocoder alloc] init];
-    
-    [self.geocoder reverseGeocodeLocation:location completionHandler:
-     ^(NSArray* placemarks, NSError* error){
-         if ([placemarks count] > 0)
-         {
-             CLPlacemark *placemark = placemarks[0];
-             self.placeMark.text = ABCreateStringWithAddressDictionary (placemark.addressDictionary, TRUE);
-         } else {
-             self.placeMark.text = [NSString stringWithFormat:@"%f %f",
-                                    location.coordinate.latitude,
-                                    location.coordinate.longitude];
-         }
-     }];
+    /* the following lines are necessary to convert data which is possibly not null-terminated into a string */
+    NSString *message = [[NSString alloc] init];
+    for (int i = 0; i < data.length; i++) {
+        char c;
+        [data getBytes:&c range:NSMakeRange(i, 1)];
+        message = [message stringByAppendingFormat:@"%c", c];
+    }
+    return message;
 }
+
+
 
 @end

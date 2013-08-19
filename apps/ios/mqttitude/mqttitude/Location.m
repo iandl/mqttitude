@@ -7,6 +7,7 @@
 //
 
 #import "Location.h"
+#import <AddressBookUI/AddressBookUI.h>
 
 @interface Location() <MKAnnotation>
 @property (nonatomic, readwrite) CLLocationCoordinate2D coordinate;
@@ -24,15 +25,28 @@
 }
 
 - (NSString *)subtitle {
-    NSString *string = [NSString stringWithFormat:@"%f %f",
-                        self.coordinate.latitude,
-                        self.coordinate.longitude];
-
-    return string;
+    return  (self.placemark) ?
+    ABCreateStringWithAddressDictionary (self.placemark.addressDictionary, TRUE) :
+    [NSString stringWithFormat:@"%f %f",
+     self.coordinate.latitude,
+     self.coordinate.longitude];
 }
 
-- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate {
-    _coordinate = newCoordinate;    
+- (void)setCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    _coordinate = coordinate;
+    
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0 timestamp:0];
+    [geocoder reverseGeocodeLocation:location completionHandler:
+     ^(NSArray *placemarks, NSError *error) {
+         if ([placemarks count] > 0) {
+             self.placemark = placemarks[0];
+         } else {
+             self.placemark = nil;
+         }
+     }];
+    
 }
 
 @end

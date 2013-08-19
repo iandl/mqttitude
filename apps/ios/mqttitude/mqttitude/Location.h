@@ -11,5 +11,7 @@
 
 @interface Location : NSObject <MKAnnotation>
 @property (strong, nonatomic) NSDate *timeStamp;
+@property (strong, nonatomic) CLPlacemark *placemark;
+
 
 @end

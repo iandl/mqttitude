@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8408E30017C208BC00068C49 /* mqttitudeQoSTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */; };
 		8485A89A17C10CE300D3348A /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89017C10CE300D3348A /* MQttTxFlow.m */; };
 		8485A89B17C10CE300D3348A /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89217C10CE300D3348A /* MQTTSession.m */; };
 		8485A89C17C10CE300D3348A /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89417C10CE300D3348A /* MQTTMessage.m */; };
@@ -41,6 +42,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8408E2FE17C208BC00068C49 /* mqttitudeQoSTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeQoSTVC.h; sourceTree = "<group>"; };
+		8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeQoSTVC.m; sourceTree = "<group>"; };
+		8408E30217C21A5100068C49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
+		8408E30417C21A5700068C49 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		8485A89017C10CE300D3348A /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
 		8485A89117C10CE300D3348A /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
 		8485A89217C10CE300D3348A /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
@@ -53,8 +58,6 @@
 		8485A89917C10CE300D3348A /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
 		8485A8A017C11D1E00D3348A /* fells_loop.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = fells_loop.gpx; path = ../fells_loop.gpx; sourceTree = "<group>"; };
 		8485A8A617C178AF00D3348A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		8485A8A917C17A4300D3348A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
-		8485A8AB17C17A4E00D3348A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CF9A0817BEED5B00E1333C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		84CF9A0A17BEED5B00E1333C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -162,6 +165,8 @@
 			isa = PBXGroup;
 			children = (
 				84F93C0317C027F60060E809 /* MainStoryboard_iPhone.storyboard */,
+				8408E2FE17C208BC00068C49 /* mqttitudeQoSTVC.h */,
+				8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */,
 				84F93C0517C029580060E809 /* Localizable.strings */,
 				84CF9A6017BF1A9400E1333C /* mqttitudeLogTVCViewController.h */,
 				84CF9A6117BF1A9400E1333C /* mqttitudeLogTVCViewController.m */,
@@ -288,6 +293,7 @@
 				8485A89C17C10CE300D3348A /* MQTTMessage.m in Sources */,
 				8485A89D17C10CE300D3348A /* MQTTEncoder.m in Sources */,
 				8485A89E17C10CE300D3348A /* MQTTDecoder.m in Sources */,
+				8408E30017C208BC00068C49 /* mqttitudeQoSTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,8 +304,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				84F93C0417C028690060E809 /* Base */,
-				8485A8A917C17A4300D3348A /* en */,
-				8485A8AB17C17A4E00D3348A /* de */,
+				8408E30217C21A5100068C49 /* en */,
+				8408E30417C21A5700068C49 /* de */,
 			);
 			name = MainStoryboard_iPhone.storyboard;
 			sourceTree = "<group>";

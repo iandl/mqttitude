@@ -7,6 +7,9 @@
 //
 
 #import "mqttitudeAppDelegate.h"
+@interface mqttitudeAppDelegate()
+@property UIBackgroundTaskIdentifier activeBackgroundTask;
+@end
 
 @implementation mqttitudeAppDelegate
 
@@ -14,6 +17,7 @@
 {
     // Override point for customization after application launch.
     NSLog(@"application didFinishLaunchingWithOptions");
+    self.activeBackgroundTask = UIBackgroundTaskInvalid;
     return YES;
 }
 							
@@ -25,12 +29,28 @@
 
 }
 
+- (void)expirationHandler
+{
+    NSLog(@"ExpirationHandler remaining: %10.3f", [UIApplication sharedApplication].backgroundTimeRemaining);
+}
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"applicationDidEnterBackground");
+    
+    self.activeBackgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self expirationHandler];
+    }];
+
+    if (self.activeBackgroundTask == UIBackgroundTaskInvalid) {
+        NSLog(@"Backgroundtasks Invalid");
+    }
+
+
 }
+
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
