@@ -6,6 +6,7 @@ the elements.
 
 ```json
 {
+    "_type": "location",	// (a) (i)
     "lat": "xx.xxxxxx", 	// (a) (i)
     "lon": "y.yyyyyy", 		// (a) (i)
     "tst": "1376715317",	// (a) (i)
