@@ -1,38 +1,159 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-      <title>MQTTitude: a decentralized "Latitude"</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style type="text/css">
-        body {
-            font-family: "Lucida Bright", Lucidabright, "Lucida Serif", Lucida,
-            "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia,
-            serif;
-         margin:0 auto; border:1px solid #fff; max-width:60em; 
-        }
-        #textblock { margin: 2.12501em 3em 3em 4.5em; }
-        body { background: white;}
-	ul { font-size: 80%; }
-    </style>
-  </head>
-  <body>
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MQTTitude: a decentralized 'Latitude' with 'MQTT inside'</title>
+	<link rel="stylesheet" href="css/pure-min.css">
+	<link rel="stylesheet" href="css/marketing.css">
+</head>
+<body>
 
-<p>
-MQTTitude is an app (well, two apps actually -- one for Android, another for iOS),
-which allow a device to periodically publish its location status to an <a
-href="http://mqtt.org">MQTT</a> broker. If you've previously used Google
-Latitude, you can think of this as a a <em>decentralized Google Latitude</em>.
-MQTTitude was started because Google Latitude
-was de-comissioned in August 2013.
-</p>
 
-<ul>
-<li><a href="https://github.com/binarybucks/mqttitude/">MQTTitude on Github</a></li>
-<li><a href="https://play.google.com/store/apps/details?id=st.alr.mqttitude">Android app on Google Play</a></li>
-</ul>
+<div class="content">
+    <div class="header">
+        <div class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal">
+            <a class="pure-menu-heading" href="">MQTTitude</a>
 
-<p>
-Follow <a href="https://twitter.com/mqttitude">@MQTTitude</a> for announcements.
-</p>
+            <ul>
+                <li class="pure-menu-selected"><a href="#">Home</a></li>
+                <li><a href="#">Tour</a></li>
+                <li><a href="#">API</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
+    </div>
 
+    <div class="splash">
+        <div class="pure-g-r">
+            <div class="pure-u-1-3">
+                <div class="l-box splash-image">
+                    <img src="http://placehold.it/500x350"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+
+            <div class="pure-u-2-3">
+                <div class="l-box splash-text">
+                    <h1 class="splash-head">
+                        Decentralized Latitude.
+                    </h1>
+
+                    <h2 class="splash-subhead">
+                        MQTTitude allows a 
+			device to periodically publish its location status to an 
+			MQTT broker. If you've previously used Google
+			Latitude, you can think of this as a a <em>decentralized Google Latitude</em>.
+			MQTTitude was started because Google Latitude
+			was de-comissioned in August 2013.
+                    </h2>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="pure-g-r content-ribbon">
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h4 class="content-subhead">Apps</h4>
+
+                    <h3>Android &amp; iOS.</h3>
+                    <p>
+                        Use MQTTitude on your Android or iOS device. Lots are supported.
+
+                    </p>
+		    <p>
+			<a href="#" class="pure-button primary-button">Get Apps</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="pure-u-1-3">
+                <div class="l-box">
+                    <img src="http://placehold.it/400x250"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+        </div>
+
+        <div class="pure-g-r content-ribbon">
+            <div class="pure-u-1-3">
+                <div class="l-box">
+                    <img src="http://placehold.it/400x250"
+                         alt="Placeholder image for example.">
+                </div>
+            </div>
+
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h4 class="content-subhead">MQTT. Huh?</h4>
+
+                    <h3>For the "Internet of Things".</h3>
+                    <p>
+                        MQTT is a machine-to-machine connectivity protocol which
+			was designed as a very lightweight publish/subscribe
+			messaging transport. It is very useful for connections
+			with remote locations (such as from a mobile device) where
+			network bandwidth is at a premium.
+		    	MQTTitude uses the MQTT protocol to safely transmit your
+			location information to your server (which is called a "broker").
+		    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pure-g-r">
+            <div class="pure-u-1-4">
+                <div class="l-box">
+                    <h3>Subheading</h3>
+                    <p>
+                        Donec suscipit, risus vel venenatis ornare, nibh massa ultrices diam, a elementum metus felis sit amet eros. Phasellus pellentesque euismod massa sed pellentesque.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pure-u-1-4">
+                <div class="l-box">
+                    <h3>Technology</h3>
+                    <p>
+                        Donec suscipit, risus vel venenatis ornare, nibh massa ultrices diam, a elementum metus felis sit amet eros. Phasellus pellentesque euismod massa sed pellentesque.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pure-u-1-4">
+                <div class="l-box">
+                    <h3>Privacy</h3>
+                    <p>
+                        It's your data, and only yours.
+                    </p>
+		    <p>
+			<a href="#" class="pure-button primary-button">Read more</a>
+		    </p>
+                </div>
+            </div>
+
+            <div class="pure-u-1-4">
+                <div class="l-box">
+                    <h3>Subheading</h3>
+                    <p>
+                        Donec suscipit, risus vel venenatis ornare, nibh massa ultrices diam, a elementum metus felis sit amet eros. Phasellus pellentesque euismod massa sed pellentesque.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="l-box ribbon">
+        </div>
+    </div>
+
+    <div class="footer">
+    </div>
+</div>
+
+
+</body>
 </html>
