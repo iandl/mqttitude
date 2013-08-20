@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MQTTitude: API</title>
+	<link rel="stylesheet" href="css/pure-min.css">
+	<link rel="stylesheet" href="css/marketing.css">
+</head>
+<body>
+
+
+<div class="content">
+    <div class="header">
+        <div class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal">
+            <a class="pure-menu-heading" href="/">MQTTitude</a>
+
+            <ul>
+                <li class="pure-menu-selected"><a href="/">Home</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="http://twitter.com/mqttitude">@mqttitude</a></li>
+                <li><a href="https://github.com/binarybucks/mqttitude">Github</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="splash">
+        <div class="pure-g-l">
+            <div class="pure-u-1-1">
+                <div class="l-box splash-text">
+                    <h1 class="splash-head">
+                        Parlez vs. JSON?
+                    </h1>
+
+                    <h2 class="splash-subhead">
+			Your data. With standards.
+                    </h2>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="pure-g-r content-ribbon">
+            <div class="pure-u-2-3">
+                <div class="l-box">
+                    <h4 class="content-subhead">Location</h4>
+
+                    <p>
+			Location updates are transported via MQTT from the
+			app to your broker.
+
+			<pre>
+{
+    "_type": "location", 
+    "lat": "37.522713", 
+    "lon": "-122.355643", 
+    "acc": "5m", 
+    "alt": "0.000000", 
+    "dir": "336.800000", 
+    "tst": "1376975729", 
+    "vac": "-1m", 
+    "vel": "33.460000"
+}
+			</pre>
+		    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+        </div>
+
+        <div class="l-box ribbon">
+        </div>
+    </div>
+
+    <div class="footer">
+    </div>
+</div>
+
+
+</body>
+</html>
