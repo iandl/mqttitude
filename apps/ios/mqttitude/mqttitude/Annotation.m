@@ -1,19 +1,19 @@
 //
-//  Location.m
-//  Longitude
+//  Annotation.
+//  MQTTitude
 //
 //  Created by Christoph Krey on 13.07.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
 
-#import "Location.h"
+#import "Annotation.h"
 #import <AddressBookUI/AddressBookUI.h>
 
-@interface Location() <MKAnnotation>
+@interface Annotation() <MKAnnotation>
 @property (nonatomic, readwrite) CLLocationCoordinate2D coordinate;
 @end
 
-@implementation Location
+@implementation Annotation
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@ %@", self.title, self.subtitle];
 }

@@ -9,8 +9,11 @@
 #import "mqttitudeViewController.h"
 #import "mqttitudeSettingsTVCViewController.h"
 #import "mqttitudeLogTVCViewController.h"
-#import "Location.h"
+#import "Annotation.h"
 #import "LogEntry.h"
+#ifdef MULTI_THREADING
+#import "ConnectionThread.h"
+#endif 
 
 @interface mqttitudeViewController ()
 @property (strong, nonatomic) MQTTSession *session;
@@ -34,12 +37,19 @@
 @property (strong, nonatomic) NSMutableArray *annotationArray;
 
 @property (weak, nonatomic) IBOutlet MKMapView *map;
-@property (weak, nonatomic) IBOutlet UITextField *status;
+@property (weak, nonatomic) IBOutlet UITextView *statusField;
 
+#ifdef MULTI_THREADING
+@property (strong, nonatomic) ConnectionThread *connectionThread;
+#endif
 
 @end
 
 @implementation mqttitudeViewController
+
+/* Settings
+ *
+ */
 
 #define SETTINGS_KEY @"SETTINGS"
 
@@ -111,15 +121,31 @@
     }
 }
 
+/* Setup
+ *
+ * Settings, Arrays, KeepAlive Timer, Location Manager
+ *
+ */
 #define KEEP_ALIVE 30
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    [self settingsFromPropertyList];
+
     self.logArray = [[NSMutableArray alloc] init];
     self.annotationArray = [[NSMutableArray alloc] init];
     
+    self.keepalive = [NSTimer timerWithTimeInterval:KEEP_ALIVE target:self selector:@selector(stillhere ) userInfo:Nil repeats:TRUE];
+    NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
+    [runLoop addTimer:self.keepalive forMode:NSDefaultRunLoopMode];
+
+    
+    if (self.manager) {
+        [self.manager startMonitoringSignificantLocationChanges];
+    }
+
     if ([CLLocationManager locationServicesEnabled]) {
         self.manager = [[CLLocationManager alloc] init];
         self.manager.delegate = self;
@@ -128,18 +154,15 @@
         [self log:[NSDate date] message:[NSString stringWithFormat:@"MQTTitude not authorized for CoreLocation %d", status]];
         
     }
-    
-    [self settingsFromPropertyList];
-    
-    self.keepalive = [NSTimer timerWithTimeInterval:KEEP_ALIVE target:self selector:@selector(stillhere ) userInfo:Nil repeats:TRUE];
-    NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
-    [runLoop addTimer:self.keepalive forMode:NSDefaultRunLoopMode];
-
+//#define MULTI_THREADING
+#ifdef MULTI_THREADING
+    self.ConnectionThread = [[ConnectionThread alloc] init];
+    [self.connectionThread setStackSize:4096*100];
+    [self.connectionThread start];
+    [self.connctionThread connect];
+#else
     [self connect];
-
-    if (self.manager) {
-        [self.manager startMonitoringSignificantLocationChanges];
-    }
+#endif
 }
 
 - (void)stillhere
@@ -194,14 +217,14 @@
 
 - (void)sessionMessage:(NSString *)message
 {
-    NSString *sessionMessage = [NSString stringWithFormat:@"%@ (%@%@:%d TLS=%@)",
+    NSString *sessionMessage = [NSString stringWithFormat:@"%@ %@%@ :%d %@",
                          message,
-                         (self.auth) ? [NSString stringWithFormat:@"%@@", self.user] : @"",
+                         (self.auth) ? [NSString stringWithFormat:@"%@@ ", self.user] : @"",
                          self.host,
                          (unsigned int)self.port,
-                         (self.tls) ? @"ON" : @"OFF"
+                         (self.tls) ? @"TLS" : @"PLAIN"
                          ];
-    self.status.text = sessionMessage;
+    self.statusField.text = sessionMessage;
     [self log:[NSDate date] message:sessionMessage];
 }
 
@@ -213,6 +236,13 @@
     [self connect];
 }
 
+/*
+ * Incoming Data Handler for subscriptions
+ *
+ * all incoming data is responded to by a publish of the current position
+ *
+ */
+ 
 - (void)session:(MQTTSession *)session newMessage:(NSData *)data onTopic:(NSString *)topic
 {
     NSLog(@"%@: %@", topic, [self dataToString:data]);
@@ -220,6 +250,7 @@
 }
 
 #define LISTENTO @"LISTENTO"
+#define MQTT_KEEPALIVE 60
 
 - (void)connect
 {
@@ -227,11 +258,16 @@
     if (!self.session) {
         self.clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         
-        if (self.auth) {
-            self.session = [[MQTTSession alloc] initWithClientId:self.clientId userName:self.user password:self.pass];
-        } else {
-            self.session = [[MQTTSession alloc] initWithClientId:self.clientId];
-        }
+        self.session = [[MQTTSession alloc] initWithClientId:self.clientId
+                                                    userName:self.auth ? self.user : @""
+                                                    password:self.auth ? self.pass : @""
+                                                   keepAlive:MQTT_KEEPALIVE
+                                                cleanSession:YES
+                                                   willTopic:self.topic
+                                                     willMsg:[self formatLocationData:self.manager.location withType:@"lwt"]
+                                                     willQoS:1
+                                               willRetainFlag:YES];
+                    
         [self.session setDelegate:self];
         [self.session connectToHost:self.host
                                port:self.port
@@ -262,42 +298,20 @@
         [self.map setCenterCoordinate:location.coordinate animated:YES];
         [self.map setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
         
-        Location *locationAnnotation = [[Location alloc] init];
-        locationAnnotation.coordinate = location.coordinate;
-        locationAnnotation.timeStamp = location.timestamp;
+        Annotation *annotation = [[Annotation alloc] init];
+        annotation.coordinate = location.coordinate;
+        annotation.timeStamp = location.timestamp;
 
-        [self.map addAnnotation:locationAnnotation];
-        [self.annotationArray addObject:locationAnnotation];
+        [self.map addAnnotation:annotation];
+        [self.annotationArray addObject:annotation];
         if ([self.annotationArray count] > MAX_ANNOTATIONS) {
             [self.map removeAnnotation:self.annotationArray[0]];
             [self.annotationArray removeObjectAtIndex:0];
         }
         
-        NSDictionary *jsonObject = @{
-                                     @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
-                                     @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
-                                     @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
-                                     @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
-                                     @"alt": [NSString stringWithFormat:@"%f", location.altitude],
-                                     @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
-                                     @"vel": [NSString stringWithFormat:@"%f", location.speed],
-                                     @"dir": [NSString stringWithFormat:@"%f", location.course],
-                                     @"_type": [NSString stringWithFormat:@"%@", @"location"]
-                                     };
-        NSData *data;
-        
-        if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
-            NSError *error;
-            data = [NSJSONSerialization dataWithJSONObject:jsonObject options:!NSJSONWritingPrettyPrinted error:&error];
-            if (!data) {
-                [self log:[NSDate date] message:[error description]];
-            }
-        } else {
-            [self log:[NSDate date] message:[NSString stringWithFormat:@"No valid JSON Object: %@", [jsonObject description]]];
-        }
-        
+        NSData *data = [self formatLocationData:location withType:@"location"];
+                
         if (self.session) {
-            /* the following lines are necessary to convert data which is possibly not null-terminated into a string */
             NSString *message = [self dataToString:data];
             [self log:location.timestamp message:message];
             
@@ -317,6 +331,46 @@
             }
         }
     }
+}
+
+- (NSData *)formatLocationData:(CLLocation *)location withType:(NSString *)type
+{
+    NSData *data;
+    
+    if (location) {
+        NSDictionary *fullJsonObject = @{
+                                     @"lat": [NSString stringWithFormat:@"%f", location.coordinate.latitude],
+                                     @"lon": [NSString stringWithFormat:@"%f", location.coordinate.longitude],
+                                     @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
+                                     @"acc": [NSString stringWithFormat:@"%.0fm", location.horizontalAccuracy],
+                                     @"alt": [NSString stringWithFormat:@"%f", location.altitude],
+                                     @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
+                                     @"vel": [NSString stringWithFormat:@"%f", location.speed],
+                                     @"dir": [NSString stringWithFormat:@"%f", location.course],
+                                     @"_type": [NSString stringWithFormat:@"%@", type]
+                                     };
+        NSDictionary *smallJsonObject = @{
+                                         @"tst": [NSString stringWithFormat:@"%.0f", [location.timestamp timeIntervalSince1970]],
+                                         @"_type": [NSString stringWithFormat:@"%@", type]
+                                         };
+
+        
+        NSDictionary *jsonObjects = @{
+                                    @"location": fullJsonObject,
+                                    @"lwt": smallJsonObject
+                                    };
+        
+        if ([NSJSONSerialization isValidJSONObject:jsonObjects[type]]) {
+            NSError *error;
+            data = [NSJSONSerialization dataWithJSONObject:jsonObjects[type] options:0 /* not pretty printed */ error:&error];
+            if (!data) {
+                [self log:[NSDate date] message:[error description]];
+            }
+        } else {
+            [self log:[NSDate date] message:[NSString stringWithFormat:@"No valid JSON Object: %@", [jsonObjects[type] description]]];
+        }
+    }
+    return data;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations

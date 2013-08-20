@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8408E30017C208BC00068C49 /* mqttitudeQoSTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */; };
+		847C9EF117C3BAEE00109BD1 /* ConnectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 847C9EF017C3BAED00109BD1 /* ConnectionThread.m */; };
 		8485A89A17C10CE300D3348A /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89017C10CE300D3348A /* MQttTxFlow.m */; };
 		8485A89B17C10CE300D3348A /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89217C10CE300D3348A /* MQTTSession.m */; };
 		8485A89C17C10CE300D3348A /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89417C10CE300D3348A /* MQTTMessage.m */; };
@@ -30,7 +31,7 @@
 		84CF9A3B17BEF11200E1333C /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3A17BEF11200E1333C /* icon_114x114.png */; };
 		84CF9A3D17BEF13200E1333C /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3C17BEF13200E1333C /* icon_72x72.png */; };
 		84CF9A3F17BEF1C200E1333C /* icon_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3E17BEF1C200E1333C /* icon_144x144.png */; };
-		84CF9A4217BEF2A500E1333C /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A4117BEF2A500E1333C /* Location.m */; };
+		84CF9A4217BEF2A500E1333C /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A4117BEF2A500E1333C /* Annotation.m */; };
 		84CF9A4517BEF35700E1333C /* mqttitudeSettingsTVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A4417BEF35700E1333C /* mqttitudeSettingsTVCViewController.m */; };
 		84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */; };
 		84CF9A5217BEF44F00E1333C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A5117BEF44F00E1333C /* MapKit.framework */; };
@@ -46,6 +47,8 @@
 		8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeQoSTVC.m; sourceTree = "<group>"; };
 		8408E30217C21A5100068C49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		8408E30417C21A5700068C49 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
+		847C9EEF17C3BAED00109BD1 /* ConnectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionThread.h; sourceTree = "<group>"; };
+		847C9EF017C3BAED00109BD1 /* ConnectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionThread.m; sourceTree = "<group>"; };
 		8485A89017C10CE300D3348A /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
 		8485A89117C10CE300D3348A /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
 		8485A89217C10CE300D3348A /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
@@ -78,8 +81,8 @@
 		84CF9A3A17BEF11200E1333C /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_114x114.png; path = ../icon_114x114.png; sourceTree = "<group>"; };
 		84CF9A3C17BEF13200E1333C /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_72x72.png; path = ../icon_72x72.png; sourceTree = "<group>"; };
 		84CF9A3E17BEF1C200E1333C /* icon_144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_144x144.png; path = ../icon_144x144.png; sourceTree = "<group>"; };
-		84CF9A4017BEF2A500E1333C /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		84CF9A4117BEF2A500E1333C /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		84CF9A4017BEF2A500E1333C /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
+		84CF9A4117BEF2A500E1333C /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 		84CF9A4317BEF35700E1333C /* mqttitudeSettingsTVCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeSettingsTVCViewController.h; sourceTree = "<group>"; };
 		84CF9A4417BEF35700E1333C /* mqttitudeSettingsTVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeSettingsTVCViewController.m; sourceTree = "<group>"; };
 		84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -174,12 +177,14 @@
 				84CF9A1817BEED5B00E1333C /* mqttitudeAppDelegate.m */,
 				84CF9A2617BEED5B00E1333C /* mqttitudeViewController.h */,
 				84CF9A2717BEED5B00E1333C /* mqttitudeViewController.m */,
-				84CF9A5D17BF051100E1333C /* LogEntry.h */,
-				84CF9A5E17BF051200E1333C /* LogEntry.m */,
+				847C9EEF17C3BAED00109BD1 /* ConnectionThread.h */,
+				847C9EF017C3BAED00109BD1 /* ConnectionThread.m */,
 				84CF9A4317BEF35700E1333C /* mqttitudeSettingsTVCViewController.h */,
 				84CF9A4417BEF35700E1333C /* mqttitudeSettingsTVCViewController.m */,
-				84CF9A4017BEF2A500E1333C /* Location.h */,
-				84CF9A4117BEF2A500E1333C /* Location.m */,
+				84CF9A5D17BF051100E1333C /* LogEntry.h */,
+				84CF9A5E17BF051200E1333C /* LogEntry.m */,
+				84CF9A4017BEF2A500E1333C /* Annotation.h */,
+				84CF9A4117BEF2A500E1333C /* Annotation.m */,
 				84CF9A0F17BEED5B00E1333C /* Supporting Files */,
 			);
 			path = mqttitude;
@@ -284,7 +289,7 @@
 				84CF9A1517BEED5B00E1333C /* main.m in Sources */,
 				84CF9A1917BEED5B00E1333C /* mqttitudeAppDelegate.m in Sources */,
 				84CF9A2817BEED5B00E1333C /* mqttitudeViewController.m in Sources */,
-				84CF9A4217BEF2A500E1333C /* Location.m in Sources */,
+				84CF9A4217BEF2A500E1333C /* Annotation.m in Sources */,
 				84CF9A4517BEF35700E1333C /* mqttitudeSettingsTVCViewController.m in Sources */,
 				84CF9A5F17BF051200E1333C /* LogEntry.m in Sources */,
 				84CF9A6217BF1A9400E1333C /* mqttitudeLogTVCViewController.m in Sources */,
@@ -294,6 +299,7 @@
 				8485A89D17C10CE300D3348A /* MQTTEncoder.m in Sources */,
 				8485A89E17C10CE300D3348A /* MQTTDecoder.m in Sources */,
 				8408E30017C208BC00068C49 /* mqttitudeQoSTVC.m in Sources */,
+				847C9EF117C3BAEE00109BD1 /* ConnectionThread.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,24 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398626230.586336"
+         timestampString = "398705356.759294"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "277"
-         endingLineNumber = "277"
-         landmarkName = "-publishLocation:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398626230.586336"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "340"
-         endingLineNumber = "340"
+         startingLineNumber = "394"
+         endingLineNumber = "394"
          landmarkName = "-prepareForSegue:sender:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398626230.586336"
+         timestampString = "398705356.759294"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "359"
-         endingLineNumber = "359"
+         startingLineNumber = "413"
+         endingLineNumber = "413"
          landmarkName = "-settingsSaved:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -73,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398626230.586336"
+         timestampString = "398705356.759294"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "302"
-         endingLineNumber = "302"
+         startingLineNumber = "316"
+         endingLineNumber = "316"
          landmarkName = "-publishLocation:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398607680.802175"
+         timestampString = "398705356.759294"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "118"
-         endingLineNumber = "118"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398626230.586336"
+         timestampString = "398705356.759294"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "261"
-         endingLineNumber = "261"
+         startingLineNumber = "297"
+         endingLineNumber = "297"
          landmarkName = "-publishLocation:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -138,24 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398626230.586336"
+         timestampString = "398705356.759294"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "230"
-         endingLineNumber = "230"
-         landmarkName = "-connect"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "mqttitude/mqttitudeViewController.m"
-         timestampString = "398607904.069684"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "145"
-         endingLineNumber = "145"
+         startingLineNumber = "168"
+         endingLineNumber = "168"
          landmarkName = "-stillhere"
          landmarkType = "5">
       </FileBreakpoint>

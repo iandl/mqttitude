@@ -54,21 +54,26 @@ typedef enum {
 }
 
 - (id)initWithClientId:(NSString*)theClientId;
+
 - (id)initWithClientId:(NSString*)theClientId runLoop:(NSRunLoop*)theRunLoop
                forMode:(NSString*)theRunLoopMode;
+
 - (id)initWithClientId:(NSString*)theClientId
               userName:(NSString*)theUsername
               password:(NSString*)thePassword;
+
 - (id)initWithClientId:(NSString*)theClientId
               userName:(NSString*)theUserName
               password:(NSString*)thePassword
                runLoop:(NSRunLoop*)theRunLoop
                forMode:(NSString*)theRunLoopMode;
+
 - (id)initWithClientId:(NSString*)theClientId
               userName:(NSString*)theUsername
               password:(NSString*)thePassword
              keepAlive:(UInt16)theKeepAliveInterval
           cleanSession:(BOOL)cleanSessionFlag;
+
 - (id)initWithClientId:(NSString*)theClientId
               userName:(NSString*)theUsername
               password:(NSString*)thePassword
@@ -76,6 +81,7 @@ typedef enum {
           cleanSession:(BOOL)theCleanSessionFlag
                runLoop:(NSRunLoop*)theRunLoop
                forMode:(NSString*)theMode;
+
 - (id)initWithClientId:(NSString*)theClientId
               userName:(NSString*)theUserName
               password:(NSString*)thePassword
@@ -97,6 +103,7 @@ typedef enum {
         willRetainFlag:(BOOL)willRetainFlag
                runLoop:(NSRunLoop*)theRunLoop
                forMode:(NSString*)theRunLoopMode;
+
 - (id)initWithClientId:(NSString*)theClientId
              keepAlive:(UInt16)theKeepAliveInterval
         connectMessage:(MQTTMessage*)theConnectMessage

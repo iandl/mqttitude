@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
-@interface Location : NSObject <MKAnnotation>
+@interface Annotation : NSObject <MKAnnotation>
 @property (strong, nonatomic) NSDate *timeStamp;
 @property (strong, nonatomic) CLPlacemark *placemark;
 
