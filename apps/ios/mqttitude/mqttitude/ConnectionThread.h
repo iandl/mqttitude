@@ -8,8 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "MQTTSession.h"
+#import "mqttitudeViewController.h"
 
 @interface ConnectionThread : NSThread
-- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass topic:(NSString *)topic message:(NSData *)message;
+@property (weak, nonatomic) mqttitudeViewController *controller;
+
+- (void)connectTo:(NSDictionary *)parameters;
+- (void)disconnect;
+- (void)sendData:(NSDictionary *)parameters;
 
 @end

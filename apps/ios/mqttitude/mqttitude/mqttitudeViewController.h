@@ -12,6 +12,8 @@
 #import "MQTTSession.h"
 
 
-@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, UITableViewDataSource>
-
+@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate>
+- (void)showStatus:(NSString *)status;
+- (void)publishNow;
+- (void)log:(NSString *)message;
 @end

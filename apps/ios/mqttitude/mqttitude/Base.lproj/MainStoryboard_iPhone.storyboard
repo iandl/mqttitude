@@ -12,7 +12,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="DCB-8M-xaX"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DCB-8M-xaX"/>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2fE-Ox-8iX">
                                 <items>
                                     <barButtonItem title="Publish Now" id="xmE-pL-qYg">
@@ -29,7 +29,7 @@
                                 </items>
                             </toolbar>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="2un-32-xrS">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="33" id="aQC-0T-bmi"/>
                                 </constraints>
@@ -37,7 +37,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="DCB-8M-xaX" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="8R4-ZK-iKu"/>
                             <constraint firstItem="2fE-Ox-8iX" firstAttribute="top" secondItem="2un-32-xrS" secondAttribute="bottom" type="default" id="Jpp-Dk-8nB"/>
@@ -59,8 +59,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="map" destination="DCB-8M-xaX" id="o4Z-vV-qIX"/>
+                        <outlet property="mapView" destination="DCB-8M-xaX" id="C52-c1-gA1"/>
                         <outlet property="statusField" destination="2un-32-xrS" id="hfq-hM-9W5"/>
+                        <outlet property="toolBar" destination="2fE-Ox-8iX" id="ONU-CW-Rvn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -150,7 +151,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="96c-W2-9ey">
-                                        <rect key="frame" x="0.0" y="136" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="136" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -179,12 +180,40 @@
                                             <constraint firstItem="yyy-1a-h4s" firstAttribute="leading" secondItem="96c-W2-9ey" secondAttribute="leading" constant="30" id="cEw-uX-Hcb"/>
                                         </constraints>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="2qn-zg-67U">
+                                        <rect key="frame" x="0.0" y="180" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Background" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CgF-Lo-1zG">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s4W-fH-Yqi">
+                                                    <connections>
+                                                        <action selector="backgroundChange:" destination="7Lm-46-Dd7" eventType="valueChanged" id="fXO-XC-htS"/>
+                                                        <action selector="retainFlagChanged:" destination="7Lm-46-Dd7" eventType="valueChanged" id="mjP-Op-zV3"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="CgF-Lo-1zG" firstAttribute="leading" secondItem="2qn-zg-67U" secondAttribute="leading" constant="30" id="5hL-TJ-Ell"/>
+                                            <constraint firstItem="CgF-Lo-1zG" firstAttribute="centerY" secondItem="s4W-fH-Yqi" secondAttribute="centerY" type="default" id="6XN-7l-pnb"/>
+                                            <constraint firstAttribute="trailing" secondItem="s4W-fH-Yqi" secondAttribute="trailing" constant="30" id="B1N-XF-5Lt"/>
+                                            <constraint firstItem="s4W-fH-Yqi" firstAttribute="top" secondItem="2qn-zg-67U" secondAttribute="top" constant="8" id="xCg-pZ-IlC"/>
+                                        </constraints>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Server Connection" id="4JK-fA-yFU">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="6lI-bA-YiH">
-                                        <rect key="frame" x="0.0" y="227" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="271" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -222,7 +251,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="j7K-f9-Mj9">
-                                        <rect key="frame" x="0.0" y="272" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="316" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -259,7 +288,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="yAh-CC-sNe">
-                                        <rect key="frame" x="0.0" y="316" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="360" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -289,7 +318,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="hgO-Pc-fXK">
-                                        <rect key="frame" x="0.0" y="360" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="404" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -319,7 +348,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="yjN-aX-aZT">
-                                        <rect key="frame" x="0.0" y="404" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="448" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -356,7 +385,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="8Bc-LV-oHf">
-                                        <rect key="frame" x="0.0" y="448" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="492" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -397,7 +426,7 @@
                             <tableViewSection headerTitle="MQTTitude App" id="OBE-cO-5wF">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" rowHeight="44" id="kVP-4w-nFa">
-                                        <rect key="frame" x="0.0" y="539" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="583" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -429,7 +458,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="44" id="J7d-Yg-1YK">
-                                        <rect key="frame" x="0.0" y="584" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="628" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="280" height="43"/>
@@ -470,6 +499,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="UIauth" destination="aJI-5F-jXl" id="Sek-iA-MKC"/>
+                        <outlet property="UIbackground" destination="s4W-fH-Yqi" id="6Uy-nH-QCQ"/>
                         <outlet property="UIhost" destination="FRL-Td-pft" id="hWF-Zy-ynS"/>
                         <outlet property="UIpass" destination="Gkl-PD-Bsg" id="fd4-mF-fID"/>
                         <outlet property="UIport" destination="yw5-Nq-yNB" id="5aI-Ii-Vux"/>
@@ -535,7 +565,7 @@
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="M22-VX-aiG">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="separatorColor" red="0.059433083980000002" green="0.2648856342" blue="0.4038336575" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
                             <tableViewSection id="i6t-5B-ICu">
                                 <cells>
@@ -608,7 +638,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="QoS" id="Gg2-ai-xgm">
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="Gq7-Ap-QQn">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="Gq7-Ap-QQn">
                             <connections>
                                 <segue destination="9lh-01-BuL" kind="unwind" unwindAction="settingsSaved:" id="ASg-p8-6BY"/>
                             </connections>
@@ -634,7 +664,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hof-rs-weX">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">MQTTitude
 
 A Google Latitude replacement that allows to upload the current location data to an own server
@@ -692,59 +721,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             <point key="canvasLocation" x="75" y="175"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
-        </class>
-        <class className="mqttitudeLogTVCViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeLogTVCViewController.h"/>
-        </class>
-        <class className="mqttitudeQoSTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeQoSTVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="UIqos0" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="UIqos1" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="UIqos2" candidateClass="UITableViewCell"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeSettingsTVCViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeSettingsTVCViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="authChange:" candidateClass="UISwitch"/>
-                <relationship kind="action" name="hostEditingChanged:" candidateClass="UITextField"/>
-                <relationship kind="action" name="passChange:" candidateClass="UITextField"/>
-                <relationship kind="action" name="portEditingChanged:" candidateClass="UITextField"/>
-                <relationship kind="action" name="qosChange:" candidateClass="UISegmentedControl"/>
-                <relationship kind="action" name="retainFlagChanged:" candidateClass="UISwitch"/>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="tlsChange:" candidateClass="UISwitch"/>
-                <relationship kind="action" name="topicEditingChanged:" candidateClass="UITextField"/>
-                <relationship kind="action" name="userChange:" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIauth" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UIhost" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIpass" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIport" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIqos" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIretainFlag" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItls" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItopic" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIuser" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIversion" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="publishNow:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="settingsSaved:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="outlet" name="map" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="statusField" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

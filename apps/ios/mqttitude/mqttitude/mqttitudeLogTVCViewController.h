@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Logs.h"
 
 @interface mqttitudeLogTVCViewController : UITableViewController
-@property (weak, nonatomic) NSArray *logArray;
+@property (weak, nonatomic) Logs *logs;
 
 @end

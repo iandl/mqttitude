@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8408E30017C208BC00068C49 /* mqttitudeQoSTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */; };
 		847C9EF117C3BAEE00109BD1 /* ConnectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 847C9EF017C3BAED00109BD1 /* ConnectionThread.m */; };
+		847C9EF417C3C97B00109BD1 /* Logs.m in Sources */ = {isa = PBXBuildFile; fileRef = 847C9EF317C3C97B00109BD1 /* Logs.m */; };
 		8485A89A17C10CE300D3348A /* MQttTxFlow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89017C10CE300D3348A /* MQttTxFlow.m */; };
 		8485A89B17C10CE300D3348A /* MQTTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89217C10CE300D3348A /* MQTTSession.m */; };
 		8485A89C17C10CE300D3348A /* MQTTMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89417C10CE300D3348A /* MQTTMessage.m */; };
@@ -16,6 +17,13 @@
 		8485A89E17C10CE300D3348A /* MQTTDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485A89817C10CE300D3348A /* MQTTDecoder.m */; };
 		8485A8A117C11D1F00D3348A /* fells_loop.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 8485A8A017C11D1E00D3348A /* fells_loop.gpx */; };
 		8485A8A717C178AF00D3348A /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8485A8A617C178AF00D3348A /* AddressBookUI.framework */; };
+		848DFAD117C60AB700B98C6F /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 848DFACB17C60AB700B98C6F /* iTunesArtwork@2x */; };
+		848DFAD217C60AB700B98C6F /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 848DFACC17C60AB700B98C6F /* iTunesArtwork */; };
+		848DFAD317C60AB700B98C6F /* icon_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 848DFACD17C60AB700B98C6F /* icon_144x144.png */; };
+		848DFAD417C60AB700B98C6F /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 848DFACE17C60AB700B98C6F /* icon_114x114.png */; };
+		848DFAD517C60AB700B98C6F /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 848DFACF17C60AB700B98C6F /* icon_72x72.png */; };
+		848DFAD617C60AB700B98C6F /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 848DFAD017C60AB700B98C6F /* icon_57x57.png */; };
+		848DFAD817C61AC300B98C6F /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 848DFAD717C61AC300B98C6F /* arrow.png */; };
 		84CF9A0917BEED5B00E1333C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0817BEED5B00E1333C /* UIKit.framework */; };
 		84CF9A0B17BEED5B00E1333C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0A17BEED5B00E1333C /* Foundation.framework */; };
 		84CF9A0D17BEED5B00E1333C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A0C17BEED5B00E1333C /* CoreGraphics.framework */; };
@@ -25,12 +33,6 @@
 		84CF9A1D17BEED5B00E1333C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A1C17BEED5B00E1333C /* Default@2x.png */; };
 		84CF9A1F17BEED5B00E1333C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A1E17BEED5B00E1333C /* Default-568h@2x.png */; };
 		84CF9A2817BEED5B00E1333C /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A2717BEED5B00E1333C /* mqttitudeViewController.m */; };
-		84CF9A3317BEF09500E1333C /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A2E17BEF09500E1333C /* iTunesArtwork@2x */; };
-		84CF9A3417BEF09500E1333C /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A2F17BEF09500E1333C /* iTunesArtwork */; };
-		84CF9A3917BEF0ED00E1333C /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3817BEF0ED00E1333C /* icon_57x57.png */; };
-		84CF9A3B17BEF11200E1333C /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3A17BEF11200E1333C /* icon_114x114.png */; };
-		84CF9A3D17BEF13200E1333C /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3C17BEF13200E1333C /* icon_72x72.png */; };
-		84CF9A3F17BEF1C200E1333C /* icon_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CF9A3E17BEF1C200E1333C /* icon_144x144.png */; };
 		84CF9A4217BEF2A500E1333C /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A4117BEF2A500E1333C /* Annotation.m */; };
 		84CF9A4517BEF35700E1333C /* mqttitudeSettingsTVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF9A4417BEF35700E1333C /* mqttitudeSettingsTVCViewController.m */; };
 		84CF9A5017BEF43D00E1333C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CF9A4F17BEF43D00E1333C /* CFNetwork.framework */; };
@@ -45,10 +47,12 @@
 /* Begin PBXFileReference section */
 		8408E2FE17C208BC00068C49 /* mqttitudeQoSTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeQoSTVC.h; sourceTree = "<group>"; };
 		8408E2FF17C208BC00068C49 /* mqttitudeQoSTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeQoSTVC.m; sourceTree = "<group>"; };
-		8408E30217C21A5100068C49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		8408E30417C21A5700068C49 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		847C9EEF17C3BAED00109BD1 /* ConnectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionThread.h; sourceTree = "<group>"; };
 		847C9EF017C3BAED00109BD1 /* ConnectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionThread.m; sourceTree = "<group>"; };
+		847C9EF217C3C97B00109BD1 /* Logs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; };
+		847C9EF317C3C97B00109BD1 /* Logs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logs.m; sourceTree = "<group>"; };
+		847C9EF617C3DE3A00109BD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		8485A89017C10CE300D3348A /* MQttTxFlow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQttTxFlow.m; sourceTree = "<group>"; };
 		8485A89117C10CE300D3348A /* MQttTxFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQttTxFlow.h; sourceTree = "<group>"; };
 		8485A89217C10CE300D3348A /* MQTTSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MQTTSession.m; sourceTree = "<group>"; };
@@ -61,6 +65,13 @@
 		8485A89917C10CE300D3348A /* MQTTDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQTTDecoder.h; sourceTree = "<group>"; };
 		8485A8A017C11D1E00D3348A /* fells_loop.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = fells_loop.gpx; path = ../fells_loop.gpx; sourceTree = "<group>"; };
 		8485A8A617C178AF00D3348A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		848DFACB17C60AB700B98C6F /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
+		848DFACC17C60AB700B98C6F /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
+		848DFACD17C60AB700B98C6F /* icon_144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_144x144.png; sourceTree = "<group>"; };
+		848DFACE17C60AB700B98C6F /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x114.png; sourceTree = "<group>"; };
+		848DFACF17C60AB700B98C6F /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_72x72.png; sourceTree = "<group>"; };
+		848DFAD017C60AB700B98C6F /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
+		848DFAD717C61AC300B98C6F /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		84CF9A0517BEED5B00E1333C /* MQTTitude.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQTTitude.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CF9A0817BEED5B00E1333C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		84CF9A0A17BEED5B00E1333C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -75,12 +86,6 @@
 		84CF9A1E17BEED5B00E1333C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		84CF9A2617BEED5B00E1333C /* mqttitudeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mqttitudeViewController.h; sourceTree = "<group>"; };
 		84CF9A2717BEED5B00E1333C /* mqttitudeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mqttitudeViewController.m; sourceTree = "<group>"; };
-		84CF9A2E17BEF09500E1333C /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
-		84CF9A2F17BEF09500E1333C /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
-		84CF9A3817BEF0ED00E1333C /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_57x57.png; path = ../icon_57x57.png; sourceTree = "<group>"; };
-		84CF9A3A17BEF11200E1333C /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_114x114.png; path = ../icon_114x114.png; sourceTree = "<group>"; };
-		84CF9A3C17BEF13200E1333C /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_72x72.png; path = ../icon_72x72.png; sourceTree = "<group>"; };
-		84CF9A3E17BEF1C200E1333C /* icon_144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_144x144.png; path = ../icon_144x144.png; sourceTree = "<group>"; };
 		84CF9A4017BEF2A500E1333C /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
 		84CF9A4117BEF2A500E1333C /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 		84CF9A4317BEF35700E1333C /* mqttitudeSettingsTVCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeSettingsTVCViewController.h; sourceTree = "<group>"; };
@@ -183,6 +188,8 @@
 				84CF9A4417BEF35700E1333C /* mqttitudeSettingsTVCViewController.m */,
 				84CF9A5D17BF051100E1333C /* LogEntry.h */,
 				84CF9A5E17BF051200E1333C /* LogEntry.m */,
+				847C9EF217C3C97B00109BD1 /* Logs.h */,
+				847C9EF317C3C97B00109BD1 /* Logs.m */,
 				84CF9A4017BEF2A500E1333C /* Annotation.h */,
 				84CF9A4117BEF2A500E1333C /* Annotation.m */,
 				84CF9A0F17BEED5B00E1333C /* Supporting Files */,
@@ -193,13 +200,14 @@
 		84CF9A0F17BEED5B00E1333C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				848DFACB17C60AB700B98C6F /* iTunesArtwork@2x */,
+				848DFACC17C60AB700B98C6F /* iTunesArtwork */,
+				848DFACD17C60AB700B98C6F /* icon_144x144.png */,
+				848DFACE17C60AB700B98C6F /* icon_114x114.png */,
+				848DFACF17C60AB700B98C6F /* icon_72x72.png */,
+				848DFAD017C60AB700B98C6F /* icon_57x57.png */,
+				848DFAD717C61AC300B98C6F /* arrow.png */,
 				8485A8A017C11D1E00D3348A /* fells_loop.gpx */,
-				84CF9A2E17BEF09500E1333C /* iTunesArtwork@2x */,
-				84CF9A2F17BEF09500E1333C /* iTunesArtwork */,
-				84CF9A3E17BEF1C200E1333C /* icon_144x144.png */,
-				84CF9A3A17BEF11200E1333C /* icon_114x114.png */,
-				84CF9A3C17BEF13200E1333C /* icon_72x72.png */,
-				84CF9A3817BEF0ED00E1333C /* icon_57x57.png */,
 				84CF9A1017BEED5B00E1333C /* mqttitude-Info.plist */,
 				84CF9A1417BEED5B00E1333C /* main.m */,
 				84CF9A1617BEED5B00E1333C /* mqttitude-Prefix.pch */,
@@ -267,15 +275,16 @@
 				84CF9A1B17BEED5B00E1333C /* Default.png in Resources */,
 				84CF9A1D17BEED5B00E1333C /* Default@2x.png in Resources */,
 				84CF9A1F17BEED5B00E1333C /* Default-568h@2x.png in Resources */,
-				84CF9A3317BEF09500E1333C /* iTunesArtwork@2x in Resources */,
-				84CF9A3417BEF09500E1333C /* iTunesArtwork in Resources */,
-				84CF9A3917BEF0ED00E1333C /* icon_57x57.png in Resources */,
-				84CF9A3B17BEF11200E1333C /* icon_114x114.png in Resources */,
-				84CF9A3D17BEF13200E1333C /* icon_72x72.png in Resources */,
-				84CF9A3F17BEF1C200E1333C /* icon_144x144.png in Resources */,
 				84F93C0117C027F60060E809 /* MainStoryboard_iPhone.storyboard in Resources */,
 				84F93C0717C029580060E809 /* Localizable.strings in Resources */,
 				8485A8A117C11D1F00D3348A /* fells_loop.gpx in Resources */,
+				848DFAD117C60AB700B98C6F /* iTunesArtwork@2x in Resources */,
+				848DFAD217C60AB700B98C6F /* iTunesArtwork in Resources */,
+				848DFAD317C60AB700B98C6F /* icon_144x144.png in Resources */,
+				848DFAD417C60AB700B98C6F /* icon_114x114.png in Resources */,
+				848DFAD517C60AB700B98C6F /* icon_72x72.png in Resources */,
+				848DFAD617C60AB700B98C6F /* icon_57x57.png in Resources */,
+				848DFAD817C61AC300B98C6F /* arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +309,7 @@
 				8485A89E17C10CE300D3348A /* MQTTDecoder.m in Sources */,
 				8408E30017C208BC00068C49 /* mqttitudeQoSTVC.m in Sources */,
 				847C9EF117C3BAEE00109BD1 /* ConnectionThread.m in Sources */,
+				847C9EF417C3C97B00109BD1 /* Logs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,8 +320,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				84F93C0417C028690060E809 /* Base */,
-				8408E30217C21A5100068C49 /* en */,
 				8408E30417C21A5700068C49 /* de */,
+				847C9EF617C3DE3A00109BD1 /* en */,
 			);
 			name = MainStoryboard_iPhone.storyboard;
 			sourceTree = "<group>";

@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *UItopic;
 @property (weak, nonatomic) IBOutlet UISwitch *UIretainFlag;
 @property (weak, nonatomic) IBOutlet UITextField *UIqos;
+@property (weak, nonatomic) IBOutlet UISwitch *UIbackground;
 @property (weak, nonatomic) IBOutlet UITextField *UIversion;
 @end
 
@@ -34,7 +35,7 @@
     self.UIpass.text = self.pass;
     self.UItopic.text = self.topic;
     self.UIretainFlag.on = self.retainFlag;
-    
+    self.UIbackground.on = self.background;
     self.UIqos.text = [self qosString:self.qos];
 
     NSDictionary *info = [NSBundle mainBundle].infoDictionary;
@@ -56,9 +57,6 @@
 - (IBAction)retainFlagChanged:(UISwitch *)sender {
     self.retainFlag = sender.on;
 }
-- (IBAction)qosChange:(UISegmentedControl *)sender {
-    self.qos = sender.selectedSegmentIndex;
-}
 - (IBAction)authChange:(UISwitch *)sender {
     self.auth = sender.on;
 }
@@ -67,6 +65,9 @@
 }
 - (IBAction)passChange:(UITextField *)sender {
     self.pass = sender.text;
+}
+- (IBAction)backgroundChange:(UISwitch *)sender {
+    self.background = sender.on;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

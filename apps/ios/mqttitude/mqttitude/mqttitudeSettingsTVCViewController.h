@@ -16,7 +16,8 @@
 @property (strong, nonatomic) NSString *user;
 @property (strong, nonatomic) NSString *pass;
 @property (strong, nonatomic) NSString *topic;
-@property (nonatomic) BOOL retainFlag  ;
+@property (nonatomic) BOOL retainFlag;
 @property (nonatomic) NSInteger qos;
+@property (nonatomic) BOOL background;
 
 @end

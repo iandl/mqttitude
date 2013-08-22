@@ -11,4 +11,5 @@
 @interface LogEntry : NSObject
 @property (strong, nonatomic) NSDate *timestamp;
 @property (strong, nonatomic) NSString *message;
++ initWithMessage:(NSString *)message at:(NSDate *)timestamp;
 @end

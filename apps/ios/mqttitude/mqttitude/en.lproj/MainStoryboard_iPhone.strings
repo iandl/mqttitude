@@ -23,8 +23,8 @@
 /* Class = "IBUILabel"; text = "UserID"; ObjectID = "9QR-ZZ-2PU"; */
 "9QR-ZZ-2PU.text" = "UserID";
 
-/* Class = "IBUILabel"; text = "At most once"; ObjectID = "9R8-zi-0XA"; */
-"9R8-zi-0XA.text" = "At most once";
+/* Class = "IBUILabel"; text = "At most once (0)"; ObjectID = "9R8-zi-0XA"; */
+"9R8-zi-0XA.text" = "At most once (0)";
 
 /* Class = "IBUILabel"; text = "Password"; ObjectID = "9kJ-qG-UQa"; */
 "9kJ-qG-UQa.text" = "Password";
@@ -35,9 +35,6 @@
 /* Class = "IBUIBarButtonItem"; title = "Show Log"; ObjectID = "DIF-vb-obJ"; */
 "DIF-vb-obJ.title" = "Show Log";
 
-/* Class = "IBUITextField"; placeholder = "Status"; ObjectID = "FCI-QI-8au"; */
-"FCI-QI-8au.placeholder" = "Status";
-
 /* Class = "IBUITextField"; placeholder = "Host"; ObjectID = "FRL-Td-pft"; */
 "FRL-Td-pft.placeholder" = "Host";
 
@@ -46,6 +43,9 @@
 
 /* Class = "IBUITextField"; placeholder = "password"; ObjectID = "Gkl-PD-Bsg"; */
 "Gkl-PD-Bsg.placeholder" = "password";
+
+/* Class = "IBUIBarButtonItem"; title = "Save"; ObjectID = "Gq7-Ap-QQn"; */
+"Gq7-Ap-QQn.title" = "Save";
 
 /* Class = "IBUILabel"; text = "Version"; ObjectID = "HI4-Zj-rQA"; */
 "HI4-Zj-rQA.text" = "Version";
@@ -74,7 +74,7 @@
 /* Class = "IBUIBarButtonItem"; title = "Settings"; ObjectID = "hPX-4p-OdQ"; */
 "hPX-4p-OdQ.title" = "Settings";
 
-/* Class = "IBUITextView"; text = "MQTTitude\n\nA Google Latitude replacement that allows to upload the current location data to an own server\n\nCopyright © 2013 by Christoph Krey, mqttitude.net\n\nusing\n\nmqttIO-iOS-SDK\niOS SDK for MQTT\n\nCopyright © 2011, 2013 2lemetry, LLC\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."; ObjectID = "hof-rs-weX"; */
+/* Class = "IBUITextView"; text = "MQTTitude\n\nA Google Latitude replacement that allows to upload the current location data to an own server\n\nCopyright © 2013 by Christoph Krey, mqttitude.org\n\nusing\n\nmqttIO-iOS-SDK\niOS SDK for MQTT\n\nCopyright © 2011, 2013 2lemetry, LLC\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."; ObjectID = "hof-rs-weX"; */
 "hof-rs-weX.text" = "MQTTitude\n\nA Google Latitude replacement that allows to upload the current location data to an own server\n\nCopyright © 2013 by Christoph Krey, mqttitude.org\n\nusing\n\nmqttIO-iOS-SDK\niOS SDK for MQTT\n\nCopyright © 2011, 2013 2lemetry, LLC\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.";
 
 /* Class = "IBUILabel"; text = "Credits"; ObjectID = "kDY-o6-S9a"; */
@@ -83,8 +83,8 @@
 /* Class = "IBUILabel"; text = "Port"; ObjectID = "l6z-Hm-XcE"; */
 "l6z-Hm-XcE.text" = "Port";
 
-/* Class = "IBUILabel"; text = "At least once"; ObjectID = "m6R-bu-xFa"; */
-"m6R-bu-xFa.text" = "At least once";
+/* Class = "IBUILabel"; text = "At least once (1)"; ObjectID = "m6R-bu-xFa"; */
+"m6R-bu-xFa.text" = "At least once (1)";
 
 /* Class = "IBUILabel"; text = "Topic"; ObjectID = "oRS-ES-Aun"; */
 "oRS-ES-Aun.text" = "Topic";
@@ -95,8 +95,8 @@
 /* Class = "IBUINavigationItem"; title = "MQTTitude"; ObjectID = "x0N-7e-ll2"; */
 "x0N-7e-ll2.title" = "MQTTitude";
 
-/* Class = "IBUILabel"; text = "Exactly once"; ObjectID = "xRW-Pc-XAz"; */
-"xRW-Pc-XAz.text" = "Exactly once";
+/* Class = "IBUILabel"; text = "Exactly once (2)"; ObjectID = "xRW-Pc-XAz"; */
+"xRW-Pc-XAz.text" = "Exactly once (2)";
 
 /* Class = "IBUIBarButtonItem"; title = "Publish Now"; ObjectID = "xmE-pL-qYg"; */
 "xmE-pL-qYg.title" = "Publish Now";

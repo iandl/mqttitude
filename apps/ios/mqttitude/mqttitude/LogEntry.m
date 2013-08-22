@@ -9,4 +9,13 @@
 #import "LogEntry.h"
 
 @implementation LogEntry
++ (id)initWithMessage:(NSString *)message at:(NSDate *)timestamp
+{
+    LogEntry *logEntry = [[LogEntry alloc] init];
+    
+    logEntry.message = message;
+    logEntry.timestamp = timestamp;
+    
+    return logEntry;
+}
 @end
