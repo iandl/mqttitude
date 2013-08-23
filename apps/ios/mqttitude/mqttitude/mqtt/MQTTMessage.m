@@ -101,6 +101,11 @@
     return [[MQTTMessage alloc] initWithType:MQTTPingreq];
 }
 
+/* CK added disconnect */
++ (id)disconnectMessage {
+    return [[MQTTMessage alloc] initWithType:MQTTDisconnect];
+}
+
 + (id)subscribeMessageWithMessageId:(UInt16)msgId
                               topic:(NSString*)topic
                                 qos:(UInt8)qos {

@@ -5,7 +5,6 @@
 //  Created by Christoph Krey on 17.08.13.
 //  Copyright (c) 2013 Christoph Krey. All rights reserved.
 //
-#define MULTI_THREADING
 
 #import "mqttitudeViewController.h"
 #import "mqttitudeSettingsTVCViewController.h"
@@ -13,6 +12,7 @@
 #import "Annotation.h"
 #import "Logs.h"
 #import "ConnectionThread.h"
+#import "mqttitudeIndicatorView.h"
 
 @interface mqttitudeViewController ()
 @property (strong, nonatomic) MQTTSession *session;
@@ -37,7 +37,9 @@
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITextView *statusField;
-@property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
+@property (weak, nonatomic) IBOutlet mqttitudeIndicatorView *indicatorView;
+@property (weak, nonatomic) IBOutlet MKUserTrackingBarButtonItem *trackingButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *stopButton;
 
 @property (strong, nonatomic) ConnectionThread *connectionThread;
 
@@ -52,42 +54,44 @@
  * Settings, Arrays, KeepAlive Timer, Location Manager
  *
  */
-#define KEEP_ALIVE 30
+#define KEEP_ALIVE 60*60 //every hour
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-    [self settingsFromPropertyList];
-    
-    self.annotationArray = [[NSMutableArray alloc] init];
     self.logs = [[Logs alloc] init];
-    
     [self.logs log:[NSString stringWithFormat:@"%@ starting...",
                     [NSString stringWithFormat:@"%@ %@",
                      [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
                      [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"]]]];
+    
+    /* for Testing */ [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+
+    [self settingsFromPropertyList];
+    
+    self.annotationArray = [[NSMutableArray alloc] init];
+    
+    if ([CLLocationManager locationServicesEnabled]) {
+        self.manager = [[CLLocationManager alloc] init];
+        self.manager.delegate = self;
+        
+        self.mapView.delegate = self;
+        self.mapView.showsUserLocation = YES;
+        [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+        (void)[self.trackingButton initWithMapView:self.mapView];
+        
+        [self.manager startMonitoringSignificantLocationChanges];
+    } else {
+        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+        [self.logs log:[NSString stringWithFormat:@"MQTTitude not authorized for CoreLocation %d", status]];
+    }
+    
         
     self.keepalive = [NSTimer timerWithTimeInterval:KEEP_ALIVE target:self selector:@selector(stillhere ) userInfo:Nil repeats:TRUE];
     NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
     [runLoop addTimer:self.keepalive forMode:NSDefaultRunLoopMode];
     
-    /* for Testing */ [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-
-    
-    if ([CLLocationManager locationServicesEnabled]) {
-        self.manager = [[CLLocationManager alloc] init];
-        self.manager.delegate = self;
-        [self.manager startMonitoringSignificantLocationChanges];
-    } else {
-        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        [self.logs log:[NSString stringWithFormat:@"MQTTitude not authorized for CoreLocation %d", status]];
-        
-    }
-    self.ConnectionThread = [[ConnectionThread alloc] init];
-    self.connectionThread.controller = self;
-    [self.connectionThread setStackSize:4096*1000]; //No idea if this is an appropriate value
-    [self.connectionThread start];
     [self connect];
 }
 
@@ -120,6 +124,9 @@
     } else {
         NSLog(@"Battery Monitoring not enabled");
     }
+    if (self.background && (!self.connectionThread || !self.connectionThread.isExecuting)) {
+        [self connect];
+    }
 }
 
 /* Communication to Background Thread
@@ -139,38 +146,51 @@
                                  @"BACKGROUND": [NSString stringWithFormat:@"%d", self.background],
                                  };
     
+    self.ConnectionThread = [[ConnectionThread alloc] init];
+    self.connectionThread.controller = self;
+    [self.connectionThread setStackSize:4096*64]; // 512k
+    [self.connectionThread start];
     [self.connectionThread performSelector:@selector(connectTo:) onThread:self.connectionThread withObject:parameters waitUntilDone:YES];
 }
 
-#define MAX_ANNOTATIONS 20
+#define MAX_ANNOTATIONS 50
+
+- (void)locationToMap:(NSDictionary *)dictionary
+{
+    [self locationToMap:dictionary[@"LOCATION"] topic:dictionary[@"TOPIC"]];
+}
+
+- (void)locationToMap:(CLLocation *)location topic:(NSString *)topic
+{
+    Annotation *annotation = [[Annotation alloc] init];
+    annotation.coordinate = location.coordinate;
+    annotation.timeStamp = location.timestamp;
+    annotation.topic = topic;
+    
+    [self.mapView addAnnotation:annotation];
+    [self.annotationArray addObject:annotation];
+    if ([self.annotationArray count] > MAX_ANNOTATIONS) {
+        [self.mapView removeAnnotation:self.annotationArray[0]];
+        [self.annotationArray removeObjectAtIndex:0];
+    }
+}
 
 - (void)publishLocation:(CLLocation *)location
 {
-    if (location) {
-        [self.mapView setCenterCoordinate:location.coordinate animated:YES];
-        [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
-        
-        Annotation *annotation = [[Annotation alloc] init];
-        annotation.coordinate = location.coordinate;
-        annotation.timeStamp = location.timestamp;
-
-        [self.mapView addAnnotation:annotation];
-        [self.annotationArray addObject:annotation];
-        if ([self.annotationArray count] > MAX_ANNOTATIONS) {
-            [self.mapView removeAnnotation:self.annotationArray[0]];
-            [self.annotationArray removeObjectAtIndex:0];
-        }
-        
-        NSData *data = [self formatLocationData:location withType:@"location"];
-
-        NSDictionary *parameters = @{@"DATA": data,
-                                     @"TOPIC": self.topic,
-                                     @"QOS": [NSString stringWithFormat:@"%d", self.qos],
-                                     @"RETAINFLAG": [NSString stringWithFormat:@"%d", self.retainFlag]
-                                     };
-
-        [self.connectionThread performSelector:@selector(sendData:) onThread:self.connectionThread withObject:parameters waitUntilDone:YES];
+    [self.mapView setCenterCoordinate:location.coordinate animated:YES];
+    [self locationToMap:location topic:self.topic];
+    
+    NSData *data = [self formatLocationData:location withType:@"location"];
+    
+    NSDictionary *parameters = @{@"DATA": data,
+                                 @"TOPIC": self.topic,
+                                 @"QOS": [NSString stringWithFormat:@"%d", self.qos],
+                                 @"RETAINFLAG": [NSString stringWithFormat:@"%d", self.retainFlag]
+                                 };
+    if (!self.connectionThread || !self.connectionThread.isExecuting) {
+        [self connect];
     }
+    [self.connectionThread performSelector:@selector(sendData:) onThread:self.connectionThread withObject:parameters waitUntilDone:YES];
 }
 
 - (NSData *)formatLocationData:(CLLocation *)location withType:(NSString *)type
@@ -184,8 +204,7 @@
                                      @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
                                      @"vel": [NSString stringWithFormat:@"%f", location.speed],
                                      @"dir": [NSString stringWithFormat:@"%f", location.course],
-                                     /* testing */ @"_pow": [NSString stringWithFormat:@"%f", ([[UIDevice currentDevice] isBatteryMonitoringEnabled]) ?
-                                                             [[UIDevice currentDevice] batteryLevel] : -1.0 ],
+                        /*testing*/  @"_pow": [NSString stringWithFormat:@"%f", ([[UIDevice currentDevice] isBatteryMonitoringEnabled]) ? [[UIDevice currentDevice] batteryLevel] : -1.0 ],
                                      @"_type": [NSString stringWithFormat:@"%@", type]
                                      };
     NSDictionary *smallJsonObject = @{
@@ -222,7 +241,7 @@
 {
     NSLog(@"Significant Location Change");
 
-    if (([UIApplication sharedApplication].applicationState == UIApplicationStateActive) || self.background) {
+    if (self.background) {
         for (CLLocation *location in locations) {
             NSLog(@"Location: %@", [location description]);
             [self publishLocation:location];
@@ -237,6 +256,15 @@
 - (IBAction)publishNow:(UIBarButtonItem *)sender {
     [self publishLocation:self.manager.location];
 }
+
+- (IBAction)stop:(UIBarButtonItem *)sender {
+    if (self.connectionThread && self.connectionThread.isExecuting) {
+        [self.connectionThread performSelector:@selector(disconnect) onThread:self.connectionThread withObject:Nil waitUntilDone:YES];
+    }
+    [self.manager stopMonitoringSignificantLocationChanges];
+    exit(0);
+}
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -263,7 +291,9 @@
     if ([seque.sourceViewController isKindOfClass:[mqttitudeSettingsTVCViewController class]]) {
         mqttitudeSettingsTVCViewController *settings = (mqttitudeSettingsTVCViewController *)seque.sourceViewController;
         
-        [self.connectionThread performSelector:@selector(disconnect) onThread:self.connectionThread withObject:Nil waitUntilDone:NO];
+        if (self.connectionThread && self.connectionThread.isExecuting) {
+            [self.connectionThread performSelector:@selector(disconnect) onThread:self.connectionThread withObject:Nil waitUntilDone:YES];
+        }
 
         self.host = settings.host;
         self.port = settings.port;
@@ -298,7 +328,7 @@
 #define QOS_KEY @"QOS"
 #define BACKGROUND_KEY @"BACKGROUND"
 
-#define HOST_DEFAULT @"roo.jpmens.net"
+#define HOST_DEFAULT @"test.mosquitto.org"
 #define PORT_DEFAULT 1883
 #define TLS_DEFAULT FALSE
 #define AUTH_DEFAULT FALSE
@@ -369,6 +399,29 @@
     self.statusField.text = status;
 }
 
+- (void)showIndicator:(NSNumber *)indicator
+{
+    UIColor *color;
+    
+    switch ([indicator integerValue]) {
+        case INDICATOR_GREEN:
+            color = [UIColor greenColor];
+            break;
+        case INDICATOR_YELLOW:
+            color = [UIColor yellowColor];
+            break;
+        case INDICATOR_RED:
+            color = [UIColor redColor];
+            break;
+        case INDICATOR_IDLE:
+        default:
+            color = [UIColor blueColor];
+            break;
+    }
+    self.indicatorView.color = color;
+    [self.indicatorView setNeedsDisplay];
+}
+
 - (void)publishNow
 {
     [self publishLocation:self.manager.location];
@@ -379,5 +432,43 @@
     [self.logs log:message];
 }
 
+/* MapView
+ *
+ */
+#define REUSE_ID_SELF @"MQTTitude_Annotation_self"
+#define REUSE_ID_OTHER @"MQTTitude_Annotation_other"
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
+        return nil;
+    } else {
+        if ([annotation isKindOfClass:[Annotation class]]) {
+            Annotation *MQTTannotation = (Annotation *)annotation;
+            if ([MQTTannotation.topic isEqualToString:self.topic]) {
+                MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_SELF];
+                if (annotationView) {
+                    return annotationView;
+                } else {
+                    MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_SELF];
+                    pinAnnotationView.pinColor = MKPinAnnotationColorRed;
+                    pinAnnotationView.canShowCallout = YES;
+                    return pinAnnotationView;
+                }
+            } else {
+                MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:REUSE_ID_OTHER];
+                if (annotationView) {
+                    return annotationView;
+                } else {
+                    MKPinAnnotationView *pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:REUSE_ID_OTHER];
+                    pinAnnotationView.pinColor = MKPinAnnotationColorGreen;
+                    pinAnnotationView.canShowCallout = YES;
+                    return pinAnnotationView;
+                }
+            }
+        }
+        return nil;
+    }
+}
 
 @end

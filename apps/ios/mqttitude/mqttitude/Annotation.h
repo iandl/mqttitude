@@ -12,6 +12,7 @@
 @interface Annotation : NSObject <MKAnnotation>
 @property (strong, nonatomic) NSDate *timeStamp;
 @property (strong, nonatomic) CLPlacemark *placemark;
+@property (strong, nonatomic) NSString *topic;
 
 
 @end

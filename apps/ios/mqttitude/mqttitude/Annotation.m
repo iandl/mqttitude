@@ -19,9 +19,10 @@
 }
 
 - (NSString *)title {
-    return [NSDateFormatter localizedStringFromDate:self.timeStamp
+    NSString *timestampAsString = [NSDateFormatter localizedStringFromDate:self.timeStamp
                                           dateStyle:NSDateFormatterShortStyle
                                           timeStyle:NSDateFormatterMediumStyle];
+    return [NSString stringWithFormat:@"%@ %@", timestampAsString,  self.topic ? self.topic : @""];
 }
 
 - (NSString *)subtitle {
