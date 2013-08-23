@@ -1,6 +1,7 @@
 # Setting up TLS on your mobile device
 
-You want data between your mobile device (a.k.a. smartphone) and the MQTT broker you use to be secured from eavesdropping. This is accomplished using [TLS] (the artist formerly known as SSL). When you configure your broker you will generate what is called a CA certificate which is basically a large amount of bits. The file you'll be creating in fact looks like this (in what is called [PEM] format; but you don't really want to know that, but if you do, see below for the nitty gritty).
+You want data between your mobile device (a.k.a. smartphone) and the MQTT broker you use to be secured from eavesdropping. This is accomplished using [TLS] (the artist formerly known as SSL). When you configure your broker you will generate what is called a CA certificate which is basically a large amount of bits. (See below for the nitty gritty.)
+
 
 
 You can share the cerficate if you want to (though not many people will want it ...)
@@ -38,7 +39,7 @@ You've clicked, and here's the trust store. You see the certificate has a name, 
 
 ![iOS](ios-cert-02-stor.png)
 
-Read the text. If you must. Just kidding: honestly, it's ok. But do read the text.
+Read the text if you must. Just kidding: honestly, it's ok. But do read the text, and then click "Install" on the top right.
 
 ![iOS](ios-cert-03-stor.png)
 
@@ -50,7 +51,8 @@ You're done, and if you no longer require the certificate file just delete the e
 
 ## The nitty gritty
 
-That CA certificate file we mentioned? The attachment called `something.crt`? This is what it looks like:
+That CA certificate file we mentioned? The attachment called `something.crt`?
+It looks like this, in fact, in what is called [PEM] format; but you don't really want to know that, but if you do, this is what it looks like:
 
 ```
 -----BEGIN CERTIFICATE-----
