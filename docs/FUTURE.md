@@ -16,6 +16,10 @@ Thoughts on possible future enhancements.
 * Add "traffic light" [#73](https://github.com/binarybucks/mqttitude/issues/73)
 * Add live "info" pane to Apps [#47](https://github.com/binarybucks/mqttitude/issues/47)
 * Remote-control [#71](https://github.com/binarybucks/mqttitude/issues/71)
+* Annotations.
+  * Click on pin
+  * Enter text string `"Restaurante La Comida; wonderful gambas al ajillo"`
+  * PUBlish with full `_location` and additional `"note" : "...."`
 
 
 ## Long-term
