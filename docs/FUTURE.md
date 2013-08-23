@@ -27,3 +27,4 @@ Thoughts on possible future enhancements.
 * Add presence. Are my friends in the area?
   * Needs friends/family on same broker
   * Needs 'standardized' topic names (maybe with Twitter id in topic?)
+* Queue updates on device (with `tst` etc) to be PUBlished upon available connection
