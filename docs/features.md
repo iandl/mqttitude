@@ -43,19 +43,56 @@ ones, or user provided ones that require a lock screen password to be set)
 
 ## iOS
 
-* Automatic publishes at "Apple" intervals (about 5 minutes and
-  "significant location changes" (>500m)). This is the appropriate way to
-  save battery power.
+* Runs on iPhones running IOS >=6.1 (3GS, 4, 4S, 5) and iPads running IOS >=6.1 as an iPhone app. Not tested on iPods yet.
 
-* Displays a marker where the app believes the user to be and marks of all
-  previous published locations
+* Monitors "significant location changes" as define by Apple Inc (about 5 minutes and
+  "significant location changes" (>500m))
 
-* Accuracy is recorded
+* Displays a map with the current location and marks the last ~50 locations with timestamp, name and reverse-geocoded location
 
-* Button to manually publish last location
+* Shows the well-known map-user-tracking-button
 
-* QoS and Retain are UI-configurable
+* Shows a button to explicitly mark the current location on the map and...
 
-* Scrollable log of last 50 status changes/published locations
+* ... publish this location via MQTT to the configured server
 
-* TLS. Use of self-signed server certificate on broker requires installing DER certificate on device's certificate store, which is a simple procedure.
+* All configration parameters are accessible via the settings-button
+
+* MQTT server is configured by 
+	* specifying hostname/ip-address,
+	* port,
+	* whether TLS is used and/or 
+	* authentication is done via user/password
+
+* If TLS is used, the server certificate needs to be distributed separately and installed on the IOS device
+
+* Data published on the server lablelled with a user-configurable `topic`. The data in JSON format contains
+	* a timestamp
+	* longitude and latitude and horizontal accuracy
+	* altitude and vertical accuracy
+	* velocity and direction
+
+* MQTT parameters are
+	* QoS and
+	* Retain
+
+* Scrollable log of last 50 locations published on the map
+
+* Connection indicator light shows current status of the MQTT server connection
+  The server connection is established automatically when a new location shall be published. In order to save 
+  battery power, the connection is closed after 15 seconds to save enery on the IOS device.
+	* BLUE=IDLE, no connection established to save battery power
+	* GREEN=CONNECTED, server connection established
+	* AMBER=ERROR OCCURED, WAITING FOR RECONNECT, app will automatically try to reconnect to the server
+	* RED=ERROR, no to the server possible or transient errror condition
+
+* Stop-Button to complete shut down the app, location monitoring and server publishes und subscriptions (quiet and private)
+
+* Application supports a background-mode
+	* "significant location changes" are automatically published to the MQTT server
+	* app listens to commands published by the server on topic <my topic>/listento. commands defined are
+		* `publish`: app publishes current location immediately to the server
+		* ...
+	* app listens to all published locations of other devices and displays the last location published per device on it's map
+	* app shows an application badge indicating the number of other device's loctions on it's map
+	* app connects once per hour to collect commands or other device's locations
