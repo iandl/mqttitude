@@ -93,7 +93,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Topic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oRS-ES-Aun">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="76" id="Os8-IG-ZxI"/>
+                                                        <constraint firstAttribute="width" constant="76" type="user" id="Os8-IG-ZxI"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -102,7 +102,6 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Topic" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dYE-Dl-58G">
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="WqM-at-DcK"/>
-                                                        <constraint firstAttribute="width" constant="176" id="yga-OZ-DBd"/>
                                                     </constraints>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -115,10 +114,11 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="dYE-Dl-58G" firstAttribute="leading" secondItem="oRS-ES-Aun" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Aol-5U-5we"/>
+                                            <constraint firstItem="dYE-Dl-58G" firstAttribute="leading" secondItem="oRS-ES-Aun" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="Aol-5U-5we"/>
                                             <constraint firstItem="dYE-Dl-58G" firstAttribute="centerY" secondItem="P76-rE-OWO" secondAttribute="centerY" type="default" id="IQa-j8-DwG"/>
-                                            <constraint firstItem="oRS-ES-Aun" firstAttribute="leading" secondItem="P76-rE-OWO" secondAttribute="leading" constant="30" id="ZxT-it-x6Q"/>
+                                            <constraint firstItem="oRS-ES-Aun" firstAttribute="leading" secondItem="P76-rE-OWO" secondAttribute="leading" constant="30" type="user" id="ZxT-it-x6Q"/>
                                             <constraint firstItem="oRS-ES-Aun" firstAttribute="centerY" secondItem="P76-rE-OWO" secondAttribute="centerY" type="default" id="eQD-0W-XXh"/>
+                                            <constraint firstAttribute="trailing" secondItem="dYE-Dl-58G" secondAttribute="trailing" constant="30" type="user" id="gQB-Ke-OL9"/>
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="45" id="353-6P-EIV">
@@ -226,7 +226,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Host" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wmq-nz-Nhm">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="64" id="GPF-qL-rJh"/>
+                                                        <constraint firstAttribute="width" constant="64" type="user" id="GPF-qL-rJh"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -234,7 +234,6 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Host" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FRL-Td-pft">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="188" id="Tq2-UA-sD5"/>
                                                         <constraint firstAttribute="height" constant="30" id="y4D-rA-GvN"/>
                                                     </constraints>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -249,9 +248,10 @@
                                         </view>
                                         <constraints>
                                             <constraint firstItem="FRL-Td-pft" firstAttribute="top" secondItem="6lI-bA-YiH" secondAttribute="top" constant="8" id="Nxh-X5-K0K"/>
-                                            <constraint firstItem="Wmq-nz-Nhm" firstAttribute="leading" secondItem="6lI-bA-YiH" secondAttribute="leading" constant="30" id="QJi-ON-yMo"/>
+                                            <constraint firstItem="Wmq-nz-Nhm" firstAttribute="leading" secondItem="6lI-bA-YiH" secondAttribute="leading" constant="30" type="user" id="QJi-ON-yMo"/>
                                             <constraint firstItem="FRL-Td-pft" firstAttribute="baseline" secondItem="Wmq-nz-Nhm" secondAttribute="baseline" type="default" id="Qjo-i4-wdA"/>
-                                            <constraint firstItem="FRL-Td-pft" firstAttribute="leading" secondItem="Wmq-nz-Nhm" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="eRq-la-B2S"/>
+                                            <constraint firstAttribute="trailing" secondItem="FRL-Td-pft" secondAttribute="trailing" constant="30" type="user" id="XpO-Gv-LHE"/>
+                                            <constraint firstItem="FRL-Td-pft" firstAttribute="leading" secondItem="Wmq-nz-Nhm" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="eRq-la-B2S"/>
                                             <constraint firstItem="Wmq-nz-Nhm" firstAttribute="centerY" secondItem="6lI-bA-YiH" secondAttribute="centerY" type="default" id="u4r-oD-awK"/>
                                         </constraints>
                                     </tableViewCell>
@@ -264,7 +264,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Port" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6z-Hm-XcE">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="43" id="2dn-28-vqb"/>
+                                                        <constraint firstAttribute="width" constant="43" type="user" id="2dn-28-vqb"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -272,7 +272,6 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Port" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yw5-Nq-yNB">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="209" id="7Ag-GH-rhe"/>
                                                         <constraint firstAttribute="height" constant="30" id="rBJ-RH-dAz"/>
                                                     </constraints>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -286,9 +285,10 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="yw5-Nq-yNB" firstAttribute="leading" secondItem="l6z-Hm-XcE" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="RVu-3c-ZXD"/>
+                                            <constraint firstAttribute="trailing" secondItem="yw5-Nq-yNB" secondAttribute="trailing" constant="30" type="user" id="BL2-ez-yEQ"/>
+                                            <constraint firstItem="yw5-Nq-yNB" firstAttribute="leading" secondItem="l6z-Hm-XcE" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="RVu-3c-ZXD"/>
                                             <constraint firstItem="l6z-Hm-XcE" firstAttribute="top" secondItem="j7K-f9-Mj9" secondAttribute="top" constant="11" id="a4z-hw-8nK"/>
-                                            <constraint firstItem="l6z-Hm-XcE" firstAttribute="leading" secondItem="j7K-f9-Mj9" secondAttribute="leading" constant="30" id="p6a-GV-cCe"/>
+                                            <constraint firstItem="l6z-Hm-XcE" firstAttribute="leading" secondItem="j7K-f9-Mj9" secondAttribute="leading" constant="30" type="user" id="p6a-GV-cCe"/>
                                             <constraint firstItem="yw5-Nq-yNB" firstAttribute="centerY" secondItem="j7K-f9-Mj9" secondAttribute="centerY" type="default" id="tAW-xU-4Pk"/>
                                         </constraints>
                                     </tableViewCell>
@@ -361,7 +361,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="UserID" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9QR-ZZ-2PU">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="83" id="TV1-Bf-hqt"/>
+                                                        <constraint firstAttribute="width" constant="83" type="user" id="TV1-Bf-hqt"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -369,7 +369,6 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="UserID" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KEA-tN-tGr">
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="169" id="35o-A3-wan"/>
                                                         <constraint firstAttribute="height" constant="30" id="hA3-aG-dn9"/>
                                                     </constraints>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -384,9 +383,10 @@
                                         </view>
                                         <constraints>
                                             <constraint firstItem="KEA-tN-tGr" firstAttribute="centerY" secondItem="yjN-aX-aZT" secondAttribute="centerY" type="default" id="2IL-zn-Q3L"/>
-                                            <constraint firstItem="9QR-ZZ-2PU" firstAttribute="leading" secondItem="yjN-aX-aZT" secondAttribute="leading" constant="30" id="Cr1-0E-1PL"/>
-                                            <constraint firstItem="KEA-tN-tGr" firstAttribute="leading" secondItem="9QR-ZZ-2PU" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Gp3-eT-mTj"/>
+                                            <constraint firstItem="9QR-ZZ-2PU" firstAttribute="leading" secondItem="yjN-aX-aZT" secondAttribute="leading" constant="30" type="user" id="Cr1-0E-1PL"/>
+                                            <constraint firstItem="KEA-tN-tGr" firstAttribute="leading" secondItem="9QR-ZZ-2PU" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="Gp3-eT-mTj"/>
                                             <constraint firstItem="9QR-ZZ-2PU" firstAttribute="top" secondItem="yjN-aX-aZT" secondAttribute="top" constant="11" id="me7-MN-tA5"/>
+                                            <constraint firstAttribute="trailing" secondItem="KEA-tN-tGr" secondAttribute="trailing" constant="30" type="user" id="wpt-y5-9QI"/>
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="8Bc-LV-oHf">
@@ -495,6 +495,7 @@
                             <outlet property="delegate" destination="7Lm-46-Dd7" id="llD-et-fFf"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Settings" id="BlZ-XY-L9g">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="2We-U5-Sjm">
                             <connections>
@@ -726,54 +727,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             <point key="canvasLocation" x="75" y="175"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="MKUserTrackingBarButtonItem" superclassName="UIBarButtonItem">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MKUserTrackingBarButtonItem.h"/>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="mqttitudeIndicatorView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeIndicatorView.h"/>
-        </class>
-        <class className="mqttitudeLogTVCViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeLogTVCViewController.h"/>
-        </class>
-        <class className="mqttitudeQoSTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeQoSTVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="UIqos0" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="UIqos1" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="UIqos2" candidateClass="UITableViewCell"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeSettingsTVCViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeSettingsTVCViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="UIauth" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UIbackground" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UIhost" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIpass" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIport" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIqos" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIretainFlag" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItls" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="UItopic" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIuser" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="UIversion" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="mqttitudeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/mqttitudeViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="indicatorView" candidateClass="mqttitudeIndicatorView"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="statusField" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="stopButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="trackingButton" candidateClass="MKUserTrackingBarButtonItem"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

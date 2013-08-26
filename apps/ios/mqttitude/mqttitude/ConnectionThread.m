@@ -10,21 +10,14 @@
 
 @interface ConnectionThread()
 @property (strong, nonatomic) NSTimer *reconnectTimer;
-@property (strong, nonatomic) NSTimer *timeoutTimer;
-@property (strong, nonatomic) MQTTSession *session;
-@property (nonatomic) BOOL background;
-
-#define STATE_INITIAL 0
-#define STATE_WAITING 1
-#define STATE_CONNECTING 2
-#define STATE_CONNECTED 3
-#define STATE_CONNECTION_ERROR 4
-#define STATE_CLOSED 5
-#define STATE_REFUSED 6
-#define STATE_PROTOCOL_ERROR 7
-#define STATE_EXIT 9
-
+@property (nonatomic) float reconnectTime;
+@property (strong, nonatomic) NSTimer *inactivityTimer;
+@property (strong, nonatomic) NSTimer *ticklerTimer;
 @property (nonatomic) NSInteger state;
+
+@property (strong, nonatomic) MQTTSession *session;
+@property (strong, nonatomic) NSMutableArray *fifo;
+
 
 @property (strong, nonatomic) NSString *host;
 @property (strong, nonatomic) NSString *user;
@@ -41,131 +34,133 @@
 
 @implementation ConnectionThread
 
-#define STATE_INITIAL 0
-#define STATE_WAITING 1
-#define STATE_CONNECTING 2
-#define STATE_CONNECTED 3
-#define STATE_CONNECTION_ERROR 4
-#define STATE_CLOSED 5
-#define STATE_REFUSED 6
-#define STATE_PROTOCOL_ERROR 7
-#define STATE_CLOSING 8
-#define STATE_EXIT 9
+enum state {
+    state_waiting,
+    state_connecting,
+    state_error,
+    state_connected,
+    state_closing,
+    state_exit
+};
 
-#define RECONNECT_SLEEP 5.0
-#define WAIT_SLEEP 15.0
+/*
+ *  Timers in seconds
+ */
+#define RECONNECT_TIMER 1.0
+#define RECONNECT_TIMER_MAX 300.0
+
+#define INACTIVITY_TIMER 15.0
+#define TICKLER_TIMER 60*60
+
+- (void)setState:(NSInteger)state
+{
+    _state = state;
+    NSLog(@"Connection thread state:%d", self.state);
+    [self showIndicator];
+}
+
+- (NSArray *)fifo
+{
+    if (!_fifo)
+        _fifo = [[NSMutableArray alloc] init];
+    return _fifo;
+}
 
 - (void)main
 {
-    self.state = STATE_INITIAL;
+    self.ticklerTimer = [NSTimer timerWithTimeInterval:TICKLER_TIMER
+                                                target:self selector:@selector(tickler)
+                                              userInfo:Nil repeats:TRUE];
+    NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
+    [runLoop addTimer:self.ticklerTimer
+              forMode:NSDefaultRunLoopMode];
+    
+    self.reconnectTime = RECONNECT_TIMER;
     
     do
     {
-        NSLog(@"Connection thread state:%d", self.state);
-        [self showIndicator];
-
-        switch (self.state) {
-            case STATE_INITIAL:
-                self.state = STATE_WAITING;
-                break;
-            case STATE_WAITING:
-            {
-                if ([NSThread currentThread].isCancelled) {
-                    self.state = STATE_EXIT;
-                }
-                break;
-            }
-            case STATE_CONNECTING:
-                break;
-            case STATE_CONNECTED:
-                if ([NSThread currentThread].isCancelled) {
-                    [self disconnect];
-                }
-                if (!self.timeoutTimer || !self.timeoutTimer.isValid) {
-                    self.timeoutTimer = [NSTimer timerWithTimeInterval:WAIT_SLEEP target:self selector:@selector(timeout) userInfo:Nil repeats:FALSE];
+        if (self.state == state_connected) {
+            if ([self.fifo count]) {
+                /*
+                 * if there are some queued send messages, send them
+                 */
+                NSDictionary *parameters = self.fifo[0];
+                [self.fifo removeObjectAtIndex:0];
+                [self sendData:parameters];
+            } else {
+                /*
+                 * otherwise start inactivity timer if necessary
+                 */
+                if (!self.inactivityTimer || !self.inactivityTimer.isValid) {
+                    self.inactivityTimer = [NSTimer timerWithTimeInterval:INACTIVITY_TIMER
+                                                                   target:self selector:@selector(inactivity)
+                                                                 userInfo:Nil repeats:FALSE];
                     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-                    [runLoop addTimer:self.timeoutTimer forMode:NSDefaultRunLoopMode];
+                    [runLoop addTimer:self.inactivityTimer
+                              forMode:NSDefaultRunLoopMode];
                 }
-                break;
-            case STATE_PROTOCOL_ERROR:
-            case STATE_CONNECTION_ERROR:
-            {
-                if ([NSThread currentThread].isCancelled) {
-                    self.state = STATE_EXIT;
-                    break;
-                }
-
-                self.state = STATE_WAITING;
-                self.reconnectTimer = [NSTimer timerWithTimeInterval:RECONNECT_SLEEP target:self selector:@selector(reconnect) userInfo:Nil repeats:FALSE];
-                NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-                [runLoop addTimer:self.reconnectTimer forMode:NSDefaultRunLoopMode];
-                break;
             }
-            case STATE_CLOSED:
-                self.state = STATE_EXIT;
-                break;
-            case STATE_REFUSED:
-                self.state = STATE_EXIT;
-                break;
-            case STATE_EXIT:
-            default:
-                break;
         }
-        
-        
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
     }
-    while (self.state != STATE_EXIT);
+    while (self.state != state_exit);
 }
+
 
 - (void)reconnect
 {
+    NSLog(@"reconnect");
+
     self.reconnectTimer = nil;
-    [self sessionMessage:NSLocalizedString(@"reconnect",
-                                           @"Status messsage to the user MQTT reconnect")];
-    [self connectTo:self.host port:self.port tls:self.tls auth:self.auth user:self.user pass:self.pass topic:self.willTopic message:self.willMessage];
+    self.state = state_waiting;
+
+    [self connectToInternal];
 }
 
-- (void)timeout
+- (void)inactivity
 {
-    self.timeoutTimer = nil;
-    [self sessionMessage:NSLocalizedString(@"timeout",
-                                           @"Status messsage to the user MQTT inactivity timeout")];
+    NSLog(@"inactivity");
+
+    self.inactivityTimer = nil;
     [self disconnect];
 }
+    
+- (void)tickler
+{
+    NSLog(@"tickler");
+    self.reconnectTime = RECONNECT_TIMER;
 
+    [self connectToInternal];
+}
 
-#define LISTENTO @"listento"
-#define OTHERS @"dt27/#"
+/*
+ * externally visible methods
+ */
+
+#define OTHERS @"#"
 #define MQTT_KEEPALIVE 10
 
 - (void)connectTo:(NSDictionary *)parameters
 {
-    self.background = [parameters[@"BACKGROUND"] boolValue];
-
-    [self connectTo:parameters[@"HOST"]
-               port:[parameters[@"PORT"] intValue]
-                tls:[parameters[@"TLS"] boolValue]
-                auth:[parameters[@"AUTH"] boolValue]
-               user:parameters[@"USER"]
-               pass:parameters[@"PASS"]
-              topic:parameters[@"TOPIC"]
-            message:parameters[@"DATA"]];
+    self.host = parameters[@"HOST"];
+    self.port = [parameters[@"PORT"] intValue];
+    self.tls = [parameters[@"TLS"] boolValue];
+    self.auth = [parameters[@"AUTH"] boolValue];
+    self.user = parameters[@"USER"];
+    self.pass = parameters[@"PASS"];
+    self.willTopic = parameters[@"TOPIC"];
+    self.topic = parameters[@"TOPIC"];
+    self.willMessage = parameters[@"DATA"];
+    
+    self.reconnectTime = RECONNECT_TIMER;
+    
+    [self connectToInternal];
 }
 
-- (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass topic:(NSString *)topic message:(NSData *)message;
+- (void)connectToInternal
 {
-    self.host = host;
-    self.port = port;
-    self.tls = tls;
-    self.auth = auth;
-    self.user = user;
-    self.pass = pass;
-    self.willTopic = topic;
-    self.willMessage = message;
-    
-    if (self.state == STATE_WAITING) {
+    if (self.state == state_waiting) {
         NSString *clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         
         self.session = [[MQTTSession alloc] initWithClientId:clientId
@@ -178,8 +173,8 @@
                                                      willQoS:1
                                               willRetainFlag:YES];
         
+        self.state = state_connecting;
         [self.session setDelegate:self];
-        self.state = STATE_CONNECTING;
         [self.session connectToHost:self.host
                                port:self.port
                            usingSSL:self.tls];
@@ -194,17 +189,24 @@
 
 - (void)disconnect
 {
-    if (self.state == STATE_CONNECTED) {
-        self.state = STATE_CLOSING;
+    if (self.state == state_connected) {
+        self.state = state_closing;
         [self.session unsubscribeTopic:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO]];
         [self.session unsubscribeTopic:[NSString stringWithFormat:OTHERS]];
         [self.session close];
     } else {
-        self.state = STATE_CLOSED;
+        self.state = state_waiting;
         NSLog(@"MQTTitude not connected, can't close");
 
     }
 }
+
+- (void)stop
+{
+    self.state = state_exit;
+}
+
+
 
 #pragma mark - MQtt Callback methods
 
@@ -212,35 +214,40 @@
 - (void)session:(MQTTSession*)sender handleEvent:(MQTTSessionEvent)eventCode {
     switch (eventCode) {
         case MQTTSessionEventConnected:
-            [self sessionMessage: NSLocalizedString(@"connected",
-                                                    @"Status messsage to the user MQTT is connected to host")];
-            self.state = STATE_CONNECTED;
+            self.state = state_connected;
             break;
         case MQTTSessionEventConnectionRefused:
-            [self sessionMessage: NSLocalizedString(@"refused",
-                                                    @"Status messsage to the user MQTT connect to host was refused")];
-            self.state = STATE_REFUSED;
+            self.state = state_error;
+            self.state = state_waiting;
             break;
         case MQTTSessionEventConnectionClosed:
-            [self sessionMessage: NSLocalizedString(@"closed",
-                                                    @"Status messsage to the user MQTT connection to host was closed")];
-            self.state = STATE_CLOSED;
+            self.state = state_waiting;
+            break;
+        case MQTTSessionEventProtocolError:
             break;
         case MQTTSessionEventConnectionError:
         {
-            [self sessionMessage:NSLocalizedString(@"connection error",
-                                                   @"Status messsage to the user MQTT connection problem")];
-            self.state = STATE_CONNECTION_ERROR;
+            if (self.state != state_closing) {
+                self.state = state_error;
+                if (self.reconnectTime < RECONNECT_TIMER_MAX) {
+                    self.reconnectTime *= 2;
+                }
+                NSLog(@"reconnect after: %f", self.reconnectTime);
+
+                self.reconnectTimer = [NSTimer timerWithTimeInterval:self.reconnectTime
+                                                              target:self
+                                                            selector:@selector(reconnect)
+                                                            userInfo:Nil repeats:FALSE];
+                NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+                [runLoop addTimer:self.reconnectTimer
+                          forMode:NSDefaultRunLoopMode];
+            }
+            
             break;
         }
-        case MQTTSessionEventProtocolError:
-            [self sessionMessage:NSLocalizedString(@"protocol error",
-                                                   @"Status messsage to the user MQTT detected a protocol error")];
-            self.state = STATE_PROTOCOL_ERROR;
-            break;
         default:
-            [self sessionMessage:[NSString stringWithFormat:@"MQTTitude unknown eventCode: %d", eventCode]];
-            self.state = STATE_EXIT;
+            NSLog(@"MQTTitude unknown eventCode: %d", eventCode);
+            self.state = state_exit;
             break;
     }
 }
@@ -254,85 +261,93 @@
 
 - (void)session:(MQTTSession *)session newMessage:(NSData *)data onTopic:(NSString *)topic
 {
-    NSLog(@"Received Data %@: %@", topic, [self dataToString:data]);
-    if (self.timeoutTimer) {
-        [self.timeoutTimer invalidate];
+    
+    NSLog(@"Received %@ %@", topic, [self dataToString:data]);
+
+    if (self.inactivityTimer) {
+        [self.inactivityTimer invalidate];
     }
     
-    if (self.background) {
-        if ([topic isEqualToString:self.topic]) {
-            // receiving own data
-        } else if ([topic isEqualToString:[NSString stringWithFormat:@"%@/%@", self.topic, LISTENTO]]) {
-            [self.controller performSelector:@selector(publishNow) onThread:[NSThread mainThread] withObject:Nil waitUntilDone:NO];
-            
-        } else {
-            NSError *error;
-            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if (dictionary) {
-                if ([dictionary[@"_type"] isEqualToString:@"location"]) {
-                    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([dictionary[@"lat"] floatValue], [dictionary[@"lon"] floatValue]);
-                    CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
-                                                                         altitude:[dictionary[@"alt"] floatValue]
-                                                               horizontalAccuracy:[dictionary[@"acc"] floatValue]
-                                                                 verticalAccuracy:[dictionary[@"vac"] floatValue]
-                                                                        timestamp:[NSDate dateWithTimeIntervalSince1970:[dictionary[@"tst"] floatValue]]];
-                    NSDictionary *dictionary = @{@"LOCATION": location, @"TOPIC": topic};
-                    [self.controller performSelector:@selector(locationToMap:) onThread:[NSThread mainThread] withObject:dictionary waitUntilDone:NO];
-                }
-            }
-        }
-    }
+    NSDictionary *dictionary = @{@"TOPIC": topic,
+                                 @"DATA": data
+                                 };
+    [(NSObject *)self.delegate performSelector:@selector(handleMessage:)
+                          onThread:[NSThread mainThread]
+                        withObject:dictionary
+                     waitUntilDone:NO];
+
 }
 
 - (void)showIndicator
 {
-    NSInteger indicator = INDICATOR_IDLE;
+    NSInteger indicator;
     
     switch (self.state) {
-        case STATE_CONNECTED:
-            indicator = INDICATOR_GREEN;
+        case state_connected:
+            indicator = indicator_green;
             break;
-        case STATE_CONNECTION_ERROR:
-        case STATE_PROTOCOL_ERROR:
-        case STATE_REFUSED:
-            indicator = INDICATOR_RED;
+        case state_error:
+            indicator = indicator_red;
             break;
-        case STATE_CONNECTING:
-        case STATE_INITIAL:
-        case STATE_WAITING:
-        case STATE_CLOSING:
-            indicator = INDICATOR_YELLOW;
+        case state_connecting:
+        case state_closing:
+            indicator = indicator_amber;
             break;
-        case STATE_CLOSED:
-        case STATE_EXIT:
+        case state_waiting:
+        case state_exit:
         default:
-            indicator = INDICATOR_IDLE;
+            indicator = indicator_idle;
             break;
     }
-
-[self.controller performSelector:@selector(showIndicator:)
-                        onThread:[NSThread mainThread]
-                      withObject:@(indicator)
-                   waitUntilDone:NO];
+    
+    [(NSObject *)self.delegate performSelector:@selector(showIndicator:)
+                          onThread:[NSThread mainThread]
+                        withObject:@(indicator)
+                     waitUntilDone:NO];
 }
 
-- (void)sessionMessage:(NSString *)message
-{
-    NSString *sessionMessage = [NSString stringWithFormat:@"%@ %@%@ :%d %@",
-                                message,
-                                (self.auth) ? [NSString stringWithFormat:@"%@@ ", self.user] : @"",
-                                self.host,
-                                (unsigned int)self.port,
-                                (self.tls) ? @"TLS" : @"PLAIN"
-                                ];
-    
 
-    [self.controller performSelector:@selector(showStatus:)
-                            onThread:[NSThread mainThread]
-                          withObject:sessionMessage
-                       waitUntilDone:NO];
+
+- (void)sendData:(NSDictionary *)parameters
+{
+    if (self.state != state_connected) {
+        NSLog(@"into fifo");
+        [self.fifo addObject:parameters];
+        [self connectToInternal];
+    } else {
+        [self sendData:parameters[@"DATA"]
+                 topic:parameters[@"TOPIC"]
+                   qos:[parameters[@"QOS"] intValue]
+            retainFlag:[parameters[@"RETAINFLAG"] boolValue]];
+    }
+}
+
+- (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retainFlag:(BOOL)retainFlag
+{
+    self.topic = topic;
+    self.qos = qos;
+    self.retainFlag = retainFlag;
     
-    [self.controller performSelector:@selector(log:) onThread:[NSThread mainThread] withObject:sessionMessage waitUntilDone:NO];
+    NSLog(@"Sending: %@", [self dataToString:data]);
+    
+    if (self.inactivityTimer) {
+        [self.inactivityTimer invalidate];
+    }
+    
+    switch (qos) {
+        case 0:
+            [self.session publishDataAtMostOnce:data onTopic:[NSString stringWithFormat:@"%@", topic] retain:retainFlag];
+            break;
+        case 1:
+            [self.session publishDataAtLeastOnce:data onTopic:[NSString stringWithFormat:@"%@", topic] retain:retainFlag];
+            break;
+        case 2:
+            [self.session publishDataExactlyOnce:data onTopic:[NSString stringWithFormat:@"%@", topic] retain:retainFlag];
+            break;
+        default:
+            NSLog(@"MQTTitude unknown qos: %d", qos);
+            break;
+    }
 }
 
 - (NSString *)dataToString:(NSData *)data
@@ -346,47 +361,5 @@
     }
     return message;
 }
-
-- (void)sendData:(NSDictionary *)parameters
-{
-    [self sendData:parameters[@"DATA"]
-             topic:parameters[@"TOPIC"]
-               qos:[parameters[@"QOS"] intValue]
-        retainFlag:[parameters[@"RETAINFLAG"] boolValue]];
-}
-
-- (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retainFlag:(BOOL)retainFlag 
-{
-    self.topic = topic;
-    self.qos = qos;
-    self.retainFlag = retainFlag;
-    
-    if (self.timeoutTimer) {
-        [self.timeoutTimer invalidate];
-    }
- 
-    if ((self.state == STATE_CONNECTED) || (self.state == STATE_CONNECTING)) {
-        NSString *message = [self dataToString:data];
-        [self.controller performSelector:@selector(log:) onThread:[NSThread mainThread] withObject:message waitUntilDone:NO];
-        
-        switch (qos) {
-            case 0:
-                [self.session publishDataAtMostOnce:data onTopic:[NSString stringWithFormat:@"%@", topic] retain:retainFlag];
-                break;
-            case 1:
-                [self.session publishDataAtLeastOnce:data onTopic:[NSString stringWithFormat:@"%@", topic] retain:retainFlag];
-                break;
-            case 2:
-                [self.session publishDataExactlyOnce:data onTopic:[NSString stringWithFormat:@"%@", topic] retain:retainFlag];
-                break;
-            default:
-                NSLog(@"MQTTitude unknown qos: %d", qos);
-                break;
-        }
-    } else {
-        NSLog(@"MQTTitude not connected, can't send");
-    }
-}
-
 
 @end

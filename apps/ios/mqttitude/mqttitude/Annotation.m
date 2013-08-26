@@ -28,7 +28,7 @@
 - (NSString *)subtitle {
     return  (self.placemark) ?
     ABCreateStringWithAddressDictionary (self.placemark.addressDictionary, TRUE) :
-    [NSString stringWithFormat:@"%f %f",
+    [NSString stringWithFormat:@"%f:%f",
      self.coordinate.latitude,
      self.coordinate.longitude];
 }

@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "MQTTSession.h"
-#import "mqttitudeViewController.h"
+#import "ConnectionThreadDelegate.h"
 
 @interface ConnectionThread : NSThread
-@property (weak, nonatomic) mqttitudeViewController *controller;
+@property (weak, nonatomic) id<ConnectionThreadDelegate> delegate;
 
 - (void)connectTo:(NSDictionary *)parameters;
-- (void)disconnect;
 - (void)sendData:(NSDictionary *)parameters;
+- (void)disconnect;
+- (void)stop;
 
 @end

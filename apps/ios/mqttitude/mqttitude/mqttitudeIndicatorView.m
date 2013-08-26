@@ -23,25 +23,5 @@
     
     [self.color setStroke];
     [circle stroke];
-    
-    /* to animate, have to use map overlays!!!
-    NSTimeInterval duration = 1.0;
-    [UIView animateWithDuration:duration
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut |
-                                UIViewAnimationOptionAllowUserInteraction |
-                                UIViewAnimationOptionAutoreverse |
-                                UIViewAnimationOptionBeginFromCurrentState
-                     animations:^(void){
-                         if (self.alpha) {
-                             self.alpha = 0.0;
-                         } else {
-                             self.alpha = 1.0;
-                         }
-                     }
-                     completion:^(BOOL finished){
-                        [self setNeedsDisplay];
-                     }];
-     */
 }
 @end

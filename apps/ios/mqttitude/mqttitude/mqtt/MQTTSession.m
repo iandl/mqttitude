@@ -173,7 +173,7 @@
 - (void)close {
     /* CK added DISCONNECT */
     [self send:[MQTTMessage disconnectMessage]];
-    [[NSRunLoop currentRunLoop]  runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
 
     [encoder close];
     [decoder close];

@@ -10,17 +10,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "MQTTSession.h"
+#import "ConnectionThreadDelegate.h"
 
-#define INDICATOR_RED 3
-#define INDICATOR_YELLOW 2
-#define INDICATOR_GREEN 1
-#define INDICATOR_IDLE 0
-
-@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
-- (void)showStatus:(NSString *)status;
-- (void)showIndicator:(NSNumber *)indicator;
-- (void)publishNow;
-- (void)log:(NSString *)message;
-- (void)locationToMap:(NSDictionary *)dictionary;
+@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ConnectionThreadDelegate>
 
 @end
