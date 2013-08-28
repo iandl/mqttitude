@@ -13,6 +13,11 @@ Before proceeding, please read and understand the following
 This document assumes that the MQTTitude backend is running on ```localhost```.
 
 #### Users
+**Request**: ```GET /api/v1/users/{id}```  
+**Request headers**: ```Content-Type: application/json```  
+**Request authentication**: yes  
+**Response**: 
+**Example request**:  ```curl -i -H "Accept: application/json" -X POST -d "name=bucks&password=strenggeheim" http://127.0.0.1:9393/api/v1/authenticate```
 
 #### Locations
 
