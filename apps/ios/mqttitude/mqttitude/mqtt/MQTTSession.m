@@ -15,193 +15,76 @@
 
 #import "MQTTSession.h"
 #import "MQttTxFlow.h"
+#import <CFNetwork/CFSocketStream.h>
+
+@interface MQTTSession()
+
+@property (nonatomic) MQTTSessionStatus status;
+@property (strong, nonatomic) NSString *clientId;
+@property (nonatomic) UInt16 keepAliveInterval;
+@property (strong, nonatomic) MQTTMessage *connectMessage;
+@property (strong, nonatomic) NSRunLoop *runLoop;
+@property (strong, nonatomic) NSString *runLoopMode;
+@property (strong, nonatomic) NSTimer *keepAliveTimer;
+@property (strong, nonatomic) MQTTEncoder *encoder;
+@property (strong, nonatomic) MQTTDecoder *decoder;
+@property (nonatomic) UInt16 txMsgId;
+@property (strong, nonatomic) NSMutableDictionary *txFlows;
+@property (strong, nonatomic) NSMutableDictionary *rxFlows;
+@property (strong, nonatomic) NSMutableArray *queue;
+
+@end
+
+#define DEBUGGING
 
 @implementation MQTTSession
+#define TIMEOUT 60
 
-- (id)initWithClientId:(NSString*)theClientId {
-    return [self initWithClientId:theClientId userName:@"" password:@""];
-}
-
-- (id)initWithClientId:(NSString*)theClientId
-              userName:(NSString*)theUserName
-              password:(NSString*)thePassword {
-    return [self initWithClientId:theClientId
-                         userName:theUserName
-                         password:thePassword
-                        keepAlive:60
-                     cleanSession:YES];
-}
-
-- (id)initWithClientId:(NSString*)theClientId runLoop:(NSRunLoop*)theRunLoop
-               forMode:(NSString*)theRunLoopMode {
-    return [self initWithClientId:theClientId userName:@"" password:@"" runLoop:theRunLoop forMode:theRunLoopMode];
-}
-
-- (id)initWithClientId:(NSString*)theClientId
-              userName:(NSString*)theUserName
-              password:(NSString*)thePassword
-               runLoop:(NSRunLoop*)theRunLoop
-               forMode:(NSString*)theRunLoopMode {
-    return [self initWithClientId:theClientId
-                         userName:theUserName
-                         password:thePassword
-                        keepAlive:60
-                     cleanSession:YES
-                          runLoop:theRunLoop
-                          forMode:theRunLoopMode];
-}
-
-
-- (id)initWithClientId:(NSString*)theClientId
-              userName:(NSString*)theUserName
-              password:(NSString*)thePassword
-             keepAlive:(UInt16)theKeepAliveInterval
-          cleanSession:(BOOL)theCleanSessionFlag {
-    return [self initWithClientId:theClientId
-                         userName:theUserName
-                         password:thePassword
-                        keepAlive:theKeepAliveInterval
-                     cleanSession:theCleanSessionFlag
-                          runLoop:[NSRunLoop currentRunLoop]
-                          forMode:NSDefaultRunLoopMode];
-}
-
-- (id)initWithClientId:(NSString*)theClientId
-              userName:(NSString*)theUserName
-              password:(NSString*)thePassword
-             keepAlive:(UInt16)theKeepAliveInterval
-          cleanSession:(BOOL)theCleanSessionFlag
-               runLoop:(NSRunLoop*)theRunLoop
-               forMode:(NSString*)theRunLoopMode {
-    MQTTMessage *msg = [MQTTMessage connectMessageWithClientId:theClientId
-                                                      userName:theUserName
-                                                      password:thePassword
-                                                     keepAlive:theKeepAliveInterval
-                                                  cleanSession:theCleanSessionFlag];
-    return [self initWithClientId:theClientId
-                        keepAlive:theKeepAliveInterval
-                   connectMessage:msg
-                          runLoop:theRunLoop
-                          forMode:theRunLoopMode];
-}
-
-- (id)initWithClientId:(NSString*)theClientId
-              userName:(NSString*)theUserName
-              password:(NSString*)thePassword
-             keepAlive:(UInt16)theKeepAliveInterval
-          cleanSession:(BOOL)theCleanSessionFlag
-             willTopic:(NSString*)willTopic
-               willMsg:(NSData*)willMsg
-               willQoS:(UInt8)willQoS
-        willRetainFlag:(BOOL)willRetainFlag {
-    return [self initWithClientId:theClientId
-                         userName:theUserName
-                         password:thePassword
-                        keepAlive:theKeepAliveInterval
-                     cleanSession:theCleanSessionFlag
-                        willTopic:willTopic
-                          willMsg:willMsg
-                          willQoS:willQoS
-                   willRetainFlag:willRetainFlag
-                          runLoop:[NSRunLoop currentRunLoop]
-                          forMode:NSDefaultRunLoopMode];
-}
-
-- (id)initWithClientId:(NSString*)theClientId
-              userName:(NSString*)theUserName
-              password:(NSString*)thePassword
-             keepAlive:(UInt16)theKeepAliveInterval
-          cleanSession:(BOOL)theCleanSessionFlag
-             willTopic:(NSString*)willTopic
-               willMsg:(NSData*)willMsg
+- (id)initWithClientId:(NSString *)clientId
+              userName:(NSString *)userName
+              password:(NSString *)password
+             keepAlive:(UInt16)keepAliveInterval
+          cleanSession:(BOOL)cleanSessionFlag
+             willTopic:(NSString *)willTopic
+               willMsg:(NSData *)willMsg
                willQoS:(UInt8)willQoS
         willRetainFlag:(BOOL)willRetainFlag
-               runLoop:(NSRunLoop*)theRunLoop
-               forMode:(NSString*)theRunLoopMode {
-    MQTTMessage *msg = [MQTTMessage connectMessageWithClientId:theClientId
-                                                      userName:theUserName
-                                                      password:thePassword
-                                                     keepAlive:theKeepAliveInterval
-                                                  cleanSession:theCleanSessionFlag
+               runLoop:(NSRunLoop *)runLoop
+               forMode:(NSString *)runLoopMode
+{
+    self.connectMessage = [MQTTMessage connectMessageWithClientId:clientId
+                                                      userName:userName
+                                                      password:password
+                                                     keepAlive:keepAliveInterval
+                                                  cleanSession:cleanSessionFlag
                                                      willTopic:willTopic
                                                        willMsg:willMsg
                                                        willQoS:willQoS
                                                     willRetain:willRetainFlag];
-    return [self initWithClientId:theClientId
-                        keepAlive:theKeepAliveInterval
-                   connectMessage:msg
-                          runLoop:theRunLoop
-                          forMode:theRunLoopMode];
-}
-
-- (id)initWithClientId:(NSString*)theClientId
-             keepAlive:(UInt16)theKeepAliveInterval
-        connectMessage:(MQTTMessage*)theConnectMessage
-               runLoop:(NSRunLoop*)theRunLoop
-               forMode:(NSString*)theRunLoopMode {
-    clientId = theClientId;
-    keepAliveInterval = theKeepAliveInterval;
-    connectMessage = theConnectMessage;
-    runLoop = theRunLoop;
-    runLoopMode = theRunLoopMode;
+    self.clientId = clientId;
+    self.keepAliveInterval = keepAliveInterval;
+    self.runLoop = runLoop;
+    self.runLoopMode = runLoopMode;
     
     self.queue = [NSMutableArray array];
-    txMsgId = 1;
-    txFlows = [[NSMutableDictionary alloc] init];
-    rxFlows = [[NSMutableDictionary alloc] init];
-    self.timerRing = [[NSMutableArray alloc] initWithCapacity:60];
-    int i;
-    for (i = 0; i < 60; i++) {
-        [self.timerRing addObject:[NSMutableSet set]];
-    }
-    ticks = 0;
-    
+    self.txMsgId = 1;
+    self.txFlows = [[NSMutableDictionary alloc] init];
+    self.rxFlows = [[NSMutableDictionary alloc] init];
+
     return self;
 }
 
-- (void)dealloc {
-    [encoder close];
-    encoder = nil;
-    [decoder close];
-    decoder = nil;
-    if (timer != nil) {
-        [timer invalidate];
-        timer = nil;
-    }
-}
+- (void)connectToHost:(NSString*)host port:(UInt32)port usingSSL:(BOOL)usingSSL {
 
-- (void)close {
-    /* CK added DISCONNECT */
-    [self send:[MQTTMessage disconnectMessage]];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
-
-    [encoder close];
-    [decoder close];
-    encoder = nil;
-    decoder = nil;
-     if (timer != nil) {
-        [timer invalidate];
-        timer = nil;
-        }
-    [self error:MQTTSessionEventConnectionClosed];
-}
-
-- (void)setDelegate:(id)aDelegate {
-    delegate = aDelegate;
-}
-
-- (void)connectToHost:(NSString*)ip port:(UInt32)port {
-    [self connectToHost:ip port:port usingSSL:false];
-}
-
-- (void)connectToHost:(NSString*)ip port:(UInt32)port usingSSL:(BOOL)usingSSL {
-
-    status = MQTTSessionStatusCreated;
+    self.status = MQTTSessionStatusCreated;
 
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
 
-    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)ip, port, &readStream, &writeStream);
+    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)host, port, &readStream, &writeStream);
+    
+    CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
+    CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
 
     if (usingSSL) {
         const void *keys[] = { kCFStreamSSLLevel,
@@ -209,34 +92,30 @@
 
         const void *vals[] = { kCFStreamSocketSecurityLevelNegotiatedSSL,
                                kCFNull };
-
+        
         CFDictionaryRef sslSettings = CFDictionaryCreate(kCFAllocatorDefault, keys, vals, 2,
                                                          &kCFTypeDictionaryKeyCallBacks,
                                                          &kCFTypeDictionaryValueCallBacks);
 
         CFReadStreamSetProperty(readStream, kCFStreamPropertySSLSettings, sslSettings);
         CFWriteStreamSetProperty(writeStream, kCFStreamPropertySSLSettings, sslSettings);
-
+        
         CFRelease(sslSettings);
     }
 
-    encoder = [[MQTTEncoder alloc] initWithStream:(__bridge NSOutputStream*)writeStream
-                                          runLoop:runLoop
-                                      runLoopMode:runLoopMode];
+    self.encoder = [[MQTTEncoder alloc] initWithStream:(__bridge NSOutputStream*)writeStream
+                                          runLoop:self.runLoop
+                                      runLoopMode:self.runLoopMode];
 
-    decoder = [[MQTTDecoder alloc] initWithStream:(__bridge NSInputStream*)readStream
-                                          runLoop:runLoop
-                                      runLoopMode:runLoopMode];
+    self.decoder = [[MQTTDecoder alloc] initWithStream:(__bridge NSInputStream*)readStream
+                                          runLoop:self.runLoop
+                                      runLoopMode:self.runLoopMode];
 
-    [encoder setDelegate:self];
-    [decoder setDelegate:self];
+    self.encoder.delegate = self;
+    self.decoder.delegate = self;
     
-    [encoder open];
-    [decoder open];
-}
-
-- (void)subscribeTopic:(NSString*)theTopic {
-    [self subscribeToTopic:theTopic atLevel:0];
+    [self.encoder open];
+    [self.decoder open];
 }
 
 - (void) subscribeToTopic:(NSString*)topic
@@ -251,219 +130,177 @@
                                                       topic:theTopic]];
 }
 
-- (void)publishData:(NSData*)data onTopic:(NSString*)topic {
-    [self publishDataAtMostOnce:data onTopic:topic];
-}
-
-- (void)publishDataAtMostOnce:(NSData*)data
-                      onTopic:(NSString*)topic {
-  [self publishDataAtMostOnce:data onTopic:topic retain:false];
-}
-
-- (void)publishDataAtMostOnce:(NSData*)data
-                      onTopic:(NSString*)topic
-                     retain:(BOOL)retainFlag {
-    [self send:[MQTTMessage publishMessageWithData:data
-                                           onTopic:topic
-                                        retainFlag:retainFlag]];
-}
-
-- (void)publishDataAtLeastOnce:(NSData*)data
-                       onTopic:(NSString*)topic {
-    [self publishDataAtLeastOnce:data onTopic:topic retain:false];
-}
-
-- (void)publishDataAtLeastOnce:(NSData*)data
-                       onTopic:(NSString*)topic
-                        retain:(BOOL)retainFlag {
+- (void)publishData:(NSData*)data
+            onTopic:(NSString*)topic
+             retain:(BOOL)retainFlag
+                qos:(NSInteger)qos
+{
     UInt16 msgId = [self nextMsgId];
     MQTTMessage *msg = [MQTTMessage publishMessageWithData:data
                                                    onTopic:topic
-                                                       qos:1
-                                                     msgId:msgId
+                                                       qos:qos
+                                                     msgId:qos ? msgId : 0
                                                 retainFlag:retainFlag
-                                                   dupFlag:false];
-    MQttTxFlow *flow = [MQttTxFlow flowWithMsg:msg
-                                      deadline:(ticks + 60)];
-    [txFlows setObject:flow forKey:[NSNumber numberWithUnsignedInt:msgId]];
-    [[self.timerRing objectAtIndex:([flow deadline] % 60)] addObject:[NSNumber numberWithUnsignedInt:msgId]];
+                                                   dupFlag:FALSE];
+    if (qos) {
+        MQttTxFlow *flow = [[MQttTxFlow alloc] init];
+        flow.msg = msg;
+        flow.deadline = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT];
+        [self.txFlows setObject:flow forKey:[NSNumber numberWithUnsignedInt:msgId]];
+    }
     [self send:msg];
 }
 
-- (void)publishDataExactlyOnce:(NSData*)data
-                       onTopic:(NSString*)topic {
-    [self publishDataExactlyOnce:data onTopic:topic retain:false];
+- (void)close
+{
+    [self closeInternal];
+    [self.delegate handleEvent:self event:MQTTSessionEventConnectionClosed];
 }
 
-- (void)publishDataExactlyOnce:(NSData*)data
-                       onTopic:(NSString*)topic
-                        retain:(BOOL)retainFlag {
-    UInt16 msgId = [self nextMsgId];
-    MQTTMessage *msg = [MQTTMessage publishMessageWithData:data
-                                                   onTopic:topic
-                                                       qos:2
-                                                     msgId:msgId
-                                                retainFlag:retainFlag
-                                                   dupFlag:false];
-    MQttTxFlow *flow = [MQttTxFlow flowWithMsg:msg
-                                      deadline:(ticks + 60)];
-    [txFlows setObject:flow forKey:[NSNumber numberWithUnsignedInt:msgId]];
-    [[self.timerRing objectAtIndex:([flow deadline] % 60)] addObject:[NSNumber numberWithUnsignedInt:msgId]];
-    [self send:msg];
-}
-
-- (void)publishJson:(id)payload onTopic:(NSString*)theTopic {
-    NSError * error = nil;
-    NSData * data = [NSJSONSerialization dataWithJSONObject:payload options:0 error:&error];
-    if(error!=nil){
-        //NSLog(@"Error creating JSON: %@",error.description);
-        return;
+- (void)closeInternal
+{
+    if (self.status == MQTTSessionStatusConnected) {
+        [self send:[MQTTMessage disconnectMessage]];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     }
-    [self publishData:data onTopic:theTopic];
+    if (self.encoder) {
+        [self.encoder close];
+        self.encoder = nil;
+    }
+    if (self.decoder) {
+        [self.decoder close];
+        self.decoder = nil;
+    }
+    if (self.keepAliveTimer) {
+        [self.keepAliveTimer invalidate];
+        self.keepAliveTimer = nil;
+    }    
 }
 
-- (void)timerHandler:(NSTimer*)theTimer {
-    idleTimer++;
-    if (idleTimer >= keepAliveInterval) {
-        if ([encoder status] == MQTTEncoderStatusReady) {
-            //NSLog(@"sending PINGREQ");
-            [encoder encodeMessage:[MQTTMessage pingreqMessage]];
-            idleTimer = 0;
-        }
-    }
-    ticks++;
-    NSEnumerator *e = [[self.timerRing objectAtIndex:(ticks % 60)] objectEnumerator];
-    id msgId;
 
-    while ((msgId = [e nextObject])) {
-        MQttTxFlow *flow = [txFlows objectForKey:msgId];
-        MQTTMessage *msg = [flow msg];
-        [flow setDeadline:(ticks + 60)];
-        [msg setDupFlag];
-        [self send:msg];
+- (void)timerHandler:(NSTimer *)timer
+{
+#ifdef DEBUGGING
+    NSLog(@"%@ Ping @%.0f", self.clientId, [[NSDate date] timeIntervalSince1970]);
+#endif
+    if ([self.encoder status] == MQTTEncoderStatusReady) {
+        [self.encoder encodeMessage:[MQTTMessage pingreqMessage]];
     }
-}
-
-- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent) eventCode {
-   // NSLog(@"encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent) eventCode ");
-    if(sender == encoder) {
-        switch (eventCode) {
-            case MQTTEncoderEventReady:
-                switch (status) {
-                    case MQTTSessionStatusCreated:
-                        //NSLog(@"Encoder has been created. Sending Auth Message");
-                        [sender encodeMessage:connectMessage];
-                        status = MQTTSessionStatusConnecting;
-                        break;
-                    case MQTTSessionStatusConnecting:
-                        break;
-                    case MQTTSessionStatusConnected:
-                        if ([self.queue count] > 0) {
-                            MQTTMessage *msg = [self.queue objectAtIndex:0];
-                            [self.queue removeObjectAtIndex:0];
-                            [encoder encodeMessage:msg];
-                        }
-                        break;
-                    case MQTTSessionStatusError:
-                        break;
-                }
-                break;
-            case MQTTEncoderEventErrorOccurred:
-                [self error:MQTTSessionEventConnectionError];
-                break;
+    
+    for (MQttTxFlow *flow in self.txFlows) {
+        if (flow.deadline < [NSDate date]) {
+            MQTTMessage *msg = [flow msg];
+            flow.deadline = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT];
+            [msg setDupFlag];
+            [self send:msg];
         }
     }
 }
 
-- (void)decoder:(MQTTDecoder*)sender handleEvent:(MQTTDecoderEvent)eventCode {
-    //NSLog(@"decoder:(MQTTDecoder*)sender handleEvent:(MQTTDecoderEvent)eventCode");
-    if(sender == decoder) {
-        MQTTSessionEvent event;
-        switch (eventCode) {
-            case MQTTDecoderEventConnectionClosed:
-                event = MQTTSessionEventConnectionError;
-                break;
-            case MQTTDecoderEventConnectionError:
-                event = MQTTSessionEventConnectionError;
-                break;
-            case MQTTDecoderEventProtocolError:
-                event = MQTTSessionEventProtocolError;
-                break;
-        }
-        [self error:event];
+- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode
+{
+    switch (eventCode) {
+        case MQTTEncoderEventReady:
+            switch (self.status) {
+                case MQTTSessionStatusCreated:
+                    [sender encodeMessage:self.connectMessage];
+                    self.status = MQTTSessionStatusConnecting;
+                    break;
+                case MQTTSessionStatusConnecting:
+                    break;
+                case MQTTSessionStatusConnected:
+                    if ([self.queue count] > 0) {
+                        MQTTMessage *msg = [self.queue objectAtIndex:0];
+                        [self.queue removeObjectAtIndex:0];
+                        [self.encoder encodeMessage:msg];
+                    }
+                    break;
+                case MQTTSessionStatusError:
+                    break;
+            }
+            break;
+        case MQTTEncoderEventErrorOccurred:
+            [self error:MQTTSessionEventConnectionError];
+            break;
     }
 }
 
-- (void)decoder:(MQTTDecoder*)sender newMessage:(MQTTMessage*)msg {
-    //NSLog(@"decoder:(MQTTDecoder*)sender newMessage:(MQTTMessage*)msg ");
-    if(sender == decoder){
-        switch (status) {
-            case MQTTSessionStatusConnecting:
-                switch ([msg type]) {
-                    case MQTTConnack:
-                        if ([[msg data] length] != 2) {
-                            [self error:MQTTSessionEventProtocolError];
+- (void)decoder:(MQTTDecoder*)sender handleEvent:(MQTTDecoderEvent)eventCode
+{
+    MQTTSessionEvent event;
+    switch (eventCode) {
+        case MQTTDecoderEventConnectionClosed:
+            event = MQTTSessionEventConnectionError;
+            break;
+        case MQTTDecoderEventConnectionError:
+            event = MQTTSessionEventConnectionError;
+            break;
+        case MQTTDecoderEventProtocolError:
+            event = MQTTSessionEventProtocolError;
+            break;
+    }
+    [self error:event];
+}
+
+- (void)decoder:(MQTTDecoder*)sender newMessage:(MQTTMessage*)msg
+{
+    switch (self.status) {
+        case MQTTSessionStatusConnecting:
+            switch ([msg type]) {
+                case MQTTConnack:
+                    if ([[msg data] length] != 2) {
+                        [self error:MQTTSessionEventProtocolError];
+                    }
+                    else {
+                        const UInt8 *bytes = [[msg data] bytes];
+                        if (bytes[1] == 0) {
+                            self.status = MQTTSessionStatusConnected;
+                            self.keepAliveTimer = [NSTimer timerWithTimeInterval:self.keepAliveInterval
+                                                                          target:self
+                                                                        selector:@selector(timerHandler:)
+                                                                        userInfo:nil
+                                                                         repeats:YES];
+                            [self.runLoop addTimer:self.keepAliveTimer forMode:self.runLoopMode];
+                            [self.delegate handleEvent:self event:MQTTSessionEventConnected];
                         }
                         else {
-                            const UInt8 *bytes = [[msg data] bytes];
-                            if (bytes[1] == 0) {
-                                status = MQTTSessionStatusConnected;
-                                timer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
-                                                                 interval:1.0
-                                                                   target:self
-                                                                 selector:@selector(timerHandler:)
-                                                                 userInfo:nil
-                                                                  repeats:YES];
-                                if ([delegate respondsToSelector:@selector(session:handleEvent:)]) {
-                                    [delegate session:self handleEvent:MQTTSessionEventConnected];
-                                }
-                                [runLoop addTimer:timer forMode:runLoopMode];
-                            }
-                            else {
-                                [self error:MQTTSessionEventConnectionRefused];
-                            }
+                            [self error:MQTTSessionEventConnectionRefused];
                         }
-                        break;
-                    default:
-                        [self error:MQTTSessionEventProtocolError];
-                        break;
-                }
-                break;
-            case MQTTSessionStatusConnected:
-                [self newMessage:msg];
-                break;
-            default:
-                break;
-        }
+                    }
+                    break;
+                default:
+                    [self error:MQTTSessionEventProtocolError];
+                    break;
+            }
+            break;
+        case MQTTSessionStatusConnected:
+            switch ([msg type]) {
+                case MQTTPublish:
+                    [self handlePublish:msg];
+                    break;
+                case MQTTPuback:
+                    [self handlePuback:msg];
+                    break;
+                case MQTTPubrec:
+                    [self handlePubrec:msg];
+                    break;
+                case MQTTPubrel:
+                    [self handlePubrel:msg];
+                    break;
+                case MQTTPubcomp:
+                    [self handlePubcomp:msg];
+                    break;
+                default:
+                    return;
+            }
+            break;
+        default:
+            break;
     }
 }
 
-- (void)newMessage:(MQTTMessage*)msg {
-    switch ([msg type]) {
-    case MQTTPublish:
-        [self handlePublish:msg];
-        break;
-    case MQTTPuback:
-        [self handlePuback:msg];
-        break;
-    case MQTTPubrec:
-        [self handlePubrec:msg];
-        break;
-    case MQTTPubrel:
-        [self handlePubrel:msg];
-        break;
-    case MQTTPubcomp:
-        [self handlePubcomp:msg];
-        break;
-    default:
-        return;
-    }
-}
-
-- (void)handlePublish:(MQTTMessage*)msg {
-    if (![delegate respondsToSelector:@selector(session:newMessage:onTopic:)]) {
-        return;
-    }
+- (void)handlePublish:(MQTTMessage*)msg
+{
     NSData *data = [msg data];
     if ([data length] < 2) {
         return;
@@ -479,7 +316,7 @@
     NSRange range = NSMakeRange(2 + topicLength, [data length] - topicLength - 2);
     data = [data subdataWithRange:range];
     if ([msg qos] == 0) {
-        [delegate session:self newMessage:data onTopic:topic];
+        [self.delegate newMessage:self data:data onTopic:topic];
     }
     else {
         if ([data length] < 2) {
@@ -492,19 +329,20 @@
         }
         data = [data subdataWithRange:NSMakeRange(2, [data length] - 2)];
         if ([msg qos] == 1) {
-            [delegate session:self newMessage:data onTopic:topic];
+            [self.delegate newMessage:self data:data onTopic:topic];
             [self send:[MQTTMessage pubackMessageWithMessageId:msgId]];
         }
         else {
             NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                 data, @"data", topic, @"topic", nil];
-            [rxFlows setObject:dict forKey:[NSNumber numberWithUnsignedInt:msgId]];
+            [self.rxFlows setObject:dict forKey:[NSNumber numberWithUnsignedInt:msgId]];
             [self send:[MQTTMessage pubrecMessageWithMessageId:msgId]];
         }
     }
 }
 
-- (void)handlePuback:(MQTTMessage*)msg {
+- (void)handlePuback:(MQTTMessage*)msg
+{
     if ([[msg data] length] != 2) {
         return;
     }
@@ -513,7 +351,7 @@
     if ([msgId unsignedIntValue] == 0) {
         return;
     }
-    MQttTxFlow *flow = [txFlows objectForKey:msgId];
+    MQttTxFlow *flow = [self.txFlows objectForKey:msgId];
     if (flow == nil) {
         return;
     }
@@ -522,11 +360,11 @@
         return;
     }
 
-    [[self.timerRing objectAtIndex:([flow deadline] % 60)] removeObject:msgId];
-    [txFlows removeObjectForKey:msgId];
+    [self.txFlows removeObjectForKey:msgId];
 }
 
-- (void)handlePubrec:(MQTTMessage*)msg {
+- (void)handlePubrec:(MQTTMessage*)msg
+{
     if ([[msg data] length] != 2) {
         return;
     }
@@ -535,7 +373,7 @@
     if ([msgId unsignedIntValue] == 0) {
         return;
     }
-    MQttTxFlow *flow = [txFlows objectForKey:msgId];
+    MQttTxFlow *flow = [self.txFlows objectForKey:msgId];
     if (flow == nil) {
         return;
     }
@@ -544,15 +382,14 @@
         return;
     }
     msg = [MQTTMessage pubrelMessageWithMessageId:[msgId unsignedIntValue]];
-    [flow setMsg:msg];
-    [[self.timerRing objectAtIndex:([flow deadline] % 60)] removeObject:msgId];
-    [flow setDeadline:(ticks + 60)];
-    [[self.timerRing objectAtIndex:([flow deadline] % 60)] addObject:msgId];
+    flow.msg = msg;
+    flow.deadline = [NSDate dateWithTimeIntervalSinceNow:TIMEOUT];
 
     [self send:msg];
 }
 
-- (void)handlePubrel:(MQTTMessage*)msg {
+- (void)handlePubrel:(MQTTMessage*)msg
+{
     if ([[msg data] length] != 2) {
         return;
     }
@@ -561,12 +398,12 @@
     if ([msgId unsignedIntValue] == 0) {
         return;
     }
-    NSDictionary *dict = [rxFlows objectForKey:msgId];
+    NSDictionary *dict = [self.rxFlows objectForKey:msgId];
     if (dict != nil) {
-        [delegate session:self
-               newMessage:[dict valueForKey:@"data"]
-                  onTopic:[dict valueForKey:@"topic"]];
-        [rxFlows removeObjectForKey:msgId];
+        [self.delegate newMessage:self
+                             data:[dict valueForKey:@"data"]
+                          onTopic:[dict valueForKey:@"topic"]];
+        [self.rxFlows removeObjectForKey:msgId];
     }
     [self send:[MQTTMessage pubcompMessageWithMessageId:[msgId unsignedIntegerValue]]];
 }
@@ -580,41 +417,25 @@
     if ([msgId unsignedIntValue] == 0) {
         return;
     }
-    MQttTxFlow *flow = [txFlows objectForKey:msgId];
+    MQttTxFlow *flow = [self.txFlows objectForKey:msgId];
     if (flow == nil || [[flow msg] type] != MQTTPubrel) {
         return;
     }
 
-    [[self.timerRing objectAtIndex:([flow deadline] % 60)] removeObject:msgId];
-    [txFlows removeObjectForKey:msgId];
+    [self.txFlows removeObjectForKey:msgId];
 }
 
 - (void)error:(MQTTSessionEvent)eventCode {
     
-    [encoder close];
-    encoder = nil;
+    self.status = MQTTSessionStatusError;
+    [self closeInternal];
     
-    [decoder close];
-    decoder = nil;
-    
-    if (timer != nil) {
-        [timer invalidate];
-        
-        timer = nil;
-    }
-    status = MQTTSessionStatusError;
-    
-    usleep(1000000); // 1 sec delay
-    
-    if ([delegate respondsToSelector:@selector(session:handleEvent:)]) {
-        [delegate session:self handleEvent:eventCode];
-    }
-
+    [self.delegate handleEvent:self event:eventCode];
 }
 
 - (void)send:(MQTTMessage*)msg {
-    if ([encoder status] == MQTTEncoderStatusReady) {
-        [encoder encodeMessage:msg];
+    if ([self.encoder status] == MQTTEncoderStatusReady) {
+        [self.encoder encodeMessage:msg];
     }
     else {
         [self.queue addObject:msg];
@@ -622,11 +443,11 @@
 }
 
 - (UInt16)nextMsgId {
-    txMsgId++;
-    while (txMsgId == 0 || [txFlows objectForKey:[NSNumber numberWithUnsignedInt:txMsgId]] != nil) {
-        txMsgId++;
+    self.txMsgId++;
+    while (self.txMsgId == 0 || [self.txFlows objectForKey:[NSNumber numberWithUnsignedInt:self.txMsgId]] != nil) {
+        self.txMsgId++;
     }
-    return txMsgId;
+    return self.txMsgId;
 }
 
 @end

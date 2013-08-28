@@ -17,8 +17,8 @@
 @interface mqttitudeViewController ()
 @property (strong, nonatomic) MQTTSession *session;
 @property (strong, nonatomic) CLLocationManager *manager;
-@property (strong, nonatomic) NSString *clientId;
 @property (strong, nonatomic) Logs *logs;
+@property (strong, nonatomic) NSTimer *keepAliveTimer;
 
 @property (strong, nonatomic) NSString *topic;
 @property (nonatomic) BOOL retainFlag;
@@ -35,7 +35,6 @@
 @property (strong, nonatomic) NSMutableArray *annotationArray;
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet UITextView *statusField;
 @property (weak, nonatomic) IBOutlet mqttitudeIndicatorView *indicatorView;
 @property (weak, nonatomic) IBOutlet MKUserTrackingBarButtonItem *trackingButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *stopButton;
@@ -47,6 +46,7 @@
 @implementation mqttitudeViewController
 
 #define DEBUGGING
+#define KEEPALIVE 120.0
 
 - (void)viewDidLoad
 {
@@ -74,15 +74,18 @@
         NSLog(@"MQTTitude not authorized for CoreLocation %d", status); // Better inform the user and exit
     }
 
-    [self.logs log:[NSString stringWithFormat:@"%@ starting...",
-                    [NSString stringWithFormat:@"%@ %@",
-                     [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
-                     [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"]]]];
+    [self.logs log:[NSString stringWithFormat:@"%@ v%@ on %@",
+                    [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
+                    [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                    [[[UIDevice currentDevice] identifierForVendor] UUIDString]]];
 
     [self settingsFromPropertyList];
     [self connect];
     
     [self.manager startMonitoringSignificantLocationChanges];
+    
+    self.keepAliveTimer = [NSTimer timerWithTimeInterval:KEEPALIVE target:self selector:@selector(keepAlive:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.keepAliveTimer forMode:NSRunLoopCommonModes];
     
 
 #ifdef DEBUGGING
@@ -172,7 +175,7 @@
                                      @"vel": [NSString stringWithFormat:@"%f", location.speed],
                                      @"dir": [NSString stringWithFormat:@"%f", location.course],
 #ifdef DEBUGGING
-                        /*testing*/  @"_pow": [NSString stringWithFormat:@"%f", ([[UIDevice currentDevice] isBatteryMonitoringEnabled]) ? [[UIDevice currentDevice] batteryLevel] : -1.0 ],
+                        /*testing*/  @"_pow": [NSString stringWithFormat:@"%.0f", ([[UIDevice currentDevice] isBatteryMonitoringEnabled]) ? [[UIDevice currentDevice] batteryLevel] * 100.0: -1.0 ],
 #endif
                                      @"_type": [NSString stringWithFormat:@"%@", @"location"]
                                      };
@@ -203,9 +206,13 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
+#ifdef DEBUGGING
     NSLog(@"Significant Location Change");
+#endif
     for (CLLocation *location in locations) {
+#ifdef DEBUGGING
         NSLog(@"Location: %@", [location description]);
+#endif
         if (self.background) [self publishLocation:location];
     }
 }
@@ -471,6 +478,13 @@
         }
         return nil;
     }
+}
+
+- (void)keepAlive:(NSTimer *)timer
+{
+#ifdef DEBUGGING
+    NSLog(@"%@ Alive @%.0f", [[[UIDevice currentDevice] identifierForVendor] UUIDString], [[NSDate date] timeIntervalSince1970]);
+#endif
 }
 
 @end

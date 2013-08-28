@@ -52,7 +52,6 @@
 		8414726017C9264400F76EAB /* fells_loop.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fells_loop.gpx; sourceTree = "<group>"; };
 		8414726817C9E5F900F76EAB /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		8414726917C9E5F900F76EAB /* Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connection.m; sourceTree = "<group>"; };
-		8414726B17C9E9CB00F76EAB /* ConnectionThreadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionThreadDelegate.h; sourceTree = "<group>"; };
 		847C9EF617C3DE3A00109BD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPhone.strings; sourceTree = "<group>"; };
 		8485A8A617C178AF00D3348A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		84BDE18517C7B11000C47B65 /* mqttitudeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mqttitudeAppDelegate.h; sourceTree = "<group>"; };
@@ -197,7 +196,6 @@
 				84BDE19717C7B12C00C47B65 /* Annotation.h */,
 				84BDE19817C7B12C00C47B65 /* Annotation.m */,
 				84BDE19917C7B12C00C47B65 /* ConnectionThread.h */,
-				8414726B17C9E9CB00F76EAB /* ConnectionThreadDelegate.h */,
 				84BDE19A17C7B12C00C47B65 /* ConnectionThread.m */,
 				8414726817C9E5F900F76EAB /* Connection.h */,
 				8414726917C9E5F900F76EAB /* Connection.m */,

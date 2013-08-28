@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ConnectionThreadDelegate.h"
+#import "ConnectionThread.h"
 
 @interface Connection : NSObject
 @property (weak, nonatomic) id<ConnectionThreadDelegate> delegate;

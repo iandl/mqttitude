@@ -16,15 +16,6 @@
 #import <Foundation/Foundation.h>
 #import "MQTTMessage.h"
 
-@interface MQTTEncoder : NSObject <NSStreamDelegate> {
-    NSInteger       status;
-    NSOutputStream* stream;
-    NSRunLoop*      runLoop;
-    NSString*       runLoopMode;
-    NSMutableData*  buffer;
-    NSInteger       byteIndex;
-    id              delegate;
-}
 
 typedef enum {
     MQTTEncoderEventReady,
@@ -39,10 +30,25 @@ typedef enum {
     MQTTEncoderStatusError
 } MQTTEncoderStatus;
 
-- (id)initWithStream:(NSOutputStream*)aStream
-             runLoop:(NSRunLoop*)aRunLoop
-         runLoopMode:(NSString*)aMode;
-- (void)setDelegate:(id)aDelegate;
+@class MQTTEncoder;
+
+@protocol MQTTEncoderDelegate <NSObject>
+- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode;
+@end
+
+
+@interface MQTTEncoder : NSObject <NSStreamDelegate>
+@property (nonatomic)    MQTTEncoderStatus       status;
+@property (strong, nonatomic)    NSOutputStream* stream;
+@property (strong, nonatomic)    NSRunLoop*      runLoop;
+@property (strong, nonatomic)    NSString*       runLoopMode;
+@property (strong, nonatomic)    NSMutableData*  buffer;
+@property (nonatomic)    NSInteger       byteIndex;
+@property (weak, nonatomic)    id<MQTTEncoderDelegate>              delegate;
+
+- (id)initWithStream:(NSOutputStream*)stream
+             runLoop:(NSRunLoop*)runLoop
+         runLoopMode:(NSString*)mode;
 - (void)open;
 - (void)close;
 - (MQTTEncoderStatus)status;
@@ -51,7 +57,3 @@ typedef enum {
 
 @end
 
-@interface NSObject (MQTTEncoderDelegate)
-- (void)encoder:(MQTTEncoder*)sender handleEvent:(MQTTEncoderEvent)eventCode;
-
-@end

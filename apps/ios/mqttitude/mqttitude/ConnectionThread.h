@@ -8,9 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import "MQTTSession.h"
-#import "ConnectionThreadDelegate.h"
 
-@interface ConnectionThread : NSThread
+
+@protocol ConnectionThreadDelegate <NSObject>
+#define LISTENTO @"listento"
+
+enum indicator {
+    indicator_idle = 0,
+    indicator_green = 1,
+    indicator_amber = 2,
+    indicator_red = 3
+};
+
+- (void)showIndicator:(NSNumber *)indicator;
+- (void)handleMessage:(NSDictionary *)dictionary;
+
+@end
+
+@interface ConnectionThread : NSThread <MQTTSessionDelegate>
 @property (weak, nonatomic) id<ConnectionThreadDelegate> delegate;
 
 - (void)connectTo:(NSDictionary *)parameters;

@@ -17,80 +17,72 @@
 
 @implementation MQTTEncoder
 
-- (id)initWithStream:(NSOutputStream*)aStream
-             runLoop:(NSRunLoop*)aRunLoop
-         runLoopMode:(NSString*)aMode {
-    status = MQTTEncoderStatusInitializing;
-    stream = aStream;
-    [stream setDelegate:self];
-    runLoop = aRunLoop;
-    runLoopMode = aMode;
+- (id)initWithStream:(NSOutputStream*)stream
+             runLoop:(NSRunLoop*)runLoop
+         runLoopMode:(NSString*)mode {
+    self.status = MQTTEncoderStatusInitializing;
+    self.stream = stream;
+    [self.stream setDelegate:self];
+    self.runLoop = runLoop;
+    self.runLoopMode = mode;
     return self;
 }
 
-- (void)setDelegate:(id)aDelegate {
-    delegate = aDelegate;
-}
-
-- (MQTTEncoderStatus)status {
-    return status;
-}
-
 - (void)open {
-    [stream setDelegate:self];
-    [stream scheduleInRunLoop:runLoop forMode:runLoopMode];
-    [stream open];
+    [self.stream setDelegate:self];
+    [self.stream scheduleInRunLoop:self.runLoop forMode:self.runLoopMode];
+    [self.stream open];
 }
 
 - (void)close {
-    [stream close];
-    [stream setDelegate:nil];
-    [stream removeFromRunLoop:runLoop forMode:runLoopMode];
-    stream = nil;
+    [self.stream close];
+    [self.stream removeFromRunLoop:self.runLoop forMode:self.runLoopMode];
+    [self.stream setDelegate:nil];
+    self.stream = nil;
 }
 
 - (void)stream:(NSStream*)sender handleEvent:(NSStreamEvent)eventCode {
-    if(stream == nil)
+    if(self.stream == nil)
         return;
-    assert(sender == stream);
+    assert(sender == self.stream);
     switch (eventCode) {
         case NSStreamEventOpenCompleted:
             break;
         case NSStreamEventHasSpaceAvailable:
-            if (status == MQTTEncoderStatusInitializing) {
-                status = MQTTEncoderStatusReady;
-                [delegate encoder:self handleEvent:MQTTEncoderEventReady];
+            if (self.status == MQTTEncoderStatusInitializing) {
+                self.status = MQTTEncoderStatusReady;
+                [self.delegate encoder:self handleEvent:MQTTEncoderEventReady];
             }
-            else if (status == MQTTEncoderStatusReady) {
-                [delegate encoder:self handleEvent:MQTTEncoderEventReady];
+            else if (self.status == MQTTEncoderStatusReady) {
+                [self.delegate encoder:self handleEvent:MQTTEncoderEventReady];
             }
-            else if (status == MQTTEncoderStatusSending) {
+            else if (self.status == MQTTEncoderStatusSending) {
                 UInt8* ptr;
                 NSInteger n, length;
                 
-                ptr = (UInt8*) [buffer bytes] + byteIndex;
+                ptr = (UInt8*) [self.buffer bytes] + self.byteIndex;
                 // Number of bytes pending for transfer
-                length = [buffer length] - byteIndex;
-                n = [stream write:ptr maxLength:length];
+                length = [self.buffer length] - self.byteIndex;
+                n = [self.stream write:ptr maxLength:length];
                 if (n == -1) {
-                    status = MQTTEncoderStatusError;
-                    [delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
+                    self.status = MQTTEncoderStatusError;
+                    [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
                 }
                 else if (n < length) {
-                    byteIndex += n;
+                    self.byteIndex += n;
                 }
                 else {
-                    buffer = NULL;
-                    byteIndex = 0;
-                    status = MQTTEncoderStatusReady;
+                    self.buffer = NULL;
+                    self.byteIndex = 0;
+                    self.status = MQTTEncoderStatusReady;
                 }
             }
             break;
         case NSStreamEventErrorOccurred:
         case NSStreamEventEndEncountered:
-            if (status != MQTTEncoderStatusError) {
-                status = MQTTEncoderStatusError;
-                [delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
+            if (self.status != MQTTEncoderStatusError) {
+                self.status = MQTTEncoderStatusError;
+                [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
             }
             break;
         default:
@@ -103,15 +95,15 @@
     UInt8 header;
     NSInteger n, length;
     
-    if (status != MQTTEncoderStatusReady) {
+    if (self.status != MQTTEncoderStatusReady) {
         NSLog(@"Encoder not ready");
         return;
     }
     
-    assert (buffer == NULL);
-    assert (byteIndex == 0);
+    assert (self.buffer == NULL);
+    assert (self.byteIndex == 0);
     
-    buffer = [[NSMutableData alloc] init];
+    self.buffer = [[NSMutableData alloc] init];
     
     // encode fixed header
     header = [msg type] << 4;
@@ -122,7 +114,7 @@
     if ([msg retainFlag]) {
         header |= 0x01;
     }
-    [buffer appendBytes:&header length:1];
+    [self.buffer appendBytes:&header length:1];
     
     // encode remaining length
     length = [[msg data] length];
@@ -132,26 +124,26 @@
         if (length > 0) {
             digit |= 0x80;
         }
-        [buffer appendBytes:&digit length:1];
+        [self.buffer appendBytes:&digit length:1];
     }
     while (length > 0);
     
     // encode message data
     if ([msg data] != NULL) {
-        [buffer appendData:[msg data]];
+        [self.buffer appendData:[msg data]];
     }
     
-    n = [stream write:[buffer bytes] maxLength:[buffer length]];
+    n = [self.stream write:[self.buffer bytes] maxLength:[self.buffer length]];
     if (n == -1) {
-        status = MQTTEncoderStatusError;
-        [delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
+        self.status = MQTTEncoderStatusError;
+        [self.delegate encoder:self handleEvent:MQTTEncoderEventErrorOccurred];
     }
-    else if (n < [buffer length]) {
-        byteIndex += n;
-        status = MQTTEncoderStatusSending;
+    else if (n < [self.buffer length]) {
+        self.byteIndex += n;
+        self.status = MQTTEncoderStatusSending;
     }
     else {
-        buffer = NULL;
+        self.buffer = NULL;
         // XXX [delegate encoder:self handleEvent:MQTTEncoderEventReady];
     }
 }

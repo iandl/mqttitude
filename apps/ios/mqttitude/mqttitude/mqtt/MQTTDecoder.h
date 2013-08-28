@@ -16,25 +16,13 @@
 #import <Foundation/Foundation.h>
 #import "MQTTMessage.h"
 
-@interface MQTTDecoder : NSObject <NSStreamDelegate> {
-    NSInteger       status;
-    NSInputStream*  stream;
-    NSRunLoop*      runLoop;
-    NSString*       runLoopMode;
-    id              delegate;
-    UInt8           header;
-    UInt32          length;
-    UInt32          lengthMultiplier;
-    NSMutableData*  dataBuffer;
-}
-
 typedef enum {
     MQTTDecoderEventProtocolError,
     MQTTDecoderEventConnectionClosed,
     MQTTDecoderEventConnectionError
 } MQTTDecoderEvent;
 
-enum {
+typedef enum {
     MQTTDecoderStatusInitializing,
     MQTTDecoderStatusDecodingHeader,
     MQTTDecoderStatusDecodingLength,
@@ -42,19 +30,36 @@ enum {
     MQTTDecoderStatusConnectionClosed,
     MQTTDecoderStatusConnectionError,
     MQTTDecoderStatusProtocolError
-};
+} MQTTDecoderStatus;
 
-- (id)initWithStream:(NSInputStream*)aStream
-             runLoop:(NSRunLoop*)aRunLoop
-         runLoopMode:(NSString*)aMode;
-- (void)setDelegate:(id)aDelegate;
+@class MQTTDecoder;
+
+@protocol MQTTDecoderDelegate <NSObject>
+
+- (void)decoder:(MQTTDecoder *)sender newMessage:(MQTTMessage*)msg;
+- (void)decoder:(MQTTDecoder *)sender handleEvent:(MQTTDecoderEvent)eventCode;
+
+@end
+
+
+@interface MQTTDecoder : NSObject <NSStreamDelegate>
+@property (nonatomic)    MQTTDecoderStatus       status;
+@property (strong, nonatomic)    NSInputStream*  stream;
+@property (strong, nonatomic)    NSRunLoop*      runLoop;
+@property (strong, nonatomic)    NSString*       runLoopMode;
+@property (nonatomic)    UInt8           header;
+@property (nonatomic)    UInt32          length;
+@property (nonatomic)    UInt32          lengthMultiplier;
+@property (strong, nonatomic)    NSMutableData*  dataBuffer;
+
+@property (weak, nonatomic ) id<MQTTDecoderDelegate> delegate;
+
+- (id)initWithStream:(NSInputStream *)stream
+             runLoop:(NSRunLoop *)runLoop
+         runLoopMode:(NSString *)mode;
 - (void)open;
 - (void)close;
-- (void)stream:(NSStream*)sender handleEvent:(NSStreamEvent)eventCode;
+- (void)stream:(NSStream *)sender handleEvent:(NSStreamEvent)eventCode;
 @end
 
-@interface NSObject (MQTTDecoderDelegate)
-- (void)decoder:(MQTTDecoder*)sender newMessage:(MQTTMessage*)msg;
-- (void)decoder:(MQTTDecoder*)sender handleEvent:(MQTTDecoderEvent)eventCode;
 
-@end
