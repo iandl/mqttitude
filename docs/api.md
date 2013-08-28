@@ -14,10 +14,12 @@ This document assumes that the MQTTitude backend is running on ```localhost```.
 
 #### Users
 
-**Request** ```GET /api/v1/users/{id}```  
-**Description:** Gets the user specified by ```id```.   
-**Request authentication**: yes  
-**Response**: 
+**Task:** Get the specified user  
+```GET /api/v1/users/:user```  
++ **:user**  The id of the user  
+
+**Authentication required**: yes  
+
 
 #### Locations
 
