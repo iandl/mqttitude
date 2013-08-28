@@ -10,9 +10,12 @@ Before proceeding, please read and understand the following
 
 ### API Version 1
 
-This document assumes that the MQTTitude backend is running on ```localhost```. 
+This document assumes that the MQTTitude backend is running on ```localhost```.
 
 #### Users
 
-#### Users
+#### Locations
 
+#### Subscriptions
+
+#### Authentication
