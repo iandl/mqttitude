@@ -28,3 +28,7 @@ Thoughts on possible future enhancements.
   * Needs friends/family on same broker
   * Needs 'standardized' topic names (maybe with Twitter id in topic?)
 * Queue updates on device (with `tst` etc) to be PUBlished upon available connection
+
+## Very-long term, a.k.a. "Neat ideas"
+
+* Publish incoming phone call (caller-id), [submitted by @bordingnon](http://twitter.com/bordignon/status/372627079059079168). JPM: Also SMS? Have to force TLS then, at least.
