@@ -1,10 +1,17 @@
 source "https://rubygems.org"
 
+gem 'rake'
 gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'sinatra-activerecord'
+gem 'sinatra-can'
 gem 'mysql2'
 gem 'activerecord'
-gem 'sinatra-activerecord'
 gem 'haml'
 gem 'json'
 gem 'mqtt'
 gem 'thin'
+gem 'multi_json'
+gem 'pbkdf2', :git => 'https://github.com/joonyou/pbkdf2-ruby.git', :branch => 'master' 
+
+require "base64"
