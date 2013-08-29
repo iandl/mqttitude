@@ -9,6 +9,7 @@
 #import "mqttitudeViewController.h"
 #import "mqttitudeSettingsTVCViewController.h"
 #import "mqttitudeLogTVCViewController.h"
+#import "mqttitudeAppDelegate.h"
 #import "Annotation.h"
 #import "Logs.h"
 #import "Connection.h"
@@ -45,8 +46,7 @@
 
 @implementation mqttitudeViewController
 
-#define DEBUGGING
-#define KEEPALIVE 120.0
+#define KEEPALIVE 300.0
 
 - (void)viewDidLoad
 {
@@ -57,18 +57,24 @@
     [super viewDidLoad];
 
     self.logs = [[Logs alloc] init];
+    [self.logs log:[NSString stringWithFormat:@"%@ v%@ on %@",
+                    [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
+                    [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                    [[[UIDevice currentDevice] identifierForVendor] UUIDString]]];
+
+    self.keepAliveTimer = [NSTimer timerWithTimeInterval:KEEPALIVE target:self selector:@selector(keepAlive:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.keepAliveTimer forMode:NSRunLoopCommonModes];
+
+    [self settingsFromPropertyList];
     
     self.connection = [[Connection alloc] init];
     self.connection.delegate = self;
     
     self.annotationArray = [[NSMutableArray alloc] init];
+    
     if ([CLLocationManager locationServicesEnabled]) {
         self.manager = [[CLLocationManager alloc] init];
         self.manager.delegate = self;
-        self.mapView.delegate = self;
-        self.mapView.showsUserLocation = YES;
-        [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
-        (void)[self.trackingButton initWithMapView:self.mapView];
     } else {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
         [self alert:NSLocalizedString(@"No Core Location Services", @"No Core Location Services")
@@ -77,22 +83,19 @@
                      status]];
     }
 
-    [self.logs log:[NSString stringWithFormat:@"%@ v%@ on %@",
-                    [NSBundle mainBundle].infoDictionary[@"CFBundleName"],
-                    [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
-                    [[[UIDevice currentDevice] identifierForVendor] UUIDString]]];
-
-    [self settingsFromPropertyList];
+    self.mapView.delegate = self;
+    self.mapView.showsUserLocation = YES;
+    [self.mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+    (void)[self.trackingButton initWithMapView:self.mapView];
+    
     [self connect];
     
-    [self.manager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
-    [self.manager startMonitoringSignificantLocationChanges];
-    
-    self.keepAliveTimer = [NSTimer timerWithTimeInterval:KEEPALIVE target:self selector:@selector(keepAlive:) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.keepAliveTimer forMode:NSRunLoopCommonModes];
-    
+    if ([[UIApplication sharedApplication].delegate isKindOfClass:[mqttitudeAppDelegate class]]) {
+        mqttitudeAppDelegate *delegate = (mqttitudeAppDelegate *)[UIApplication sharedApplication].delegate;
+        delegate.manager = self.manager;
+    }
 
-#ifdef DEBUGGING
+#ifdef DEBUG
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
 #endif
 }
@@ -178,7 +181,7 @@
                                      @"vac": [NSString stringWithFormat:@"%.0fm", location.verticalAccuracy],
                                      @"vel": [NSString stringWithFormat:@"%f", location.speed],
                                      @"dir": [NSString stringWithFormat:@"%f", location.course],
-#ifdef DEBUGGING
+#ifdef DEBUG
                         /*testing*/  @"_pow": [NSString stringWithFormat:@"%.0f", ([[UIDevice currentDevice] isBatteryMonitoringEnabled]) ? [[UIDevice currentDevice] batteryLevel] * 100.0: -1.0 ],
 #endif
                                      @"_type": [NSString stringWithFormat:@"%@", @"location"]
@@ -214,11 +217,11 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"Significant Location Change");
 #endif
     for (CLLocation *location in locations) {
-#ifdef DEBUGGING
+#ifdef DEBUG
         NSLog(@"Location: %@", [location description]);
 #endif
         if (self.background) [self publishLocation:location];
@@ -227,7 +230,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"locationManager didFailWithError %@", error);
 #endif
     
@@ -235,14 +238,14 @@
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"locationManagerDidPauseLocationUpdates");
 #endif
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"locationManagerDidResumeLocationUpdates");
 #endif    
 }
@@ -511,9 +514,28 @@
 
 - (void)keepAlive:(NSTimer *)timer
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"%@ Alive @%.0f", [[[UIDevice currentDevice] identifierForVendor] UUIDString], [[NSDate date] timeIntervalSince1970]);
 #endif
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+#ifdef DEBUG
+        NSLog(@"startMonitoringSignificantLocationChanges");
+#endif
+
+        [self.manager startMonitoringSignificantLocationChanges];
+#ifdef DEBUG
+        NSLog(@"startMonitoringSignificantLocationChanges done");
+#endif
+
+#ifdef DEBUG
+        NSLog(@"stopMonitoringSignificantLocationChanges");
+#endif
+
+        [self.manager stopMonitoringSignificantLocationChanges];
+#ifdef DEBUG
+        NSLog(@"stopMonitoringSignificantLocationChanges done");
+#endif
+    }
 }
 
 - (void)alert:(NSString *)title message:(NSString *)message

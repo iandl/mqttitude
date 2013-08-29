@@ -43,8 +43,6 @@ enum state {
 #define RECONNECT_TIMER 1.0
 #define RECONNECT_TIMER_MAX 300.0
 
-#define DEBUGGING
-
 @implementation Connection
 
 - (id)init
@@ -57,7 +55,7 @@ enum state {
 - (void)setState:(NSInteger)state
 {
     _state = state;
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"Connection thread state:%d", self.state);
 #endif
     [self showIndicator];
@@ -99,7 +97,7 @@ enum state {
 
 - (void)reconnect
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"reconnect");
 #endif
     self.reconnectTimer = nil;
@@ -142,7 +140,7 @@ enum state {
         NSString *clientId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         
         self.session = [[MQTTSession alloc] initWithClientId:clientId userName:self.auth ? self.user : @"" password:self.auth ? self.pass : @"" keepAlive:MQTT_KEEPALIVE cleanSession:YES
-                                                   willTopic:self.willTopic willMsg:self.willMessage willQoS:1 willRetainFlag:YES runLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+                                                   willTopic:self.willTopic willMsg:self.willMessage willQoS:1 willRetainFlag:NO runLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         [self.session setDelegate:self];
         [self.session connectToHost:self.host
                                port:self.port
@@ -183,7 +181,7 @@ enum state {
 
 - (void)handleEvent:(MQTTSession *)session event:(MQTTSessionEvent)eventCode
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"MQTTitude eventCode: %d", eventCode);
 #endif
     [self.reconnectTimer invalidate];
@@ -208,7 +206,7 @@ enum state {
         case MQTTSessionEventConnectionRefused:
         case MQTTSessionEventConnectionError:
         {
-#ifdef DEBUGGING
+#ifdef DEBUG
             NSLog(@"reconnect after: %f", self.reconnectTime);
 #endif
             self.reconnectTimer = [NSTimer timerWithTimeInterval:self.reconnectTime
@@ -237,7 +235,7 @@ enum state {
 
 - (void)newMessage:(MQTTSession *)session data:(NSData *)data onTopic:(NSString *)topic
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"Received %@ %@", topic, [self dataToString:data]);
 #endif
     [self.delegate handleMessage:data onTopic:topic];
@@ -251,7 +249,7 @@ enum state {
     self.retainFlag = retainFlag;
     
     if (self.state != state_connected) {
-#ifdef DEBUGGING
+#ifdef DEBUG
         NSLog(@"into fifo");
 #endif
         NSDictionary *parameters = @{
@@ -263,7 +261,7 @@ enum state {
         [self.fifo addObject:parameters];
         [self connectToInternal];
     } else {
-#ifdef DEBUGGING
+#ifdef DEBUG
         NSLog(@"Sending: %@", [self dataToString:data]);
 #endif
         [self.session publishData:data onTopic:topic retain:retainFlag qos:qos];

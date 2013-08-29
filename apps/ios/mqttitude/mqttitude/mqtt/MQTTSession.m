@@ -35,8 +35,6 @@
 
 @end
 
-#define DEBUGGING
-
 @implementation MQTTSession
 #define TIMEOUT 60
 
@@ -180,7 +178,7 @@
 
 - (void)timerHandler:(NSTimer *)timer
 {
-#ifdef DEBUGGING
+#ifdef DEBUG
     NSLog(@"%@ Ping @%.0f", self.clientId, [[NSDate date] timeIntervalSince1970]);
 #endif
     if ([self.encoder status] == MQTTEncoderStatusReady) {
