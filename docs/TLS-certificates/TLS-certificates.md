@@ -15,7 +15,7 @@ In our example, the CA certificate is called `MQTTitude-ca.crt`.
 
 ## Android
 
-Note that by following these instructions on Android you'll be prompted to set a device PIN or pattern to protect the device. If you already have that, just carry on. If you absolutely don't want to do that, you should download the certificate into, say, the Downloads folder, and configure it manually in MQTTitude.
+Note that by following these instructions on Android you'll be prompted to set a device PIN or pattern to protect the device. If you already have that, just carry on. If you absolutely don't want to do that, you should download the certificate into, say, the Downloads folder, and configure it manually in MQTTitude (see below).
 
 So, here's your e-mail message with said attachment.
 
@@ -48,6 +48,22 @@ There you go! That's it: the certificate was installed.
 ![iOS](ios-cert-04-stor.png)
 
 You're done, and if you no longer require the certificate file just delete the e-mail, though we recommend you keep it around for a bit.
+
+## manual configuration on Android
+
+From the, say, e-mail you got with the certificate, click "save" on the attached `.crt` file which is stored on your device's `Download` folder.
+
+In MQTTitude's settings, select `TLS (Custom Certificate)`
+
+![Android custom](android-custom-01.png)
+
+Now comes the hard part: you have to enter the path to the certificate you downloaded. On my device this is `/storage/emulated/0/Download/MQTTitude.crt`. Your mileage, etc; 
+
+![Android custom](android-custom-02.png)
+
+When you click `Connect`, it will try and use your certificate. Good luck! ;-)
+
+
 
 ## The nitty gritty
 
