@@ -10,8 +10,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "MQTTSession.h"
-#import "ConnectionThread.h"
+#import "Connection.h"
 
-@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ConnectionThreadDelegate>
+@interface mqttitudeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ConnectionDelegate>
 
 @end

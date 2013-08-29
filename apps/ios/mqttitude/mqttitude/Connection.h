@@ -7,10 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ConnectionThread.h"
+#import "MQTTSession.h"
 
-@interface Connection : NSObject
-@property (weak, nonatomic) id<ConnectionThreadDelegate> delegate;
+
+@protocol ConnectionDelegate <NSObject>
+#define LISTENTO @"listento"
+
+enum indicator {
+    indicator_idle = 0,
+    indicator_green = 1,
+    indicator_amber = 2,
+    indicator_red = 3
+};
+
+- (void)showIndicator:(NSInteger)indicator;
+- (void)handleMessage:(NSData *)data onTopic:(NSString *)topic;
+@end
+
+@interface Connection: NSObject <MQTTSessionDelegate>
+@property (weak, nonatomic) id<ConnectionDelegate> delegate;
+
 - (void)connectTo:(NSString *)host port:(NSInteger)port tls:(BOOL)tls auth:(BOOL)auth user:(NSString *)user pass:(NSString *)pass willTopic:(NSString *)willTopic will:(NSData *)will;
 - (void)sendData:(NSData *)data topic:(NSString *)topic qos:(NSInteger)qos retain:(BOOL)retainFlag;
 - (void)disconnect;

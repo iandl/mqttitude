@@ -71,7 +71,10 @@
         (void)[self.trackingButton initWithMapView:self.mapView];
     } else {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        NSLog(@"MQTTitude not authorized for CoreLocation %d", status); // Better inform the user and exit
+        [self alert:NSLocalizedString(@"No Core Location Services", @"No Core Location Services")
+            message:[NSString stringWithFormat:@"%@ %d",
+                     NSLocalizedString(@"MQTTitude not authorized for CoreLocation", @"MQTTitude not authorized for CoreLocation"),
+                     status]];
     }
 
     [self.logs log:[NSString stringWithFormat:@"%@ v%@ on %@",
@@ -82,6 +85,7 @@
     [self settingsFromPropertyList];
     [self connect];
     
+    [self.manager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     [self.manager startMonitoringSignificantLocationChanges];
     
     self.keepAliveTimer = [NSTimer timerWithTimeInterval:KEEPALIVE target:self selector:@selector(keepAlive:) userInfo:nil repeats:YES];
@@ -191,9 +195,13 @@
         NSError *error;
         data = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 /* not pretty printed */ error:&error];
         if (!data) {
+            [self alert:NSLocalizedString(@"JSONSerialization", @"JSONSerialization")
+                message:NSLocalizedString(@"Error serializing JSON object", @"Error serializing JSON object")];
             NSLog(@"Error %@ serializing JSON Object: %@", [error description], [jsonObject description]);
         }
     } else {
+        [self alert:NSLocalizedString(@"JSONSerialization", @"JSONSerialization")
+            message:NSLocalizedString(@"No valid JSON Object", @"No valid JSON Object")];
         NSLog(@"No valid JSON Object: %@", [jsonObject description]);
     }
     return data;
@@ -215,6 +223,28 @@
 #endif
         if (self.background) [self publishLocation:location];
     }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+#ifdef DEBUGGING
+    NSLog(@"locationManager didFailWithError %@", error);
+#endif
+    
+}
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager
+{
+#ifdef DEBUGGING
+    NSLog(@"locationManagerDidPauseLocationUpdates");
+#endif
+}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager
+{
+#ifdef DEBUGGING
+    NSLog(@"locationManagerDidResumeLocationUpdates");
+#endif    
 }
 
 /* UI Actions
@@ -357,11 +387,11 @@
  *
  */
 
-- (void)showIndicator:(NSNumber *)indicator
+- (void)showIndicator:(NSInteger)indicator
 {
     UIColor *color;
     
-    switch ([indicator integerValue]) {
+    switch (indicator) {
         case indicator_green:
             color = [UIColor greenColor];
             break;
@@ -392,11 +422,8 @@
 
 #define COMMAND_PUBLISH @"publish"
 
-- (void)handleMessage:(NSDictionary *)dictionary
+- (void)handleMessage:(NSData *)data onTopic:(NSString *)topic
 {
-    NSString *topic = dictionary[@"TOPIC"];
-    NSData *data = dictionary[@"DATA"];
-    
     if (self.background) {
         if ([topic isEqualToString:self.topic]) {
             // received own data
@@ -406,6 +433,8 @@
             if ([message isEqualToString:COMMAND_PUBLISH]) {
                 [self publishNow];
             } else {
+                [self alert:NSLocalizedString(@"Unknown Command", @"Unknown Command")
+                    message:NSLocalizedString(@"MQTTitude received an unknown command", @"MQTTitude received an unknown command")];
                 NSLog(@"Unknown command: %@", message);
             }
         } else {
@@ -487,4 +516,13 @@
 #endif
 }
 
+- (void)alert:(NSString *)title message:(NSString *)message
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:NSLocalizedString(@"OK", @"OK button in alert")
+                                          otherButtonTitles:nil];
+    [alert show];
+}
 @end

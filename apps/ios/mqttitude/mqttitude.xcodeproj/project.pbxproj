@@ -17,7 +17,6 @@
 		84BDE19517C7B11000C47B65 /* mqttitudeSettingsTVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE18E17C7B11000C47B65 /* mqttitudeSettingsTVCViewController.m */; };
 		84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */; };
 		84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19817C7B12C00C47B65 /* Annotation.m */; };
-		84BDE1A017C7B12C00C47B65 /* ConnectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19A17C7B12C00C47B65 /* ConnectionThread.m */; };
 		84BDE1A117C7B12C00C47B65 /* LogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19C17C7B12C00C47B65 /* LogEntry.m */; };
 		84BDE1A217C7B12C00C47B65 /* Logs.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDE19E17C7B12C00C47B65 /* Logs.m */; };
 		84BDE1A817C7B15F00C47B65 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDE1A717C7B15F00C47B65 /* icon_57x57.png */; };
@@ -68,8 +67,6 @@
 		84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mqttitudeViewController.m; sourceTree = "<group>"; };
 		84BDE19717C7B12C00C47B65 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
 		84BDE19817C7B12C00C47B65 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
-		84BDE19917C7B12C00C47B65 /* ConnectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionThread.h; sourceTree = "<group>"; };
-		84BDE19A17C7B12C00C47B65 /* ConnectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionThread.m; sourceTree = "<group>"; };
 		84BDE19B17C7B12C00C47B65 /* LogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogEntry.h; sourceTree = "<group>"; };
 		84BDE19C17C7B12C00C47B65 /* LogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogEntry.m; sourceTree = "<group>"; };
 		84BDE19D17C7B12C00C47B65 /* Logs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; };
@@ -195,8 +192,6 @@
 				84BDE19017C7B11000C47B65 /* mqttitudeViewController.m */,
 				84BDE19717C7B12C00C47B65 /* Annotation.h */,
 				84BDE19817C7B12C00C47B65 /* Annotation.m */,
-				84BDE19917C7B12C00C47B65 /* ConnectionThread.h */,
-				84BDE19A17C7B12C00C47B65 /* ConnectionThread.m */,
 				8414726817C9E5F900F76EAB /* Connection.h */,
 				8414726917C9E5F900F76EAB /* Connection.m */,
 				84BDE19B17C7B12C00C47B65 /* LogEntry.h */,
@@ -318,7 +313,6 @@
 				84BDE19517C7B11000C47B65 /* mqttitudeSettingsTVCViewController.m in Sources */,
 				84BDE19617C7B11000C47B65 /* mqttitudeViewController.m in Sources */,
 				84BDE19F17C7B12C00C47B65 /* Annotation.m in Sources */,
-				84BDE1A017C7B12C00C47B65 /* ConnectionThread.m in Sources */,
 				84BDE1A117C7B12C00C47B65 /* LogEntry.m in Sources */,
 				84BDE1A217C7B12C00C47B65 /* Logs.m in Sources */,
 				84BDE1B617C7B1D600C47B65 /* MQTTDecoder.m in Sources */,
