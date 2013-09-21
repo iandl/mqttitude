@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="st.alr.mqttitude"
-    android:versionCode="0302"
-    android:versionName="0.3.02" >
+    android:versionCode="0306"
+    android:versionName="0.3.06" >
 
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
     <permission
@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:name="st.alr.mqttitude.App"
@@ -33,7 +34,8 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDL80DnlIzyG5GNcMoy9yX7uuWEJcCvW7c" />
+            android:value="AIzaSyBQ-1wo9fx5ZIav-X3Si-t3fAc2kKxzlmY"/>
+            <!-- android:value="AIzaSyDL80DnlIzyG5GNcMoy9yX7uuWEJcCvW7c" />-->
 
         <activity
             android:name="st.alr.mqttitude.ActivityMain"
@@ -54,7 +56,11 @@
             android:name="st.alr.mqttitude.services.ServiceMqtt"
             android:exported="false" >
         </service>
-
+        <service
+            android:name="st.alr.mqttitude.services.ServiceLocatorFused"
+            android:exported="false" >
+        </service>
+        
         <activity
             android:name="st.alr.mqttitude.ActivityStatus"
             android:label="@string/title_activity_activity_status" >

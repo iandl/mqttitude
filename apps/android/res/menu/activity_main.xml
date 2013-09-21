@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
- 		<item
+    
+    <item android:id="@+id/menu_addpeer" 
+        android:title="Add"
+        android:icon="@drawable/ic_icon"
+        ></item>
+    
+    <item
         android:id="@+id/menu_publish"
         android:orderInCategory="2"
         android:title="Upload"
@@ -25,6 +30,8 @@
         android:id="@+id/menu_settings"
         android:orderInCategory="100"
         android:title="Preferences"/>
+    
+    
 
 </menu>
 

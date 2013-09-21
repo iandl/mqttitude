@@ -36,6 +36,7 @@ public class Defaults {
     public static final String BUGSNAG_API_KEY = "f3302f4853372edcdd12dfcc102a3578";
 
 
+    public static final String SETTING_PEER_USERNAMES = "usernames";
     
     public enum State {Idle, Locating, LocatingFail, PublishConnectionWaiting, PublishConnectionTimeout, Publishing, NOTOPIC};
 }

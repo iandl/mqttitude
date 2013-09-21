@@ -23,11 +23,13 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <color name="altGrey">#b9b9b9</color>
     <color name="lightGrey">#d9d9d9</color>
     <color name="mediumGrey">#acacac</color>
     <color name="darkGrey">#626262</color>
     <color name="background">#f2f2f2</color>
     <color name="border">#acacac</color>
+    <color name="mqqtitude">#1683BB</color>
 
     <style name="actionBar" parent="@android:style/Widget.Holo.ActionBar.Solid">
         <item name="android:background">@drawable/ab_bottom_solid</item>
